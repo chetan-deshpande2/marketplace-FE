@@ -1,0 +1,108 @@
+.showHideBtn {
+  width: 100%;
+  border-radius: 50px;
+  font-size: 16px;
+  padding: 10px 10px;
+  border: 1px solid #000;
+  background: transparent;
+  color: #000 !important;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.property-input {
+  border: none;
+  border-bottom: 2px solid rgba(4, 4, 5, 0.07);
+  width: 100%;
+  font-size: medium;
+}
+
+.property-input:focus,
+.property-input:active,
+.property-input:focus-within,
+.property-input:focus-visible {
+  border: none;
+  border-bottom: solid 2px #000;
+  outline: none;
+  box-shadow: 2px 2px 20px 0px rgb(94 75 153 / 0%);
+}
+
+.property {
+  padding-bottom: 20px;
+}
+
+.active.clicked .span-border:before {
+  content: "\2713";
+  height: 30px;
+  width: 30px;
+  font-size: 22px;
+  background: #008000;
+  border-radius: 50%;
+  color: #fff;
+  padding: 6px;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+.choose-collection-img {
+  width: -webkit-fill-available;
+  height: 11vh;
+  border-radius: 12px;
+}
+
+.scrollable {
+  float: left;
+  width: 800px;
+  overflow-y: auto;
+  height: 300px;
+}
+
+@media screen and (max-width: 767px) {
+  .loader_popup-box {
+    width: 60%;
+  }
+}
+@media screen and (max-width: 767px) {
+  .slick-prev {
+    left: 10px;
+  }
+  .slick-next {
+    right: 10px;
+  }
+}
+
+.popup-bg {
+  position: fixed;
+  z-index: 9999;
+  background-color: #4b4b4d8f;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader_popup-box {
+  width: 30%;
+  background-color: #fff;
+  min-height: 35%;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+@media screen and (max-width: 350px) {
+  .loader_popup-box {
+    width: 90%;
+  }
+}
+
+.customDisplayPopup {
+  width: 100%;
+  float: left;
+  margin: 0 0 15px 0;
+  text-align: left;
+  align-self: center;
+  vertical-align: middle;
+}
