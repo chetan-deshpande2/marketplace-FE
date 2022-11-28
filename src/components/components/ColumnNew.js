@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Clock from "./Clock";
 import { GetOnSaleItems, GetSearchedNft, LikeNft } from "../../apiServices";
 import { connect } from "react-redux";
+import { useNavigate } from "@reach/router";
 
 const ipfsAPI = require("ipfs-api");
 
@@ -29,6 +30,7 @@ const ColumnNew = (props) => {
   const [height, setHeight] = useState(0);
   const [items, setItems] = useState([]);
   const [likeEvent, setLikeEvent] = useState(false);
+  const navigate = useNavigate();
 
   const onImgLoad = ({ target: img }) => {
     let currentHeight = height;
@@ -124,6 +126,7 @@ const ColumnNew = (props) => {
                           (window.location.href = `./author/${nft.nCreater._id}`),
                         "_self")
                       }
+                      // }
                     >
                       <img
                         style={NftPreview}
@@ -140,9 +143,8 @@ const ColumnNew = (props) => {
                     </span>
                   </div>
                   <div
-                    onClick={() =>
-                      (window.location.href = `./ItemDetail/${nft._id}`)
-                    }
+                    // onClick={console.log("nftId===========", nft._id)}
+                    onClick={() => navigate(`./itemDetail/${nft._id}`)}
                     className="nft__item_wrap"
                     style={{ height: `${height}px` }}
                   >
@@ -159,10 +161,8 @@ const ColumnNew = (props) => {
                   </div>
                   <div className="nft__item_info">
                     <span
-                      onClick={
-                        (() =>
-                          (window.location.href = `./itemDetail/${nft._id}`),
-                        "_self")
+                      onClick={() =>
+                        (window.location.href = `./itemDetail/${nft._id}`)
                       }
                     >
                       <h4>{nft.nTitle}</h4>
@@ -173,7 +173,7 @@ const ColumnNew = (props) => {
                     <div className="nft__item_action">
                       <span
                         onClick={() =>
-                          (window.location.href = `/ItemDetails/${nft._id}`)
+                          (window.location.href = `/itemDetail/${nft._id}`)
                         }
                       >
                         Buy
@@ -217,7 +217,9 @@ const mapStateToProps = (state) => {
   return {
     account: state.account,
     token: state.token,
-    exploreSaleType: state.exploreSaleType,
+    paramType: state.paramType,
+    profileData: state.profileData,
+    authorData: state.authorData,
   };
 };
 

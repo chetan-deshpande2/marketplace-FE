@@ -15,6 +15,7 @@ import contracts from "../Config/contracts";
 import erc20Abi from "../Config/abis/erc20.json";
 import erc721Abi from "./../Config/abis/simpleERC721.json";
 import erc1155Abi from "../Config/abis/simpleERC1155.json";
+import { GENERAL_DATE, GENERAL_TIMESTAMP } from "./constants";
 
 const ipfsAPI = require("ipfs-api");
 const ipfs = ipfsAPI("ipfs.infura.io", "5001", {
@@ -242,4 +243,125 @@ export const getNextId = async (collection) => {
   } catch (e) {
     console.log("error in api", e);
   }
+};
+
+export const getUsersNFTs = async (
+  paramType,
+  walletAddress,
+  userId,
+  isAuthor
+) => {
+  console.log(
+    "here",
+    "paramType",
+    paramType,
+    "walletAddress",
+    walletAddress,
+    "userId",
+    userId,
+    "isAuthor",
+    isAuthor
+  );
+  let formattedData = [];
+  let details = [];
+  console.log("walletAddress", walletAddress);
+  if (walletAddress === "") {
+    return [];
+  }
+  let searchParams;
+  try {
+    if (paramType === 0) {
+      searchParams = {
+        userId: userId,
+        sortType: -1,
+        sortKey: "nTitle",
+        page: 1,
+        limit: 10,
+      };
+      details = await GetMyOnSaleNft(searchParams);
+    } else if (paramType === 1) {
+      searchParams = {
+        conditions: {
+          nCreater: userId,
+        },
+      };
+      details = await GetMyNftList(searchParams);
+    } else if (paramType === 2) {
+      searchParams = {
+        userId: userId,
+        length: 10,
+        start: 0,
+      };
+      details = await GetMyLikedNft(searchParams);
+    } else if (paramType === 3) {
+      searchParams = {
+        nOwnedBy: walletAddress,
+      };
+      details = await GetMyNftList(searchParams);
+    } else if (paramType === 5) {
+      searchParams = {
+        nOwnedBy: walletAddress,
+      };
+      details = await GetMyNftList(searchParams);
+    }
+
+    let d = [];
+    if (details && details.results && details.results?.length > 0) {
+      let arr = details.results[0];
+
+      if (arr) {
+        for (let i = 0; i < arr.length; i++) {
+          let resp = await ipfs.cat(arr[i].nHash);
+          d[i] = JSON.parse(resp.toString("utf8")).image;
+          console.log("Resp" + resp);
+        }
+
+        console.log("arrr", process.env.REACT_APP_IPFS_URL);
+        // eslint-disable-next-line array-callback-return
+        arr.map((data, key) => {
+          data.previewImg = d[key];
+          data.metaData = "#";
+          data.metaData = d[key];
+          data.deadline =
+            data.nOrders?.length > 0
+              ? data.nOrders[0].oValidUpto !== GENERAL_TIMESTAMP
+                ? data.nOrders[0].oValidUpto
+                : ""
+              : "";
+          data.auction_end_date =
+            data.nOrders?.length > 0
+              ? data.nOrders[0].auction_end_date !== GENERAL_DATE
+                ? data.nOrders[0].auction_end_date
+                : ""
+              : "";
+          data.authorLink = "#";
+          data.previewLink = "#";
+          data.nftLink = "#";
+          data.bidLink = "#";
+          data.authorImg =
+            data.nCreater && data.nCreater.sProfilePicUrl
+              ? process.env.REACT_APP_IPFS_URL + data.nCreater.sProfilePicUrl
+              : "";
+          data.title = data ? data.nTitle : "";
+          data.price = "";
+          data.bid = "";
+          data.likes = data.nUser_likes?.length;
+          data.id = data ? data._id : "";
+          formattedData.push(data);
+        });
+      }
+    }
+    console.log("formattedData", formattedData);
+    return formattedData;
+  } catch (e) {
+    console.log("error in api", e);
+  }
+};
+
+export const getUsersTokenBalance = async (account, tokenAddress) => {
+  let token;
+  token = await exportInstance(tokenAddress, erc20Abi);
+  let userBalance = await token.balanceOf(account);
+  console.log("token", token, "userBalance", userBalance.toString(), account);
+  return userBalance.toString();
 };

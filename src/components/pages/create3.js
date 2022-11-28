@@ -29,7 +29,7 @@ import {
   GENERAL_DATE,
   GENERAL_TIMESTAMP,
 } from "../../helpers/constants";
-import simplerERC721ABI from "../../Config/abis/simpleERC721.json";
+import simplerERC1155ABI from "../../Config/abis/simpleERC1155.json";
 import contracts from "./../../Config/contracts";
 import { ethers } from "ethers";
 import { connect } from "react-redux";
@@ -403,6 +403,261 @@ const Create3 = (props) => {
       console.log(e);
     }
   };
+
+  const handleNftCreation = async () => {
+    if (props.account && props.account.account) {
+      try {
+        console.log("Starting NFT create", nftContractAddress);
+        let isValid = validateInputs();
+        if (!isValid) return;
+
+        setisShowPopup(true);
+
+        let metaData = [];
+        for (let i = 0; i < propertyKeys.length; i++) {
+          metaData.push({
+            trait_type: propertyKeys[i],
+            value: propertyValues[i],
+          });
+        }
+
+        console.log("metaData", metaData);
+        var fd = new FormData();
+        fd.append("metaData", JSON.stringify(metaData));
+        fd.append("nCreatorAddress", props.account.account.toLowerCase());
+        fd.append("nTitle", nftTitle);
+        fd.append("nftFile", nftImage);
+        fd.append("nQuantity", quantity);
+        fd.append("nCollaborator", [...collaborators]);
+        fd.append("nCollaboratorPercentage", [...collaboratorPercents]);
+        fd.append("nRoyaltyPercentage", 40);
+        fd.append("nCollection", nftContractAddress);
+        fd.append("nDescription", nftDesc);
+        fd.append("nTokenID", nextId);
+        fd.append("nType", 2);
+        fd.append("lockedContent", lockedContent);
+
+        setisUploadPopupClass("clockloader");
+
+        let res = await createNft(fd);
+        try {
+          let historyMetaData = {
+            nftId: res.data._id,
+            userId: res.data.nCreater,
+            action: "Creation",
+            actionMeta: "Default",
+            message: `${props?.profileData?.profileData?.sUserName} Created ${quantity} NFT ${res.data.nTitle}`,
+          };
+
+          await InsertHistory(historyMetaData);
+        } catch (e) {
+          console.log("error in history api", e);
+          return;
+        }
+        console.log("response", res);
+        console.log("response Data", res.data);
+        if (res.data) {
+          setisUploadPopupClass("checkiconCompleted");
+          setisApprovePopupClass("clockloader");
+        } else {
+          setisUploadPopupClass("errorIcon");
+          stopCreateNFTPopup();
+          return;
+        }
+        console.log("Ending NFT create");
+
+        const NFTcontract = await exportInstance(
+          nftContractAddress,
+          simplerERC1155ABI.abi
+        );
+
+        let approval = await NFTcontract.isApprovedForAll(
+          props.account.account,
+          contracts.MARKETPLACE
+        );
+        let approvalres;
+        const options = {
+          from: props.account.account,
+          gasLimit: 9000000,
+          value: "0",
+        };
+        if (approval) {
+          setisApprovePopupClass("checkiconCompleted");
+        }
+        console.log("approval", approval);
+        if (!approval) {
+          approvalres = await NFTcontract.setApprovalForAll(
+            contracts.MARKETPLACE,
+            true,
+            options
+          );
+          await approvalres.wait();
+
+          if (approvalres) {
+            setisApprovePopupClass("checkiconCompleted");
+          } else {
+            setisApprovePopupClass("errorIcon");
+            stopCreateNFTPopup();
+            return;
+          }
+          NotificationManager.success("Approved");
+        }
+
+        setisMintPopupClass("clockloader");
+        console.log("To be minted", nextId, GENERAL_TIMESTAMP);
+
+        let res1 = "";
+        try {
+          let mintres = await NFTcontract.mint(
+            props.account.account,
+            nextId,
+            quantity,
+            options
+          );
+          res1 = await mintres.wait();
+        } catch (minterr) {
+          console.log("Mint error", minterr);
+          setisMintPopupClass("errorIcon");
+          stopCreateNFTPopup();
+          return;
+        }
+        setisMintPopupClass("checkiconCompleted");
+        console.log("res1", res1);
+        setisRoyaltyPopupClass("clockloader");
+        let localCollabPercent = [];
+        for (let i = 0; i < collaboratorPercents.length; i++) {
+          localCollabPercent[i] = Number(collaboratorPercents[i]) * 100;
+        }
+        if (collaborators.length > 0) {
+          try {
+            let collaborator = await NFTcontract.setTokenRoyaltyDistribution(
+              collaborators,
+              localCollabPercent,
+              nextId
+            );
+            await collaborator.wait();
+          } catch (Collerr) {
+            console.log("Coll error", Collerr);
+            setisRoyaltyPopupClass("errorIcon");
+            stopCreateNFTPopup();
+            return;
+          }
+          console.log("Collaborator addded");
+        }
+        setisRoyaltyPopupClass("checkiconCompleted");
+        setisPutOnSalePopupClass("clockloader");
+        console.log("chosenType " + chosenType);
+        console.log("price " + price);
+
+        let _deadline;
+        let _price;
+        let _auctionEndDate;
+        if (chosenType === 0) {
+          _deadline = GENERAL_TIMESTAMP;
+          _auctionEndDate = GENERAL_DATE;
+          _price = ethers.utils.parseEther(price.toString()).toString();
+        } else if (chosenType === 1) {
+          let _endTime = new Date(endTime).valueOf() / 1000;
+          _auctionEndDate = endTime;
+          _deadline = _endTime;
+          _price = ethers.utils.parseEther(minimumBid.toString()).toString();
+        } else if (chosenType === 2) {
+          _deadline = GENERAL_TIMESTAMP;
+          _auctionEndDate = GENERAL_DATE;
+          _price = ethers.utils.parseEther(minimumBid.toString()).toString();
+        }
+        console.log("Setting On sale Loader");
+
+        if (isPutOnMarketplace) {
+          let sellerOrder = [
+            props.account.account.toLowerCase(),
+            nftContractAddress,
+            nextId,
+            quantity,
+            saleType,
+            selectedTokenAddress
+              ? selectedTokenAddress
+              : "0x0000000000000000000000000000000000000000",
+            _price,
+            _deadline,
+            [],
+            [],
+            salt,
+          ];
+
+          console.log("sellerOrder is---->", sellerOrder);
+          let signature = await getSignature(
+            props.account.account,
+            ...sellerOrder
+          );
+          console.log("nftContractAddress is---->", nftContractAddress);
+          console.log("_price", _price, "min", minimumBid);
+          let reqParams = {
+            nftId: res.data._id,
+            seller: props.account.account.toLowerCase(),
+            tokenAddress: selectedTokenAddress
+              ? selectedTokenAddress
+              : "0x0000000000000000000000000000000000000000",
+            collection: nftContractAddress,
+            price: _price,
+            quantity: quantity,
+            saleType: saleType,
+            validUpto: _deadline,
+            signature: signature,
+            tokenId: nextId,
+            auctionEndDate: _auctionEndDate,
+            salt: salt,
+          };
+
+          let data = "";
+          try {
+            data = await createOrder(reqParams);
+            try {
+              let historyMetaData = {
+                nftId: res.data._id,
+                userId: res.data.nCreater,
+                action: "Marketplace",
+                actionMeta: "Default",
+                message: `${props?.profileData?.profileData?.sUserName} Put ${quantity} ${res.data.nTitle} on Marketplace`,
+              };
+
+              await InsertHistory(historyMetaData);
+            } catch (e) {
+              console.log("error in history api", e);
+              return;
+            }
+          } catch (DataErr) {
+            console.log("Coll error", DataErr);
+            setisPutOnSalePopupClass("errorIcon");
+            stopCreateNFTPopup();
+            return;
+          }
+          console.log("dataaa", data);
+
+          try {
+            await SetNFTOrder({
+              orderId: data.data._id,
+              nftId: data.data.oNftId,
+            });
+          } catch (NFTErr) {
+            console.log("Coll error", NFTErr);
+            setisPutOnSalePopupClass("errorIcon");
+            stopCreateNFTPopup();
+            return;
+          }
+          setisPutOnSalePopupClass("checkiconCompleted");
+          console.log("seller sign", reqParams);
+        }
+        setisPutOnSalePopupClass("checkiconCompleted");
+        closeCreateNFTPopup();
+      } catch (err) {
+        console.log("error", err);
+        stopCreateNFTPopup();
+        return;
+      }
+    }
+  };
+
   useEffect(() => {
     setIsOpenForBid(false);
     setIsTimedAuction(false);
@@ -427,7 +682,7 @@ const Create3 = (props) => {
         console.log("single collectionsList", collectionsList);
         setCollections(collectionsList);
         let profile = await getProfile();
-        // console.log(profile.sProfilePicUrl);
+        console.log(profile.sProfilePicUrl);
         // if (profile) {
         //   setProfilePic(
         //     "https://decryptnft.mypinata.cloud/ipfs/" + profile.sProfilePicUrl

@@ -409,7 +409,6 @@ const Create2 = (props) => {
   };
 
   const handleNftCreation = async () => {
-    console.log("props", props);
     if (props.account && props.account.account) {
       try {
         console.log("nft image", nftImage);
@@ -426,11 +425,6 @@ const Create2 = (props) => {
             value: propertyValues[i],
           });
         }
-        // setCollaborators(
-        //   "0xa0BB53b41A4BF1524DeD5Ee73aF503a87717a73e",
-        //   "0xa3d16efC8cF4F4F1ACEDF6A57cb8ea79bC53d792"
-        // );
-        // setCollaboratorPercents("1", "2");
 
         var fd = new FormData();
         fd.append("metaData", JSON.stringify(metaData));

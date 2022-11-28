@@ -35,6 +35,8 @@ import Accordion from "./pages/accordion";
 import Alerts from "./pages/alerts";
 import Progressbar from "./pages/progressbar";
 import Tabs from "./pages/tabs";
+import PersonalProfile from "./pages/PersonalProfile";
+import ItemNotFound from "./pages/ItemNotFound";
 
 import { createGlobalStyle } from "styled-components";
 
@@ -79,8 +81,9 @@ const app = () => (
         <Auction path="/Auction" />
         <Helpcenter path="/helpcenter" />
         <Colection path="/colection" />
-        {/* <ItemDetail path="/ItemDetail/:id" /> */}
-        <ItemDetail path="/ItemDetail/:id" />
+        <ItemDetail path="/itemDetail/:id" />
+        {/* <ItemDetail path="/itemDetail" /> */}
+        <PersonalProfile path="/personalProfile" />
         <Author path="/Author" />
         <Wallet path="/wallet" />
         <Login path="/login" />
@@ -102,6 +105,7 @@ const app = () => (
         <Alerts path="/alerts" />
         <Progressbar path="/progressbar" />
         <Tabs path="/tabs" />
+        <ItemNotFound path="*" element={ItemNotFound} />
       </ScrollTop>
     </PosedRouter>
     <ScrollToTopBtn />

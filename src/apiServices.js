@@ -114,6 +114,7 @@ export const getProfile = async () => {
     .get("content-type")
     ?.includes("application/json");
   const data = isJson && (await response.json());
+  console.log(data);
   return data;
 };
 
@@ -252,8 +253,8 @@ export const GetIndividualAuthorDetail = async (data) => {
     const isJson = response.headers
       .get("content-type")
       ?.includes("application/json");
-    console.log(isJson);
     const datas = isJson && (await response.json());
+    console.log(datas);
 
     if (datas.data) return datas.data;
     return [];
@@ -454,6 +455,7 @@ export const GetNftDetails = async (id) => {
       .get("content-type")
       ?.includes("application/json");
     const datas = isJson && (await response.json());
+    console.log(datas);
     return datas.data ? datas.data : [];
   } catch (err) {
     return err;
