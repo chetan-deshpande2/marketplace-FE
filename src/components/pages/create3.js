@@ -764,6 +764,351 @@ const Create3 = (props) => {
                     </div>
                   ) : null}
                 </div>
+                <div className="switch-with-title">
+                  <h5>
+                    <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
+                    Put on Marketplace
+                  </h5>
+                  <div className="de-switch">
+                    <input
+                      type="checkbox"
+                      id="switch-unlock1"
+                      className="checkbox"
+                    />
+
+                    <label
+                      htmlFor="switch-unlock1"
+                      onClick={clickToUnlock}
+                    ></label>
+                  </div>
+                </div>
+                <div className="spacer-single"></div>
+                {isUnlock ? (
+                  <>
+                    <h5>Select method</h5>
+                    <div className="de_tab tab_methods">
+                      <ul className="de_nav">
+                        <li id="btn1" className="active" onClick={handleShow}>
+                          <span>
+                            <i className="fa fa-tag"></i>Fixed price
+                          </span>
+                        </li>
+                        <li id="btn2" onClick={handleShow1}>
+                          <span>
+                            <i className="fa fa-hourglass-1"></i>Timed auction
+                          </span>
+                        </li>
+                        <li id="btn3" onClick={handleShow2}>
+                          <span>
+                            <i className="fa fa-users"></i>Open for bids
+                          </span>
+                        </li>
+                      </ul>
+
+                      <div className="de_tab_content pt-3">
+                        <div id="tab_opt_1">
+                          <h5>Price</h5>
+                          <input
+                            type="Number"
+                            name="item_price"
+                            id="item_price"
+                            value={price}
+                            onChange={(e) => {
+                              setPrice(e.target.value);
+                            }}
+                            className="form-control"
+                            placeholder={`enter price for one item (${CURRENCY})`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+                <div className="spacer-single"></div>
+                <div className="de_tab_content pt-3">
+                  <div id="tab_opt_2" className="hide">
+                    <h5>Minimum bid</h5>
+                    <input
+                      type="text"
+                      name="item_price_bid"
+                      id="item_price_bid"
+                      value={minimumBid}
+                      onChange={(e) => {
+                        setMinimumBid(e.target.value);
+                      }}
+                      className="form-control"
+                      placeholder="enter minimum bid"
+                    />
+                    <div className="spacer-20"></div>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <h5>Payment Token</h5>
+                        <select
+                          onChange={(e) => {
+                            console.log("e", e.target.value);
+                            setSelectedTokenAddress(e.target.value);
+                          }}
+                        >
+                          {/* {console.log("options", options)} */}
+                          {options
+                            ? options.map((option, key) => {
+                                return (
+                                  <option value={option.value}>
+                                    {option.title}
+                                  </option>
+                                );
+                              })
+                            : ""}
+                        </select>
+                      </div>
+                      <div className="col-md-6">
+                        <h5>Expiration date</h5>
+                        <input
+                          type="date"
+                          min={getMaxAllowedDate()}
+                          name="bid_expiration_date"
+                          onChange={(e) => {
+                            console.log("ee", e.target.value);
+                            setEndTime(e.target.value);
+                          }}
+                          id="bid_expiration_date"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div id="tab_opt_3" className="hide">
+                    <h5>Minimum bid</h5>
+                    <input
+                      type="Number"
+                      name="item_price_bid"
+                      id="item_price_bid"
+                      value={minimumBid}
+                      onChange={(e) => {
+                        setMinimumBid(e.target.value);
+                      }}
+                      className="form-control"
+                      placeholder="enter minimum bid"
+                    />
+                    <div className="spacer-20"></div>
+                    <div className="col-md-6">
+                      <h5>Payment Token</h5>
+                      <select
+                        onChange={(e) => {
+                          console.log("e", e.target.value);
+                          setSelectedTokenAddress(e.target.value);
+                        }}
+                      >
+                        {/* {console.log("options", options)} */}
+                        {options
+                          ? options.map((option, key) => {
+                              return (
+                                <option value={option.value}>
+                                  {option.title}
+                                </option>
+                              );
+                            })
+                          : ""}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <h5>Title</h5>
+                <input
+                  type="text"
+                  name="item_title"
+                  id="item_title"
+                  onChange={(e) => setNftTitle(e.target.value)}
+                  value={nftTitle}
+                  className="form-control"
+                  placeholder="Crypto"
+                />
+                <div className="spacer-10"></div>
+                <h5>Description</h5>
+                <textarea
+                  onChange={(e) => setNftDesc(e.target.value)}
+                  value={nftDesc}
+                  data-autoresize
+                  name="item_desc"
+                  id="item_desc"
+                  className="form-control"
+                  placeholder="My NFT description"
+                ></textarea>
+                <h5>Quantity</h5>
+                <input
+                  type="text"
+                  name="item_title"
+                  id="item_title"
+                  onChange={(e) => setQuantity(e.target.value)}
+                  value={quantity}
+                  className="form-control"
+                  placeholder="Crypto"
+                />
+                <div className="spacer-10"></div>
+                <h5>Collaborator (Optional)</h5>
+                <input
+                  type="text"
+                  name="item_collaborator"
+                  id="item_collaborator"
+                  onChange={(e) => setCurrCollaborator(e.target.value)}
+                  value={currCollaborator}
+                  className="form-control"
+                  placeholder="Collaborators"
+                  maxLength={42}
+                />
+                <input
+                  type="Number"
+                  name="item_collaborator_percent"
+                  id="item_collaborator_percent"
+                  onChange={(e) => {
+                    if (Number(currCollaboratorPercent) > 70) {
+                      NotificationManager.error("Invalid Percent");
+                    }
+                    setCurrCollaboratorPercent(e.target.value);
+                  }}
+                  value={currCollaboratorPercent}
+                  className="form-control"
+                  placeholder="Percent"
+                />
+                <button
+                  id="submit"
+                  className="btn-main"
+                  onClick={() => {
+                    handleAddCollaborator();
+                  }}
+                >
+                  Add Collaborator
+                </button>
+                <ul>
+                  {collaborators && collaboratorPercents
+                    ? collaborators.map((collaborator, key) => {
+                        return collaborator !== "" ? (
+                          <li className="added_collaborator_list">
+                            <div className="d-flex justify-content-around align-items-baseline">
+                              <h5>
+                                {collaborator.slice(0, 5) +
+                                  "..." +
+                                  collaborator.slice(38, 42)}{" "}
+                                : <span>{collaboratorPercents[key] + "%"}</span>
+                              </h5>
+                              <button
+                                className="remove-btn btn-main"
+                                onClick={() => {
+                                  handleRemoveCollaborator(key);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </li>
+                        ) : (
+                          ""
+                        );
+                      })
+                    : ""}
+                </ul>
+                <button
+                  className="btn-main showHideBtn"
+                  onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}
+                >
+                  {isAdvancedSetting
+                    ? "Hide Advanced Setting"
+                    : "Show Advanced Setting"}
+                </button>
+                {isAdvancedSetting ? PropertiesSection() : ""}
+                <button
+                  id="submit"
+                  className="btn-main"
+                  onClick={() => {
+                    handleAddProperty();
+                  }}
+                >
+                  Add Property
+                </button>
+                <ul>
+                  {propertyKeys && propertyValues
+                    ? propertyKeys.map((propertyKey, key) => {
+                        return propertyKey !== "" ? (
+                          <li className="added_collaborator_list">
+                            <div className="d-flex justify-content-around align-items-baseline">
+                              <h5>
+                                {propertyKey}:{" "}
+                                <span>{propertyValues[key]}</span>
+                              </h5>
+                              <button
+                                className="remove-btn btn-main"
+                                onClick={() => {
+                                  handleRemoveProperty(key);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </li>
+                        ) : (
+                          ""
+                        );
+                      })
+                    : ""}
+                </ul>
+                <div className="spacer-10"></div>
+                <button
+                  id="submit"
+                  className="btn-main"
+                  onClick={() => {
+                    // handleNftCreation();
+                  }}
+                >
+                  Create NFT
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-3 col-sm-6 col-xs-12">
+            <h5>Preview item</h5>
+            <div className="nft__item m-0">
+              {isTimedAuction ? (
+                <div className="de_countdown">
+                  <Clock deadline={timeLeft} />
+                </div>
+              ) : (
+                ""
+              )}
+
+              <div className="author_list_pp1">
+                <span>
+                  <img
+                    className="lazy author_list_pp1_img"
+                    src={profilePic}
+                    alt=""
+                  />
+                  <i className="fa fa-check profile_img_check"></i>
+                </span>
+              </div>
+              <div className="nft__item_wrap">
+                <span>
+                  <img
+                    src={nftImage ? URL.createObjectURL(nftImage) : null}
+                    id="get_file_2"
+                    className="lazy nft__item_preview"
+                    alt=""
+                  />
+                </span>
+              </div>
+              <div className="nft__item_info">
+                <span>
+                  <h4>{nftTitle}</h4>
+                </span>
+                <div className="nft__item_price">
+                  {isUnlock && price ? price + " " + CURRENCY : ""}
+                </div>
+                <div className="nft__item_action">
+                  <span>{isOpenForBid ? "Place a bid" : ""}</span>
+                </div>
+                <div className="nft__item_like">
+                  <i className="fa fa-heart"></i>
+                  <span>0</span>
+                </div>
               </div>
             </div>
           </div>
