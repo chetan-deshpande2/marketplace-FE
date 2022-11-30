@@ -48,8 +48,8 @@
     "web3modal": "^1.9.9"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts start ",
+    "build": "react-scripts  --max-old-space-size=4096  build ",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
