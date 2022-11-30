@@ -118,6 +118,7 @@ const mapStateToProps = (state) => {
     token: state.token,
     paramType: state.paramType,
     profileData: state.profileData,
+    authorData: state.authorData,
   };
 };
 

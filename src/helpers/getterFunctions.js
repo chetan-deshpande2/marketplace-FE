@@ -279,6 +279,7 @@ export const getUsersNFTs = async (
         limit: 10,
       };
       details = await GetMyOnSaleNft(searchParams);
+      console.log(details);
     } else if (paramType === 1) {
       searchParams = {
         conditions: {
@@ -286,6 +287,7 @@ export const getUsersNFTs = async (
         },
       };
       details = await GetMyNftList(searchParams);
+      console.log(details);
     } else if (paramType === 2) {
       searchParams = {
         userId: userId,
@@ -306,15 +308,16 @@ export const getUsersNFTs = async (
     }
 
     let d = [];
-    if (details && details.results && details.results?.length > 0) {
+    if (details && details.results) {
       let arr = details.results[0];
+      console.log(arr);
 
       if (arr) {
-        for (let i = 0; i < arr.length; i++) {
-          let resp = await ipfs.cat(arr[i].nHash);
-          d[i] = JSON.parse(resp.toString("utf8")).image;
-          console.log("Resp" + resp);
-        }
+        // for (let i = 0; i < arr.length; i++) {
+        //   let resp = await ipfs.cat(arr[i].nHash);
+        //   d[i] = JSON.parse(resp.toString("utf8")).image;
+        //   console.log("Resp" + resp);
+        // }
 
         console.log("arrr", process.env.REACT_APP_IPFS_URL);
         // eslint-disable-next-line array-callback-return

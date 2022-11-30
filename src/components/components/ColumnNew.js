@@ -121,12 +121,9 @@ const ColumnNew = (props) => {
                   )}
                   <div className="author_list_pp_explore_page">
                     <span
-                      onClick={
-                        (() =>
-                          (window.location.href = `./author/${nft.nCreater._id}`),
-                        "_self")
-                      }
-                      // }
+                      onClick={() => {
+                        navigate(`./author/${nft.nCreater._id}`);
+                      }}
                     >
                       <img
                         style={NftPreview}
@@ -160,22 +157,14 @@ const ColumnNew = (props) => {
                     </Outer>
                   </div>
                   <div className="nft__item_info">
-                    <span
-                      onClick={() =>
-                        (window.location.href = `./itemDetail/${nft._id}`)
-                      }
-                    >
+                    <span onClick={() => navigate(`./itemDetail/${nft._id}`)}>
                       <h4>{nft.nTitle}</h4>
                     </span>
                     <div className="nft__item_price">
                       {/* {convertToEth(nft?.nOrders[0]?.oPrice.$numberDecimal)} ETH */}
                     </div>
                     <div className="nft__item_action">
-                      <span
-                        onClick={() =>
-                          (window.location.href = `/itemDetail/${nft._id}`)
-                        }
-                      >
+                      <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
                         Buy
                       </span>
                     </div>

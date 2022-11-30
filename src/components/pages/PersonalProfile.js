@@ -15,6 +15,7 @@ import {
   userProfileDataLoaded,
 } from "../../redux/actions";
 // import "./profilePage.css";
+import { useNavigate } from "@reach/router";
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
@@ -47,8 +48,10 @@ const PersonalProfile = (props) => {
   const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({});
   const isMounted = useRef(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(props);
     setAuthorization(localStorage.getItem("Authorization"));
     props.dispatch(
       nftListParamsUpdate({
@@ -60,11 +63,13 @@ const PersonalProfile = (props) => {
 
   useEffect(() => {
     async function fetchData() {
+      console.log(props);
       if ((props.token && props.token.token) || authorization) {
         setLoading(true);
         const profileInfo = await getProfile();
-        if (profileInfo && profileInfo.data) {
-          let profileData = profileInfo.data;
+        console.log(profileInfo.user);
+        if (profileInfo) {
+          let profileData = profileInfo.user;
           if (
             profileData.oName &&
             profileData.oName.sFirstname &&
@@ -74,6 +79,7 @@ const PersonalProfile = (props) => {
               profileData.oName.sFirstname + " " + profileData.oName.sLastname
             );
           } else {
+            console.log("in else");
             setFullName("Unnamed");
           }
 
@@ -102,10 +108,13 @@ const PersonalProfile = (props) => {
         }
       }
     }
-    if ((props.token && props.token.token) || authorization) fetchData();
+    if (props.token || authorization) fetchData();
   }, [props.token, authorization, props.account]);
 
   useEffect(() => {
+    setTimeout(() => {
+      console.log(profileData);
+    }, 5000);
     props.dispatch(
       userProfileDataLoaded({
         profileData: profileData,
@@ -237,7 +246,7 @@ const PersonalProfile = (props) => {
                         <BsPencilSquare
                           className="BsPencilSquare"
                           onClick={() => {
-                            window.location.href = "/updateProfile";
+                            navigate("/updateProfile");
                           }}
                         />
                       </div>
@@ -262,14 +271,7 @@ const PersonalProfile = (props) => {
                 </div>
               </div>
 
-              <div className="profile_follow de-flex">
-                <div className="de-flex-col">
-                  <div className="profile_follower">0 followers</div>
-                </div>
-                <div className="de-flex-col">
-                  <div className="profile_following">0 following</div>
-                </div>
-              </div>
+              {/* <div className="profile_follow de-flex"></div> */}
             </div>
           </div>
         </div>
@@ -300,6 +302,26 @@ const PersonalProfile = (props) => {
             <ColumnZero />
           </div>
         )}
+        {openMenu1 && (
+          <div id="zero2" className="onStep fadeIn">
+            <ColumnZero />
+          </div>
+        )}
+        {openMenu2 && (
+          <div id="zero3" className="onStep fadeIn">
+            <ColumnZero />
+          </div>
+        )}
+        {openMenu3 && (
+          <div id="zero4" className="onStep fadeIn">
+            <ColumnZero />
+          </div>
+        )}
+        {/* {openMenu4 && (
+          <div id="zero5" className="onStep fadeIn">
+            <GeneralCollectionsPage />
+          </div>
+        )} */}
       </section>
       <Footer />
     </div>

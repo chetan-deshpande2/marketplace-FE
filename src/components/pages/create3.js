@@ -683,13 +683,13 @@ const Create3 = (props) => {
         setCollections(collectionsList);
         let profile = await getProfile();
         console.log(profile.sProfilePicUrl);
-        // if (profile) {
-        //   setProfilePic(
-        //     "https://decryptnft.mypinata.cloud/ipfs/" + profile.sProfilePicUrl
-        //   );
-        // } else {
-        //   setProfilePic("../assets/react.svg");
-        // }
+        if (profile) {
+          setProfilePic(
+            "https://decryptnft.mypinata.cloud/ipfs/" + profile.sProfilePicUrl
+          );
+        } else {
+          setProfilePic("../../assets/react.svg");
+        }
       }
     }
     if (

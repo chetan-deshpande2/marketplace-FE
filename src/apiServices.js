@@ -607,6 +607,7 @@ export const GetMyNftList = async (data) => {
       .get("content-type")
       ?.includes("application/json");
     const datas = isJson && (await response.json());
+    console.log(datas);
     return datas.data;
   } catch (err) {
     return err;
@@ -681,7 +682,7 @@ export const GetMyOnSaleNft = async (data) => {
       ?.includes("application/json");
     const datas = isJson && (await response.json());
     console.log("dataaasss on sale", datas);
-    return datas.data;
+    return datas.results;
   } catch (err) {
     return err;
   }
