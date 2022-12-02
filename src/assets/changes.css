@@ -35,6 +35,7 @@ iframe {
 .custom-popup-box .add-collection-box {
   scrollbar-width: thin;
   border-radius: 0px;
+  width: 50%;
 }
 .items-cards .nft__item_info {
   margin-bottom: 0px;

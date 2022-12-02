@@ -748,7 +748,7 @@ const Create2 = (props) => {
                 <h5>Choose Collection</h5>
                 <div className="de_tab tab_methods">
                   <div className="scrollable">
-                    <ul className="de_nav">
+                    <ul className="de_nav" id="custom-create">
                       <li id="btn4" className="active" onClick={handleShow3}>
                         <span onClick={togglePopup}>
                           <i className="fa fa-plus"></i>Create New
@@ -769,7 +769,7 @@ const Create2 = (props) => {
                                   <div id="form-create-item" className="form-border" action="#">
                                     <div className="collection-field-set">
                                       <h5 className="mb-3">Upload Collection Cover</h5>
-                                      <div className="row align-center">
+                                      <div className="row align-items-center">
                                         <span className="col-sm-5 padding_span">
                                           <img
                                             src={image ? URL.createObjectURL(image) : null}
@@ -1251,17 +1251,17 @@ const Create2 = (props) => {
 
           <div className="col-lg-3 col-sm-6 col-xs-12">
             <h5>Preview item</h5>
-            <div className="nft__item m-0">
+            <div className="nft__item m-0 position-relative c-items">
               {/* <div className="de_countdown"></div> */}
               <div className="author_list_pp">
-                <span>
+                <span className='c-author-img'>
                   <img className="lazy" src="./img/author/author-1.jpg" alt="" />
                   <i className="fa fa-check"></i>
                 </span>
               </div>
               <div className="nft__item_wrap">
                 <span>
-                  <span>
+                  <span className='c-previous-items'>
                     <img
                       src={nftImage ? URL.createObjectURL(nftImage) : ''}
                       id="get_file_2"
