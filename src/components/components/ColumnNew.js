@@ -50,14 +50,14 @@ const ColumnNew = (props) => {
         if (props.exploreSaleType?.exploreSaleType === -1) {
           data = {
             page: 1,
-            limit: 15,
+            limit: 10,
             itemType: 1,
             sSellingType: 0,
           };
         } else {
           data = {
             page: 1,
-            limit: 15,
+            limit: 10,
             itemType: 1,
             // sSellingType: props.exploreSaleType?.exploreSaleType,
             sSellingType: 0,
@@ -118,7 +118,7 @@ const ColumnNew = (props) => {
                   <div className="author_list_pp_explore_page">
                     <span
                       onClick={() => {
-                        navigate(`/itemDetail/${nft.nCreater._id}`);
+                        navigate(`/itemDetail/${nft._id}`);
                       }}
                     >
                       <img
