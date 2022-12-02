@@ -36,7 +36,9 @@ import Alerts from "./pages/alerts";
 import Progressbar from "./pages/progressbar";
 import Tabs from "./pages/tabs";
 import PersonalProfile from "./pages/PersonalProfile";
+import UpdateProfile from "./pages/updateProfile";
 import ItemNotFound from "./pages/ItemNotFound";
+import ItemDetail2 from "./pages/ItemDetail2";
 
 import { createGlobalStyle } from "styled-components";
 
@@ -82,7 +84,8 @@ const app = () => (
         <Helpcenter path="/helpcenter" />
         <Colection path="/colection" />
         <ItemDetail path="/itemDetail/:id" />
-        {/* <ItemDetail path="/itemDetail" /> */}
+        <ItemDetail2 path="/itemDetails2" />
+        <UpdateProfile path="/updateProfile" />
         <PersonalProfile path="/personalProfile" />
         <Author path="/Author" />
         <Wallet path="/wallet" />

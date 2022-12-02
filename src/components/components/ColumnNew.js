@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Clock from "./Clock";
-import { GetOnSaleItems, GetSearchedNft, LikeNft } from "../../apiServices";
-import { connect } from "react-redux";
-import { useNavigate } from "@reach/router";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Clock from './Clock';
+import { GetOnSaleItems, GetSearchedNft, LikeNft } from '../../apiServices';
+import { connect } from 'react-redux';
+import { useNavigate } from '@reach/router';
+import '../../assets/changes.css';
 
-const ipfsAPI = require("ipfs-api");
+const ipfsAPI = require('ipfs-api');
 
-const ipfs = ipfsAPI("ipfs.infura.io", "5001", {
-  protocol: "https",
-  auth: "21w11zfV67PHKlkAEYAZWoj2tsg:f2b73c626c9f1df9f698828420fa8439",
+const ipfs = ipfsAPI('ipfs.infura.io', '5001', {
+  protocol: 'https',
+  auth: '21w11zfV67PHKlkAEYAZWoj2tsg:f2b73c626c9f1df9f698828420fa8439',
 });
 
 const Outer = styled.div`
@@ -22,7 +23,7 @@ const Outer = styled.div`
 `;
 
 var NftPreview = {
-  background: "red",
+  background: 'red',
   // backgroundImage: "",
 };
 
@@ -41,7 +42,7 @@ const ColumnNew = (props) => {
 
   useEffect(() => {
     async function fetch() {
-      console.log("propss", props);
+      console.log('propss', props);
       let data;
       let itemsOnSale = [];
 
@@ -74,14 +75,14 @@ const ColumnNew = (props) => {
           length: 48,
           start: 0,
           sTextsearch: props.searchedData,
-          sSellingType: "",
-          sSortingType: "",
+          sSellingType: '',
+          sSortingType: '',
           page: 1,
           limit: 10,
         };
         itemsOnSale = await GetSearchedNft(reqParams);
       }
-      console.log("itemsOnSale", itemsOnSale.results.length);
+      console.log('itemsOnSale', itemsOnSale.results.length);
       let localRes = [];
       // for (let i = 0; i < itemsOnSale?.results?.length; i++) {
       //   console.log("resssss111", itemsOnSale.results[i].nHash);
@@ -93,9 +94,7 @@ const ColumnNew = (props) => {
       // }
 
       for (let i = 0; i < itemsOnSale?.results[0]?.length; i++) {
-        itemsOnSale.results[i].imageHash = JSON.parse(
-          localRes[i].toString("utf8")
-        ).image;
+        itemsOnSale.results[i].imageHash = JSON.parse(localRes[i].toString('utf8')).image;
       }
 
       setItems(itemsOnSale && itemsOnSale.results ? itemsOnSale.results : []);
@@ -104,16 +103,13 @@ const ColumnNew = (props) => {
     fetch();
   }, [props]);
   return (
-    <div className="row">
+    <div className="row items-cards">
       {items
         ? items.map((nft, index) => {
             return (
-              <div
-                key={index}
-                className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4"
-              >
+              <div key={index} className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4">
                 <div className="nft__item m-0">
-                  {" "}
+                  {' '}
                   {nft.deadline && (
                     <div className="de_countdown">
                       <Clock deadline={nft.nOrders.oValidUpto} />
@@ -122,7 +118,7 @@ const ColumnNew = (props) => {
                   <div className="author_list_pp_explore_page">
                     <span
                       onClick={() => {
-                        navigate(`./author/${nft.nCreater._id}`);
+                        navigate(`/itemDetail/${nft.nCreater._id}`);
                       }}
                     >
                       <img
@@ -130,13 +126,12 @@ const ColumnNew = (props) => {
                         className="lazy "
                         src={
                           nft.nCreater?.sProfilePicUrl
-                            ? "https://decryptnft.mypinata.cloud/ipfs/" +
+                            ? 'https://gateway.pinata.cloud/ipfs/QmdaGBG8mjZgkg3Z2uvzJ57tdGTJscSGJcuR3fxqdtJbmM' +
                               nft.nCreater.sProfilePicUrl
-                            : "./img/author/author-1.jpg"
+                            : 'https://gateway.pinata.cloud/ipfs/QmdaGBG8mjZgkg3Z2uvzJ57tdGTJscSGJcuR3fxqdtJbmM'
                         }
                         alt=""
                       />
-                      <i className="fa fa-check"></i>
                     </span>
                   </div>
                   <div
@@ -157,47 +152,21 @@ const ColumnNew = (props) => {
                     </Outer>
                   </div>
                   <div className="nft__item_info">
-                    <span onClick={() => navigate(`./itemDetail/${nft._id}`)}>
+                    <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
                       <h4>{nft.nTitle}</h4>
                     </span>
                     <div className="nft__item_price">
                       {/* {convertToEth(nft?.nOrders[0]?.oPrice.$numberDecimal)} ETH */}
                     </div>
                     <div className="nft__item_action">
-                      <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
-                        Buy
-                      </span>
-                    </div>
-                    <div className="nft__item_like">
-                      {nft.is_user_like ? (
-                        <i
-                          className="fa fa-heart"
-                          style={{ color: "red" }}
-                          onClick={async () => {
-                            await LikeNft({ id: nft._id });
-                            setLikeEvent(!likeEvent);
-
-                            // window.location.reload();
-                          }}
-                        ></i>
-                      ) : (
-                        <i
-                          className="fa fa-heart"
-                          onClick={async () => {
-                            await LikeNft({ id: nft._id });
-                            setLikeEvent(!likeEvent);
-                            // window.location.reload();
-                          }}
-                        ></i>
-                      )}
-                      <span>{nft?.nUser_likes?.length}</span>
+                      <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>View Item</span>
                     </div>
                   </div>
                 </div>
               </div>
             );
           })
-        : ""}
+        : ''}
     </div>
   );
 };

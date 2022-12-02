@@ -5,7 +5,7 @@ import Footer from "../components/footer";
 import { createGlobalStyle } from "styled-components";
 import { connect } from "react-redux";
 import { exploreSaleTypeUpdated } from "../../redux/actions";
-
+import "../../assets/changes.css";
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
     background: #403f83;

@@ -1,0 +1,66 @@
+.custom-collection-card .opt-create {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.custom-collection-card .opt-create img {
+  max-width: 175px;
+}
+.nft__item {
+  padding: 30px;
+}
+.logo a img {
+  max-width: 200px;
+}
+.f-logo {
+  max-width: 200px;
+}
+iframe {
+  position: relative !important;
+}
+.item_info_counts .item_info_type,
+.item_info_views,
+.item_info_like,
+.item_info_lock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.de_tab_content .p_list_pp {
+  width: 100%;
+}
+.add-collection-box .d-create-file {
+  padding: 30px;
+}
+.custom-popup-box .add-collection-box {
+  scrollbar-width: thin;
+  border-radius: 0px;
+}
+.items-cards .nft__item_info {
+  margin-bottom: 0px;
+}
+.custom-popup-box .collection-field-set {
+  width: 100%;
+  border-radius: 0px;
+}
+
+@media (max-width: 991px) {
+  .offset-lg-1 {
+    margin-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .collection-field-set {
+    width: 100%;
+  }
+  .add-collection-box {
+    width: 75%;
+    top: 8%;
+  }
+  .add-collection-box .d-create-file {
+    padding: 20px;
+  }
+  .navbar.navbar .logo img {
+    width: auto;
+  }
+}

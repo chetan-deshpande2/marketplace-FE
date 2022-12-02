@@ -32,7 +32,7 @@
 }
 
 .active.clicked .span-border:before {
-  content: "\2713";
+  content: '\2713';
   height: 30px;
   width: 30px;
   font-size: 22px;
@@ -46,10 +46,17 @@
 }
 .choose-collection-img {
   width: -webkit-fill-available;
-  height: 11vh;
-  border-radius: 12px;
+  border-radius: 0px;
+  height: 90px;
 }
-
+.de_tab.tab_methods .de_nav li.active span {
+  min-width: 150px;
+  height: 145px;
+}
+.de_tab.tab_methods .de_nav li span {
+  padding: 15px;
+  min-width: 140px;
+}
 .scrollable {
   float: left;
   width: 800px;

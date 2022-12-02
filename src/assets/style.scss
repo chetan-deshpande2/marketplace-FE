@@ -2763,8 +2763,13 @@ i.font60 {
 .nft__item_action {
     font-size: 14px;
     span{
-      font-weight: bold;
-      color: $color;
+    font-weight: 700;
+    color: #8364e2;
+    padding: 2px 6px;
+    border: 1px solid #8364e2;
+    border-radius: 5px;
+    display: block;
+    text-align: center;
     }
 }
 
