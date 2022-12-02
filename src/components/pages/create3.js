@@ -695,7 +695,7 @@ const Create3 = (props) => {
         </div>
       </section>
       <section className="container">
-        <div className="row align-items-center">
+        <div className="row">
           <div className="col-lg-7 mb-5">
             <div id="form-create-item" className="form-border" action="#">
               <div className="field-set">
