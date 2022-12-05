@@ -747,7 +747,7 @@ const Create2 = (props) => {
               <div className="field-set">
                 <h5>Choose Collection</h5>
                 <div className="de_tab tab_methods">
-                  <div className="scrollable">
+                  <div className="scrollable mb-5">
                     <ul className="de_nav" id="custom-create">
                       <li id="btn4" className="active" onClick={handleShow3}>
                         <span onClick={togglePopup}>
@@ -770,7 +770,7 @@ const Create2 = (props) => {
                                     <div className="collection-field-set">
                                       <h5 className="mb-3">Upload Collection Cover</h5>
                                       <div className="row align-items-center">
-                                        <span className="col-sm-5 padding_span">
+                                        <span className="col-md-5 col-sm-12 padding_span text-center">
                                           <img
                                             src={image ? URL.createObjectURL(image) : null}
                                             id="get_file_2"
@@ -779,7 +779,7 @@ const Create2 = (props) => {
                                           />
                                         </span>
 
-                                        <div className="d-create-file col">
+                                        <div className="d-create-file col-md-7">
                                           <p id="collection_file_name">
                                             We recommend an image of at least 300x300. PNG, JPG, GIF, WEBP or MP4. Max
                                             200mb.

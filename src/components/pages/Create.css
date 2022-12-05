@@ -49,6 +49,7 @@
   border-radius: 0px;
   max-height: 55px;
   height: 35px;
+  width: 125px;
 }
 #custom-create .de_nav li.active span {
   min-width: 160px;
@@ -64,25 +65,122 @@
   overflow-y: auto;
   height: 300px;
 }
-/* .author_list_pp .c-author-img {
+.author_list_pp .c-author-img {
+  top: -5px;
+  position: absolute;
+}
+.author_list_pp1 .c-author-img {
   top: -5px;
   position: absolute;
 }
 .c-items {
+  height: 200px;
   max-height: 200px;
   overflow: hidden;
 }
 .nft__item_wrap .c-previous-items {
   max-height: 200px;
 }
-.nft__item_wrap .c-previous-items img{
+.nft__item_wrap .c-previous-items img {
   max-height: 125px;
   max-width: 185px;
-} */
+  object-fit: cover;
+  object-position: top;
+}
+.padding_span {
+  max-width: 250px;
+}
+footer {
+  position: absolute;
+  width: 100%;
+}
+.de-flex {
+  align-items: center;
+}
+.de-flex > .de-flex-col {
+  justify-content: space-between;
+  width: 650px;
+}
+@media (max-width: 1024px) {
+  .subfooter .de-flex,
+  .subfooter .de-flex-col {
+    display: flex;
+  }
+  .de-flex-col-icon {
+    width: 50%;
+    justify-content: flex-end;
+    display: flex;
+  }
+}
+
+@media (max-width: 992px) {
+  .scrollable {
+    width: 100%;
+  }
+  #form-create-item .de_nav {
+    grid-template-columns: auto auto auto;
+  }
+  .custom-popup-box .add-collection-box {
+    width: 75%;
+  }
+  .navbar .nav-icon{
+    top: 45px;
+  }
+}
 
 @media screen and (max-width: 767px) {
   .loader_popup-box {
     width: 60%;
+  }
+  .mainside.btn-main button {
+    width: 50px;
+    overflow: hidden;
+    text-align: left;
+    display: flex;
+    justify-content: left;
+    padding: 5px;
+  }
+  .navbar .nav-icon{
+    top: 45px;
+  }
+  .scrollable {
+    width: 100%;
+  }
+  .custom-popup-box .add-collection-box {
+    width: 90%;
+  }
+  .padding_span {
+    margin-bottom: 10px;
+  }
+  #form-create-item .de_nav {
+    grid-template-columns: auto auto;
+  }
+  .de-flex > .de-flex-col {
+    width: 100%;
+  }
+  .de-flex-col .copy {
+    margin: 20px 0px 20px;
+    text-align: center;
+  }
+  .de-flex-col-icon {
+    text-align: center;
+  }
+  .subfooter .de-flex,
+  .subfooter .de-flex-col {
+    display: block;
+  }
+  .de-flex-col-icon {
+    justify-content: center;
+    width: 100%;
+  }
+  footer {
+    padding: 40px 0 0 0;
+  }
+  .item_info .item_info_counts {
+    flex-wrap: wrap;
+  }
+  .item_info .item_info_counts > div {
+    min-width: 20%;
   }
 }
 @media screen and (max-width: 767px) {

@@ -696,13 +696,13 @@ const Create3 = (props) => {
       </section>
       <section className="container">
         <div className="row">
-          <div className="col-lg-7 mb-5">
+          <div className="col-lg-9 mb-5">
             <div id="form-create-item" className="form-border" action="#">
               <div className="field-set">
                 {' '}
                 <h5>Choose Collection</h5>
                 <div className="de_tab tab_methods">
-                  <div className="scrollable">
+                  <div className="scrollable mb-5">
                     <ul className="de_nav">
                       <li id="btn4" className="active" onClick={handleShow3}>
                         <span onClick={togglePopup}>
@@ -710,7 +710,7 @@ const Create3 = (props) => {
                         </span>
                       </li>
                       {isPopup && (
-                        <div className="collection-popup-box">
+                        <div className="collection-popup-box custom-popup-box">
                           {/* {loading ? <Loader /> : <></>} */}
                           <span className="close-icon" onClick={togglePopup}>
                             x
@@ -724,7 +724,7 @@ const Create3 = (props) => {
                                     <div className="collection-field-set-1">
                                       <h5>Upload Collection Cover</h5>
                                       <div className="row align-items-center">
-                                        <span className="col-sm-5 padding_span">
+                                        <span className="col-md-5 col-sm-12 padding_span text-center">
                                           <img
                                             src={image ? URL.createObjectURL(image) : null}
                                             id="get_file_2"
@@ -733,7 +733,7 @@ const Create3 = (props) => {
                                           />
                                         </span>
 
-                                        <div className="d-create-file col">
+                                        <div className="d-create-file col-md-7">
                                           <p id="collection_file_name">
                                             We recommend an image of at least 300x300. PNG, JPG, GIF, WEBP or MP4. Max
                                             200mb.
@@ -1197,7 +1197,7 @@ const Create3 = (props) => {
           </div>
           <div className="col-lg-3 col-sm-6 col-xs-12">
             <h5>Preview item</h5>
-            <div className="nft__item m-0">
+            <div className="nft__item m-0 position-relative c-items">
               {isTimedAuction ? (
                 <div className="de_countdown">
                   <Clock deadline={timeLeft} />
@@ -1207,13 +1207,13 @@ const Create3 = (props) => {
               )}
 
               <div className="author_list_pp1">
-                <span>
+                <span className='c-author-img'>
                   <img className="lazy author_list_pp1_img" src={profilePic} alt="" />
                   <i className="fa fa-check profile_img_check"></i>
                 </span>
               </div>
               <div className="nft__item_wrap">
-                <span>
+                <span className='c-previous-items'>
                   <img
                     src={nftImage ? URL.createObjectURL(nftImage) : null}
                     id="get_file_2"
@@ -1222,7 +1222,7 @@ const Create3 = (props) => {
                   />
                 </span>
               </div>
-              <div className="nft__item_info">
+              {/* <div className="nft__item_info">
                 <span>
                   <h4>{nftTitle}</h4>
                 </span>
@@ -1234,7 +1234,7 @@ const Create3 = (props) => {
                   <i className="fa fa-heart"></i>
                   <span>0</span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
