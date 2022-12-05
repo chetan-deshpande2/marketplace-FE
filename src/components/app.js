@@ -12,15 +12,14 @@ import Explore2 from "./pages/explore2";
 import Rangking from "./pages/rangking";
 import Auction from "./pages/Auction";
 import Helpcenter from "./pages/helpcenter";
-import Colection from "./pages/colection";
 import ItemDetail from "./pages/ItemDetail";
-import Author from "./pages/Author";
+// import Author from "./pages/Author";
 import Wallet from "./pages/wallet";
 import Login from "./pages/login";
 import LoginTwo from "./pages/loginTwo";
 import Register from "./pages/register";
 import Price from "./pages/price";
-import Works from "./pages/works";
+
 import News from "./pages/news";
 import Create from "./pages/create";
 import Create2 from "./pages/create2";
@@ -38,7 +37,7 @@ import Tabs from "./pages/tabs";
 import PersonalProfile from "./pages/PersonalProfile";
 import UpdateProfile from "./pages/updateProfile";
 import ItemNotFound from "./pages/ItemNotFound";
-import ItemDetail2 from "./pages/ItemDetail2";
+// import ItemDetail2 from "./pages/ItemDetail2";
 
 import { createGlobalStyle } from "styled-components";
 
@@ -82,18 +81,20 @@ const app = () => (
         <Rangking path="/rangking" />
         <Auction path="/Auction" />
         <Helpcenter path="/helpcenter" />
-        <Colection path="/colection" />
         <ItemDetail path="/itemDetail/:id" />
-        <ItemDetail2 path="/itemDetails2" />
+        {/*
+             <ItemDetail path="/itemDetail">
+             <ItemDetail path="/itemDetail/:id" />
+      </ItemDetail>*/}
+        {/* <ItemDetail2 path="/itemDetails2" /> */}
         <UpdateProfile path="/updateProfile" />
         <PersonalProfile path="/personalProfile" />
-        <Author path="/Author" />
+        {/* <Author path="/Author" /> */}
         <Wallet path="/wallet" />
         <Login path="/login" />
         <LoginTwo path="/loginTwo" />
         <Register path="/register" />
         <Price path="/price" />
-        <Works path="/works" />
         <News path="/news" />
         <Create path="/create" />
         <Create2 path="/create2" />
@@ -115,14 +116,15 @@ const app = () => (
   </div>
 );
 
-const mapStateToProps = (state) => {
-  return {
-    account: state.account,
-    token: state.token,
-    paramType: state.paramType,
-    profileData: state.profileData,
-    authorData: state.authorData,
-  };
-};
+// const mapStateToProps = (state) => {
+//   return {
+//     account: state.account,
+//     token: state.token,
+//     paramType: state.paramType,
+//     profileData: state.profileData,
+//     authorData: state.authorData,
+//   };
+// };
 
-export default connect(mapStateToProps)(app);
+// export default connect(mapStateToProps)(app);
+export default app;

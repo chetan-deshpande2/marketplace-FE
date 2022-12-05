@@ -11,6 +11,7 @@ import {
   fetchBidNft,
 } from "../apiServices";
 import { ethers } from "ethers";
+import Web3 from "web3";
 import contracts from "../Config/contracts";
 import erc20Abi from "../Config/abis/erc20.json";
 import erc721Abi from "./../Config/abis/simpleERC721.json";
@@ -85,6 +86,16 @@ export const readReceipt = async (hash) => {
     console.log("error in api", e);
   }
 };
+
+export const getBalance = async (account) => {
+  let web3 = new Web3(Web3.givenProvider);
+  console.log("web3", web3);
+  let bal = await web3.eth.getBalance(account);
+  console.log("balll", bal);
+
+  return bal.toString();
+};
+
 export const GetOwnerOfToken = async (
   collection,
   tokenId,

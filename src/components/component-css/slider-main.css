@@ -1,0 +1,32 @@
+.hunter-market {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 800;
+  font-size: 25px;
+  line-height: 34px;
+  color: #fff;
+}
+
+.main-title {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 112.4%;
+}
+.btn-banner {
+  background: linear-gradient(180deg, #ef981d 56.77%, #f9bf50 100%);
+  border-radius: 50px;
+  border: 0;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 29px;
+  text-align: center;
+  color: #fff;
+  padding: 10px 50px;
+}
+.container.banner-container {
+  max-width: 1500px;
+}

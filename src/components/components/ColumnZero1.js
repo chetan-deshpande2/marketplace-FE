@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Clock from "./Clock";
-import { connect } from "react-redux";
 import { getUsersNFTs } from "../../helpers/getterFunctions";
+import { connect } from "react-redux";
 import { LikeNft } from "../../apiServices";
 import { GENERAL_DATE } from "../../helpers/constants";
+import { checkIfLiked } from "../../helpers/getterFunctions";
 import NotificationManager from "react-notifications/lib/NotificationManager";
-// import { Pagination } from "@material-ui/lab";
+import { Pagination } from "@material-ui/lab";
 import Placeholder from "./placeholder";
-import { useNavigate } from "@reach/router";
 import { perPageCount } from "./../../helpers/constants";
 
 const Outer = styled.div`
@@ -20,7 +20,7 @@ const Outer = styled.div`
   border-radius: 8px;
 `;
 
-const ColumnZero = (props) => {
+const OnSaleItems = (props) => {
   const [nfts, setNfts] = useState([]);
   const [height, setHeight] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -30,8 +30,6 @@ const ColumnZero = (props) => {
   const [currPage, setCurrPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [profile, setProfile] = useState();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -94,50 +92,51 @@ const ColumnZero = (props) => {
     fetch();
   }, [props.paramType, props.isAuthor, props, currPage]);
 
-  // useEffect(() => {
-  //   async function fetch() {
-  //     let data;
+  useEffect(() => {
+    async function fetch() {
+      let data;
 
-  //     if (props.isAuthor) {
-  //       if (props.paramType && profile) {
-  //         data = await getUsersNFTs(
-  //           props.paramType ? props.paramType : 0,
-  //           profile ? profile.sWalletAddress : "",
-  //           props.authorId ? props.authorId : "",
-  //           true
-  //         );
-  //       }
-  //     } else {
-  //       if (props.paramType && profile) {
-  //         data = await getUsersNFTs(
-  //           props.paramType,
-  //           profile.sWalletAddress,
-  //           profile._id,
-  //           false
-  //         );
-  //       }
-  //     }
-  //     let localLikes = [];
-  //     let localTotalLikes = [];
-  //     if (data) {
-  //       for (let i = 0; i < data.length; i++) {
-  //         localLikes[i] = profile
-  //           ? await checkIfLiked(data[i]._id, profile._id)
-  //           : false;
+      if (props.isAuthor) {
+        if (props.paramType && profile) {
+          data = await getUsersNFTs(
+            props.paramType ? props.paramType : 0,
+            profile ? profile.sWalletAddress : "",
+            props.authorId ? props.authorId : "",
+            true
+          );
+        }
+      } else {
+        if (props.paramType && profile) {
+          data = await getUsersNFTs(
+            props.paramType,
+            profile.sWalletAddress,
+            profile._id,
+            false
+          );
+        }
+      }
+      let localLikes = [];
+      let localTotalLikes = [];
+      if (data) {
+        for (let i = 0; i < data.length; i++) {
+          localLikes[i] = profile
+            ? await checkIfLiked(data[i]._id, profile._id)
+            : false;
 
-  //         localTotalLikes[i] = data[i]?.nUser_likes?.length;
-  //       }
-  //       setTotalLikes(localTotalLikes);
-  //       setLikedItems(localLikes);
-  //     }
-  //   }
-  //   fetch();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [likeEvent, profile]);
+          localTotalLikes[i] = data[i]?.nUser_likes?.length;
+        }
+        setTotalLikes(localTotalLikes);
+        setLikedItems(localLikes);
+      }
+    }
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [likeEvent, profile]);
 
   const handleChange = (e, p) => {
     setCurrPage(p);
   };
+
   const onImgLoad = ({ target: img }) => {
     let currentHeight = height;
     if (currentHeight < img.offsetHeight) {
@@ -166,10 +165,10 @@ const ColumnZero = (props) => {
             >
               <div className="nft__item nft__item1">
                 {/* {nft.deadline && nft.auction_end_date !== GENERAL_DATE && (
-                <div className="de_countdown">
-                  <Clock deadline={nft.auction_end_date} />
-                </div>
-              )} */}
+                  <div className="de_countdown">
+                    <Clock deadline={nft.auction_end_date} />
+                  </div>
+                )} */}
                 <div className="author_list_pp_explore_page">
                   <span onClick={() => (window.location.href = nft.authorLink)}>
                     <img
@@ -240,33 +239,33 @@ const ColumnZero = (props) => {
 
                   <div className="nft__item_like">
                     {/* {likedItems && likedItems[index] ? (
-                    <i
-                      id={`item${index}`}
-                      style={{ color: "red" }}
-                      className="fa fa-heart"
-                      onClick={async () => {
-                        await LikeNft({ id: nft._id });
+                      <i
+                        id={`item${index}`}
+                        style={{ color: "red" }}
+                        className="fa fa-heart"
+                        onClick={async () => {
+                          await LikeNft({ id: nft._id });
 
-                        setLikeEvent(!likeEvent);
-                        NotificationManager.success(
-                          "Nft disliked successfully"
-                        );
-                      }}
-                    ></i>
-                  ) : (
-                    <i
-                      id={`item${index}`}
-                      className="fa fa-heart"
-                      onClick={async () => {
-                        await LikeNft({ id: nft._id });
-                        setLikeEvent(!likeEvent);
-                        NotificationManager.success("Nft liked successfully");
-                      }}
-                    ></i>
-                  )}
-                  <span id={`totalLikes${index}`}>
-                    {totalLikes && totalLikes[index] ? totalLikes[index] : 0}
-                  </span> */}
+                          setLikeEvent(!likeEvent);
+                          NotificationManager.success(
+                            "Nft disliked successfully"
+                          );
+                        }}
+                      ></i>
+                    ) : (
+                      <i
+                        id={`item${index}`}
+                        className="fa fa-heart"
+                        onClick={async () => {
+                          await LikeNft({ id: nft._id });
+                          setLikeEvent(!likeEvent);
+                          NotificationManager.success("Nft liked successfully");
+                        }}
+                      ></i>
+                    )}
+                    <span id={`totalLikes${index}`}>
+                      {totalLikes && totalLikes[index] ? totalLikes[index] : 0}
+                    </span> */}
                   </div>
 
                   {/* LIKE ENDS*/}
@@ -275,21 +274,21 @@ const ColumnZero = (props) => {
             </div>
           ))
         : ""}
-      {totalPages > 1
-        ? ""
-        : // <Pagination
-          //   count={totalPages}
-          //   size="large"
-          //   page={currPage}
-          //   variant="outlined"
-          //   shape="rounded"
-          //   onChange={handleChange}
-          // />
-          ""}
+      {totalPages > 1 ? (
+        <Pagination
+          count={totalPages}
+          size="large"
+          page={currPage}
+          variant="outlined"
+          shape="rounded"
+          onChange={handleChange}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
-
 const mapStateToProps = (state) => {
   return {
     token: state.token,
@@ -298,4 +297,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(ColumnZero);
+export default connect(mapStateToProps)(OnSaleItems);

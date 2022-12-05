@@ -1,169 +1,239 @@
-import React, { Component } from "react";
-import Slider from "react-slick";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import React, { Component, useEffect, useState } from "react";
+import Slider from "./slick-loader/slider";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
+
+import { GetHotCollections } from "../../apiServices";
+import { connect } from "react-redux";
+import Loader from "./loader";
+import Avatar from "./../../assets/images/avatar5.jpg";
+import styled from "styled-components";
 
 class CustomSlide extends Component {
   render() {
     const { index, ...props } = this.props;
-    return (
-      <div {...props}></div>
-    );
+    return <div {...props}></div>;
   }
 }
 
-export default class Responsive extends Component {
-  render() {
-    var settings = {
-      infinite: false,
-      speed: 500,
-      slidesToShow: 4,
-      slidesToScroll: 1,
-      initialSlide: 0,
-      responsive: [
-        {
-          breakpoint: 1900,
-          settings: {
-            slidesToShow: 4,
-            slidesToScroll: 1,
-            infinite: true
-          }
+const Outer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+`;
+
+const CollectionList = (props) => {
+  var settings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    initialSlide: 0,
+    responsive: [
+      {
+        breakpoint: 2040,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 1,
+          infinite: false,
         },
-        {
-          breakpoint: 1600,
-          settings: {
-            slidesToShow: 4,
-            slidesToScroll: 1,
-            infinite: true
-          }
+      },
+      {
+        breakpoint: 1900,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 1,
+          infinite: false,
         },
-        {
-          breakpoint: 1024,
-          settings: {
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            infinite: true
-          }
+      },
+      {
+        breakpoint: 1600,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 1,
+          infinite: false,
         },
-        {
-          breakpoint: 600,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 1,
-            initialSlide: 2
-          }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: false,
         },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            dots: true
-          }
-        }
-      ]
-    };
-    return (
-        <div className='nft'>
-          <Slider {...settings}>
-            <CustomSlide className='itm' index={1}>
-              <div className="nft_coll">
-                  <div className="nft_wrap">
-                      <span><img src="./img/collections/coll-1.jpg" className="lazy img-fluid" alt=""/></span>
-                  </div>
-                  <div className="nft_coll_pp">
-                      <span onClick={()=> window.open("/home", "_self")}><img className="lazy" src="./img/author/author-1.jpg" alt=""/></span>
-                      <i className="fa fa-check"></i>
-                  </div>
-                  <div className="nft_coll_info">
-                      <span onClick={()=> window.open("/home", "_self")}><h4>Abstraction</h4></span>
-                      <span>ERC-192</span>
-                  </div>
-              </div>
-            </CustomSlide>
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 320,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: false,
+          dots: true,
+        },
+      },
+    ],
+  };
 
-            <CustomSlide className='itm' index={2}>
-              <div className="nft_coll">
-                  <div className="nft_wrap">
-                      <span><img src="./img/collections/coll-2.jpg" className="lazy img-fluid" alt=""/></span>
-                  </div>
-                  <div className="nft_coll_pp">
-                      <span onClick={()=> window.open("/#", "_self")}><img className="lazy" src="./img/author/author-2.jpg" alt=""/></span>
-                      <i className="fa fa-check"></i>
-                  </div>
-                  <div className="nft_coll_info">
-                      <span onClick={()=> window.open("/#", "_self")}><h4>Patternlicious</h4></span>
-                      <span>ERC-61</span>
-                  </div>
-              </div>
-            </CustomSlide>
+  const [collections, setCollections] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-            <CustomSlide className='itm' index={3}>
-              <div className="nft_coll">
-                  <div className="nft_wrap">
-                      <span><img src="./img/collections/coll-3.jpg" className="lazy img-fluid" alt=""/></span>
-                  </div>
-                  <div className="nft_coll_pp">
-                      <span onClick={()=> window.open("/#", "_self")}><img className="lazy" src="./img/author/author-3.jpg" alt=""/></span>
-                      <i className="fa fa-check"></i>
-                  </div>
-                  <div className="nft_coll_info">
-                      <span onClick={()=> window.open("/#", "_self")}><h4>Skecthify</h4></span>
-                      <span>ERC-126</span>
-                  </div>
-              </div>
-            </CustomSlide>
+  useEffect(() => {
+    async function fetchData() {
+      // if (!localStorage.getItem("Authorization")) return;
+      setLoading(true);
+      let reqParam = {
+        page: 1,
+        limit: 6,
+        sortType: -1,
+      };
+      let collectionsList = await GetHotCollections(reqParam);
+      if (collectionsList.results.length > 0) {
+        collectionsList = collectionsList.results;
+        setCollections(collectionsList);
+      }
 
-            <CustomSlide className='itm' index={4}>
-              <div className="nft_coll">
-                  <div className="nft_wrap">
-                      <span><img src="./img/collections/coll-4.jpg" className="lazy img-fluid" alt=""/></span>
-                  </div>
-                  <div className="nft_coll_pp">
-                      <span onClick={()=> window.open("/#", "_self")}><img className="lazy" src="./img/author/author-4.jpg" alt=""/></span>
-                      <i className="fa fa-check"></i>
-                  </div>
-                  <div className="nft_coll_info">
-                      <span onClick={()=> window.open("/#", "_self")}><h4>Cartoonism</h4></span>
-                      <span>ERC-73</span>
-                  </div>
-              </div>
-            </CustomSlide>
+      setLoading(false);
+    }
 
-            <CustomSlide className='itm' index={5}>
-              <div className="nft_coll">
-                  <div className="nft_wrap">
-                      <span><img src="./img/collections/coll-5.jpg" className="lazy img-fluid" alt=""/></span>
-                  </div>
-                  <div className="nft_coll_pp">
-                      <span onClick={()=> window.open("/#", "_self")}><img className="lazy" src="./img/author/author-5.jpg" alt=""/></span>
-                      <i className="fa fa-check"></i>
-                  </div>
-                  <div className="nft_coll_info">
-                      <span onClick={()=> window.open("/#", "_self")}><h4>Virtuland</h4></span>
-                      <span>ERC-85</span>
-                  </div>
-              </div>
-            </CustomSlide>
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-            <CustomSlide className='itm' index={6}>
-              <div className="nft_coll">
-                  <div className="nft_wrap">
-                      <span><img src="./img/collections/coll-6.jpg" className="lazy img-fluid" alt=""/></span>
-                  </div>
-                  <div className="nft_coll_pp">
-                      <span onClick={()=> window.open("/#", "_self")}><img className="lazy" src="./img/author/author-6.jpg" alt=""/></span>
+  return loading ? (
+    <Loader />
+  ) : (
+    <div className="nft">
+      <Slider {...settings}>
+        {collections && collections.length > 0
+          ? collections.map((collection, key) => {
+              return (
+                <CustomSlide className="itm" key={key}>
+                  <div className="nft_coll">
+                    <div
+                      className="nft_wrap"
+                      onClick={() =>
+                        (window.location.href = `/collection/${collection.sContractAddress}`)
+                      }
+                    >
+                      <span>
+                        <img
+                          src={collection.collectionImage}
+                          className="lazy img-fluid collection-slider-img"
+                          alt=""
+                        />
+                      </span>
+                    </div>
+                    <div className="nft_coll_pp">
+                      <span
+                        onClick={() =>
+                          (window.location.href = `/author/${collection.oCreatedBy}`)
+                        }
+                      >
+                        <img
+                          title={
+                            collection.oUser.length > 0
+                              ? collection.oUser[0].sWalletAddress.slice(0, 3) +
+                                "..." +
+                                collection.oUser[0].sWalletAddress.slice(39, 42)
+                              : ""
+                          }
+                          className="lazy"
+                          src={
+                            collection.oUser.length > 0
+                              ? collection.oUser[0].sProfilePicUrl
+                                ? collection.oUser[0].sProfilePicUrl
+                                : Avatar
+                              : Avatar
+                          }
+                          alt={""}
+                        />
+                      </span>
                       <i className="fa fa-check"></i>
+                    </div>
+                    <div className="nft_coll_info">
+                      <span
+                        onClick={() =>
+                          (window.location.href = `/collection/${collection.sContractAddress}`)
+                        }
+                      >
+                        <h4 className="nft_title_class">
+                          {collection.sName
+                            ? collection.sName.length > 15
+                              ? collection.sName.slice(0, 15) + "..."
+                              : collection.sName
+                            : ""}
+                        </h4>
+                      </span>
+                      {/* <span>{collection.erc721 ? "ERC721" : "ERC1155"}</span> */}
+                    </div>
                   </div>
-                  <div className="nft_coll_info">
-                      <span onClick={()=> window.open("/#", "_self")}><h4>Papercut</h4></span>
-                      <span>ERC-42</span>
+                </CustomSlide>
+              );
+            })
+          : ""}
+        {collections.length > 0 ? (
+          <CustomSlide className="itm hot_collection">
+            <div className="d-item" href="/exploreCollections">
+              <a href="/exploreCollections">
+                <div className="nft__item ">
+                  <div className="author_list_pp d-none">
+                    <span></span>
                   </div>
-              </div>
-            </CustomSlide>
+                  <div
+                    className="nft__item_wrap_carausel"
+                    // style={{ height: `${height}px` }}
+                  >
+                    <Outer>
+                      <a href="/exploreCollections">View All</a>
+                    </Outer>
+                  </div>
+                  <div
+                    className="nft__item_info"
+                    style={{ visibility: "hidden" }}
+                  >
+                    <span>
+                      <h4>3</h4>
+                    </span>
+                    <div className="nft__item_price">1</div>
+                    <div className="nft__item_action">
+                      <span>3</span>
+                    </div>
+                    <div className={"nft__item_like"}></div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </CustomSlide>
+        ) : (
+          ""
+        )}
+      </Slider>
+    </div>
+  );
+};
 
-          </Slider>
-        </div>
-    );
-  }
-}
+const mapStateToProps = (state) => {
+  return {
+    token: state.token,
+    profileData: state.profileData,
+  };
+};
+
+export default connect(mapStateToProps)(CollectionList);

@@ -1,0 +1,11 @@
+.button.edit-btn {
+  background: #8155e5;
+  border-radius: 60px;
+  border: none;
+  padding: 10px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 19px;
+  color: #ffffff;
+}

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Footer from "../components/footer";
 import { createGlobalStyle } from "styled-components";
-import { updateProfile } from "../../apiServices";
-import { connect } from "react-redux";
+import { updateProfile, getProfile } from "../../apiServices";
 import { NotificationManager } from "react-notifications";
 import Loader from "../components/loader";
-import { useNavigate } from "@reach/router";
+import ItemNotFound from "./ItemNotFound";
+import { useCookies } from "react-cookie";
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -51,15 +51,73 @@ const UpdateProfile = (props) => {
   const [uname, setUname] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate;
+  const [currentUser, setCurrentUser] = useState("");
+  const [cookies] = useCookies(["selected_account"]);
+  const [profile, setProfile] = useState();
+  const [restrictSpace] = useState([" "]);
 
-  const onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      let img = event.target.files[0];
-      console.log(img);
-      setProfilePic(img);
+  useEffect(() => {
+    if (cookies.selected_account) setCurrentUser(cookies.selected_account);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookies.selected_account]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (currentUser) {
+        let _profile = await getProfile();
+        setProfile(_profile);
+      }
+    };
+    fetch();
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (profile) {
+      let firstname = profile?.oName?.sFirstname;
+      let username = profile?.sUserName;
+      let lastname = profile?.oName?.sLastname;
+      setFname(
+        firstname === "" || firstname === undefined || firstname === "undefined"
+          ? ""
+          : firstname.trim()
+      );
+      setUname(username.trim());
+      setLname(
+        lastname === "" || lastname === undefined || lastname === "undefined"
+          ? ""
+          : lastname.trim()
+      );
+
+      setWebsite(
+        profile.sWebsite &&
+          profile.sWebsite !== undefined &&
+          profile.sWebsite !== "undefined"
+          ? profile.sWebsite
+          : ""
+      );
+      setBio(
+        profile.sBio &&
+          profile.sBio !== undefined &&
+          profile.sBio !== "undefined"
+          ? profile.sBio
+          : ""
+      );
+      setPhone(
+        profile.sPhone &&
+          profile.sPhone !== undefined &&
+          profile.sPhone !== "undefined"
+          ? profile.sPhone
+          : ""
+      );
+      setEmail(
+        profile.sEmail &&
+          profile.sEmail !== undefined &&
+          profile.sEmail !== "undefined"
+          ? profile.sEmail
+          : ""
+      );
     }
-  };
+  }, [profile]);
 
   const isValidEmail = async (email) => {
     var atposition = email.indexOf("@");
@@ -76,7 +134,6 @@ const UpdateProfile = (props) => {
   };
 
   const handleUpdateProfile = async () => {
-    console.log(props.account.account);
     let data = {
       uname: uname,
       fname: fname,
@@ -84,22 +141,60 @@ const UpdateProfile = (props) => {
       bio: bio,
       website: website,
       phone: phone,
-      userProfile: profilePic,
+      profilePic: profilePic,
       email: email,
     };
-    console.log(data);
-    let res = await isValidEmail(email);
-    if (!res) {
+    // if (profilePic === "" || profilePic === undefined) {
+    //   NotificationManager.error("Please choose profile pic", "", 800);
+    //   return;
+    // }
+
+    if (fname === "" || fname === undefined) {
+      NotificationManager.error("Please Enter a Valid Firstname", "", 800);
       return;
+    } else {
+      if (fname.trim().length === 0) {
+        NotificationManager.error("Space not allowed", "", 800);
+        return;
+      }
     }
-    if (props.account && props.account.account) {
+
+    if (lname === "" || lname === undefined) {
+      NotificationManager.error("Please Enter a Valid Lastname", "", 800);
+      return;
+    } else {
+      if (lname.trim().length === 0) {
+        NotificationManager.error("Space not allowed", "", 800);
+        return;
+      }
+    }
+
+    if (uname === "" || uname === undefined) {
+      NotificationManager.error("Please choose valid username", "", 800);
+      return;
+    } else {
+      if (uname.trim().length === 0) {
+        NotificationManager.error("Space not allowed", "", 800);
+        return;
+      }
+    }
+
+    // if (email) {
+    //   let res = await isValidEmail(email);
+    //   if (!res) {
+    //     return;
+    //   }
+    // }
+
+    if (currentUser) {
       setLoading(true);
       try {
-        let res = await updateProfile(props.account.account, data);
-        console.log(res);
-        if (res === "User Details updated") {
+        let res = await updateProfile(currentUser, data);
+        if (res === "User Details Updated successfully") {
           NotificationManager.success(res);
-          navigate("/personalProfile");
+          setTimeout(() => {
+            window.location.href = "/profile";
+          }, 200);
         } else {
           NotificationManager.error(res);
         }
@@ -112,25 +207,35 @@ const UpdateProfile = (props) => {
     }
   };
 
-  return (
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setProfilePic(img);
+    }
+  };
+
+  return !currentUser ? (
+    <ItemNotFound />
+  ) : (
     <div>
-      {" "}
       <GlobalStyles />
+      {loading ? <Loader /> : ""}
       <section
         className="jumbotron breadcumb no-bg"
-        style={{ backgroundImage: `url(${"./img/background/subheader.jpg"})` }}
+        style={{ backgroundImage: `url(${"/img/background/Rectangle11.png"})` }}
       >
         <div className="mainbreadcumb">
           <div className="container">
             <div className="row">
               <div className="col-md-12 text-center">
-                <h1>Update Profile</h1>
+                <h1 className="explore-heading">Update Profile</h1>
                 {/* <p>Anim pariatur cliche reprehenderit</p> */}
               </div>
             </div>
           </div>
         </div>
       </section>
+
       <section className="container">
         <div className="row">
           <div className="col-md-8 offset-md-2">
@@ -144,8 +249,8 @@ const UpdateProfile = (props) => {
             >
               <div className="row">
                 <div className="col-md-6">
-                  <div className="field-set">
-                    <label>First Name:</label>
+                  <div className="field-set ">
+                    <label className="required">First Name:</label>
                     <input
                       type="text"
                       name="fname"
@@ -161,7 +266,7 @@ const UpdateProfile = (props) => {
 
                 <div className="col-md-6">
                   <div className="field-set">
-                    <label>Last Name:</label>
+                    <label className="required">Last Name:</label>
                     <input
                       type="text"
                       name="lname"
@@ -193,7 +298,7 @@ const UpdateProfile = (props) => {
 
                 <div className="col-md-6">
                   <div className="field-set">
-                    <label>Username:</label>
+                    <label className="required">Username:</label>
                     <input
                       type="text"
                       name="username"
@@ -259,7 +364,7 @@ const UpdateProfile = (props) => {
                     <label>Upload Profile Pic:</label>
                     {profilePic ? (
                       <img
-                        className="upload-profile"
+                        className="upload-profile "
                         src={URL.createObjectURL(profilePic)}
                         alt="profile-pic"
                       />
@@ -280,7 +385,7 @@ const UpdateProfile = (props) => {
                     <button
                       type="submit"
                       id="send_message"
-                      className="btn btn-main color-2"
+                      className="btn-main color-2"
                       onClick={() => {
                         handleUpdateProfile();
                       }}
@@ -296,15 +401,10 @@ const UpdateProfile = (props) => {
           </div>
         </div>
       </section>
+
       <Footer />
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    account: state.account,
-  };
-};
-
-export default connect(mapStateToProps)(UpdateProfile);
+export default UpdateProfile;
