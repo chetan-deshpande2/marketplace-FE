@@ -1,9 +1,7 @@
 const Loader = () => {
   return (
     <div className="loader-div">
-      <div className="loader-div1" role="status">
-        <span className="sr-only" id="loading"></span>
-      </div>
+       <h4>Loading...</h4> 
     </div>
   );
 };

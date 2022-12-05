@@ -4,6 +4,9 @@ import Clock from "./Clock";
 import { GetOnSaleItems, GetSearchedNft, LikeNft } from "../../apiServices";
 import { connect } from "react-redux";
 import { useNavigate } from "@reach/router";
+// import ReactDOM from 'react-dom';
+import ReactPaginate from "react-paginate";
+// import Pagination from './Pagination.js';
 
 const ipfsAPI = require("ipfs-api");
 
@@ -26,8 +29,10 @@ var NftPreview = {
   // backgroundImage: "",
 };
 
-const ColumnNew = (props) => {
+function ColumnNew (props, itemsPerPage){
   const [height, setHeight] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0);
+
   const [items, setItems] = useState([]);
   const [likeEvent, setLikeEvent] = useState(false);
   const navigate = useNavigate();
@@ -49,14 +54,14 @@ const ColumnNew = (props) => {
         if (props.exploreSaleType?.exploreSaleType === -1) {
           data = {
             page: 1,
-            limit: 15,
+            limit: 9,
             itemType: 1,
             sSellingType: 0,
           };
         } else {
           data = {
             page: 1,
-            limit: 15,
+            limit: 9,
             itemType: 1,
             // sSellingType: props.exploreSaleType?.exploreSaleType,
             sSellingType: 0,
@@ -77,7 +82,7 @@ const ColumnNew = (props) => {
           sSellingType: "",
           sSortingType: "",
           page: 1,
-          limit: 10,
+          limit: 4,
         };
         itemsOnSale = await GetSearchedNft(reqParams);
       }
@@ -103,124 +108,104 @@ const ColumnNew = (props) => {
 
     fetch();
   }, [props]);
+  const endOffset = itemOffset + 4;
+  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+
+  const pages = items;
+  const pageCount = Math.ceil(pages.length / 4);
+  console.log(pageCount);
+
+  const handlePageClick = (event) => {
+    console.log(event);
+    const newOffset = (event.selected * 4) % items.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
+
   return (
-    <div className="row">
+    <><div className="row">
       {items
         ? items.map((nft, index) => {
-            return (
-              <div
-                key={index}
-                className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4"
-              >
-                <div className="nft__item m-0">
-                  {" "}
-                  {nft.deadline && (
-                    <div className="de_countdown">
-                      <Clock deadline={nft.nOrders.oValidUpto} />
-                    </div>
-                  )}
-                  <div className="author_list_pp_explore_page">
-                    <span
-                      onClick={
-                        (() =>
-                          (window.location.href = `./author/${nft.nCreater._id}`),
-                        "_self")
-                      }
-                      // }
-                    >
-                      <img
-                        style={NftPreview}
-                        className="lazy "
-                        src={
-                          nft.nCreater?.sProfilePicUrl
-                            ? "https://decryptnft.mypinata.cloud/ipfs/" +
-                              nft.nCreater.sProfilePicUrl
-                            : "./img/author/author-1.jpg"
-                        }
-                        alt=""
-                      />
-                      <i className="fa fa-check"></i>
-                    </span>
+          return (
+            <div
+              key={index}
+              className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4"
+            >
+              <div className="nft__item m-0">
+                {" "}
+                {nft.deadline && (
+                  <div className="de_countdown">
+                    <Clock deadline={nft.nOrders.oValidUpto} />
                   </div>
-                  <div
-                    // onClick={console.log("nftId===========", nft._id)}
-                    onClick={() => navigate(`./itemDetail/${nft._id}`)}
-                    className="nft__item_wrap"
-                    style={{ height: `${height}px` }}
+                )}
+                <div className="author_list_pp_explore_page">
+                  <span
+                    onClick={() => {
+                      navigate(`/itemDetail/${nft.nCreater._id}`);
+                    } }
                   >
-                    <Outer>
-                      <span>
-                        <img
-                          onLoad={onImgLoad}
-                          src={nft.imageHash}
-                          className="lazy nft__item_preview slider-img-preview"
-                          alt=""
-                        />
-                      </span>
-                    </Outer>
-                  </div>
-                  <div className="nft__item_info">
-                    <span
-                      onClick={() =>
-                        (window.location.href = `./itemDetail/${nft._id}`)
-                      }
-                    >
-                      <h4>{nft.nTitle}</h4>
+                    <img
+                      style={NftPreview}
+                      className="lazy "
+                      src={nft.nCreater?.sProfilePicUrl
+                        ? "https://gateway.pinata.cloud/ipfs/QmdaGBG8mjZgkg3Z2uvzJ57tdGTJscSGJcuR3fxqdtJbmM" +
+                        nft.nCreater.sProfilePicUrl
+                        : "https://gateway.pinata.cloud/ipfs/QmdaGBG8mjZgkg3Z2uvzJ57tdGTJscSGJcuR3fxqdtJbmM"}
+                      alt="" />
+                  </span>
+                </div>
+                <div
+                  // onClick={console.log("nftId===========", nft._id)}
+                  onClick={() => navigate(`./itemDetail/${nft._id}`)}
+                  className="nft__item_wrap"
+                  style={{ height: `${height}px` }}
+                >
+                  <Outer>
+                    <span>
+                      <img
+                        onLoad={onImgLoad}
+                        src={nft.imageHash}
+                        className="lazy nft__item_preview slider-img-preview"
+                        alt="" />
                     </span>
-                    <div className="nft__item_price">
-                      {/* {convertToEth(nft?.nOrders[0]?.oPrice.$numberDecimal)} ETH */}
-                    </div>
-                    <div className="nft__item_action">
-                      <span
-                        onClick={() =>
-                          (window.location.href = `/itemDetail/${nft._id}`)
-                        }
-                      >
-                        Buy
-                      </span>
-                    </div>
-                    <div className="nft__item_like">
-                      {nft.is_user_like ? (
-                        <i
-                          className="fa fa-heart"
-                          style={{ color: "red" }}
-                          onClick={async () => {
-                            await LikeNft({ id: nft._id });
-                            setLikeEvent(!likeEvent);
-
-                            // window.location.reload();
-                          }}
-                        ></i>
-                      ) : (
-                        <i
-                          className="fa fa-heart"
-                          onClick={async () => {
-                            await LikeNft({ id: nft._id });
-                            setLikeEvent(!likeEvent);
-                            // window.location.reload();
-                          }}
-                        ></i>
-                      )}
-                      <span>{nft?.nUser_likes?.length}</span>
-                    </div>
+                  </Outer>
+                </div>
+                <div className="nft__item_info">
+                  <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
+                    <h4>{nft.nTitle}</h4>
+                  </span>
+                  <div className="nft__item_price">
+                    {/* {convertToEth(nft?.nOrders[0]?.oPrice.$numberDecimal)} ETH */}
+                  </div>
+                  <div className="nft__item_action">
+                    <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
+                      View Item
+                    </span>
                   </div>
                 </div>
               </div>
-            );
-          })
+            </div>
+          );
+        })
         : ""}
-    </div>
+
+      {/* <ColumnNew itemsPerPage={4} /> */}
+    </div><ReactPaginate
+        breakLabel="..."
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        Displayed Page Range={5}
+        pageCount={pageCount}
+        previousLabel="< previous"
+        renderOnZeroPageCount={null} /></>  
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    account: state.account,
-    token: state.token,
-    paramType: state.paramType,
-    profileData: state.profileData,
-    authorData: state.authorData,
-  };
-};
 
-export default connect(mapStateToProps)(ColumnNew);
+// ReactDOM.render(
+//   <ColumnNew itemsPerPage={4} />,
+//   document.getElementById('container')
+// );
+export default ColumnNew;
