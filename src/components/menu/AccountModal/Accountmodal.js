@@ -1,31 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useCallback } from "react";
-import Web3 from "web3";
-import { connect } from "react-redux";
-import { accountUpdate, tokenUpdate } from "../../../redux/actions";
-import Web3Modal from "web3modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import detectEthereumProvider from "@metamask/detect-provider";
-import WalletLink from "walletlink";
-import COINBASE_ICON from "./../../../assets/react.svg";
-import { Networks } from "./networks";
-import {
-  Login,
-  Logout,
-  Register,
-  checkuseraddress,
-} from "../../../apiServices";
-
+import { useState, useEffect, useCallback } from 'react';
+import Web3 from 'web3';
+import { connect } from 'react-redux';
+import { accountUpdate, tokenUpdate } from '../../../redux/actions';
+import Web3Modal from 'web3modal';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import detectEthereumProvider from '@metamask/detect-provider';
+import WalletLink from 'walletlink';
+import COINBASE_ICON from './../../../assets/react.svg';
+import { Networks } from './networks';
+import { Login, Logout, Register, checkuseraddress } from '../../../apiServices';
+import PopupModal from './popupModal';
+import { useCookies } from 'react-cookie';
+import NotificationManager from 'react-notifications/lib/NotificationManager';
+import { BsExclamationLg } from 'react-icons/bs';
 // import "./Mode.css";
 
-function initWeb3(provider) {
+async function initWeb3(provider) {
   const web3 = new Web3(provider);
 
-  web3.eth.extend({
+  await web3.eth.extend({
     methods: [
       {
-        name: "chainId",
-        call: "eth_chainId",
+        name: 'chainId',
+        call: 'eth_chainId',
         outputFormatter: web3.utils.hexToNumber,
       },
     ],
@@ -38,6 +36,8 @@ const AccountModal = (props) => {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [wrongNetwork, setWrongNetwork] = useState(false);
   const [isPopup, setIsPopup] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies([]);
+
   let web3Modal = null;
   let web3 = null;
   let provider = null;
@@ -52,71 +52,108 @@ const AccountModal = (props) => {
           rpc: {
             80001: process.env.REACT_APP_RPC_URL,
           },
-          network: process.env.REACT_APP_NETWORK,
-          chainId: process.env.REACT_APP_CHAIN_ID,
-          // infuraId: YOUR_INFURA_KEY,
-        },
-      },
-
-      "custom-coinbase": {
-        display: {
-          logo: COINBASE_ICON,
-          name: "Coinbase",
-          description: "Scan with WalletLink to connect",
-        },
-        options: {
-          appName: "app", // Your app name
-          networkUrl: process.env.REACT_APP_RPC_URL,
-          chainId: process.env.REACT_APP_CHAIN_ID,
-        },
-        package: WalletLink,
-        connector: async (_, options) => {
-          const { appName, networkUrl, chainId } = options;
-          const walletLink = new WalletLink({
-            appName,
-          });
-          const provider = walletLink.makeWeb3Provider(networkUrl, chainId);
-          await provider.enable();
-          return provider;
         },
       },
     };
 
     web3Modal = new Web3Modal({
-      network: process.env.REACT_APP_NETWORK,
-      cacheProvider: true,
+      network: 'mainnet',
+      cacheProvider: false,
       providerOptions: providerOptions,
     });
+
     provider = await detectEthereumProvider();
+    web3 = await initWeb3(provider);
+    if (web3 && provider) {
+      if (web3.eth) {
+        provider.on('accountsChanged', async function (accounts) {
+          let acc = await web3?.eth?.getAccounts();
+
+          removeCookie('selected_account', { path: '/' });
+          removeCookie('balance', { path: '/' });
+          removeCookie('Authorization', { path: '/' });
+
+          setCurrentAccount(null);
+          setInterval(() => {
+            window.location.reload();
+          }, 500);
+        });
+
+        provider.on('chainChanged', async (_chainId) => {
+          console.log(
+            '333',
+            parseInt(_chainId, 16).toString() !== process.env.REACT_APP_CHAIN_ID,
+            parseInt(_chainId, 16).toString(),
+            process.env.REACT_APP_CHAIN_ID,
+          );
+
+          window.sessionStorage.setItem('chain_id', parseInt(_chainId, 16).toString());
+          // if (_chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
+          //   setWrongNetwork(true);
+          //   setIsPopup(true);
+          // } else {
+          //   setWrongNetwork(false);
+          //   setIsPopup(false);
+          // }
+        });
+      }
+    }
   };
 
   init();
 
   useEffect(() => {
+    window.addEventListener('load', async () => {
+      console.log('metamask detect', window.ethereum);
+      // Modern dapp browsers...
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        try {
+          // Request account access if needed
+          window.ethereum
+            .request({ method: 'eth_requestAccounts' })
+            .then((acc) => {})
+            .catch((error) => {
+              if (error.code === 4001) {
+                // EIP-1193 userRejectedRequest error
+                console.log('Please connect to MetaMask.');
+              } else {
+                console.error(error);
+              }
+            });
+          // Acccounts now exposed
+        } catch (error) {
+          // User denied account access...
+        }
+      }
+      // Legacy dapp browsers...
+      else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider);
+        // Acccounts always exposed
+      }
+      // Non-dapp browsers...
+      else {
+        console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     async function update() {
-      if (window.sessionStorage.getItem("selected_account") != null) {
-        setCurrentAccount(window.sessionStorage.getItem("selected_account"));
+      if (cookies.selected_account !== null) {
+        setCurrentAccount(cookies.selected_account);
+
         if (provider) {
           web3 = await initWeb3(provider);
-          const chainId = await web3.eth.getChainId();
-          let bal = await web3.eth.getBalance(
-            window.sessionStorage.getItem("selected_account")
-          );
-          console.log("bal", bal);
-          props.dispatch(
-            accountUpdate({
-              account: window.sessionStorage.getItem("selected_account"),
-              chainId: chainId,
-              balance: bal,
-            })
-          );
+          let bal = await web3.eth.getBalance(cookies.selected_account);
+
+          setCookie('balance', bal);
         }
       }
     }
 
     update();
-  }, [window.sessionStorage.getItem("selected_Account"), web3, provider]);
-  // action on connect wallet button
+  }, [cookies.selected_account, web3, provider]);
 
   const onConnect = async () => {
     //Detect Provider
@@ -126,19 +163,22 @@ const AccountModal = (props) => {
         await provider.open();
         web3 = initWeb3(provider);
       }
-      window.sessionStorage.setItem("Provider", provider);
       if (!provider) {
-        console.log("no provider found");
+        console.log('no provider found');
       } else {
         web3 = new Web3(provider);
         await ConnectWallet();
       }
       const chainId = await web3.eth.getChainId();
-
-      if (chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
-        setWrongNetwork(true);
-        setIsPopup(true);
-      }
+      window.sessionStorage.setItem('chain_id', chainId.toString());
+      console.log('111', chainId.toString() !== process.env.REACT_APP_CHAIN_ID);
+      // if (chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
+      //   setWrongNetwork(true);
+      //   setIsPopup(true);
+      // } else {
+      //   setWrongNetwork(false);
+      //   setIsPopup(false);
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -147,7 +187,7 @@ const AccountModal = (props) => {
   // connect wallet
 
   const ConnectWallet = async () => {
-    if ("caches" in window) {
+    if ('caches' in window) {
       caches.keys().then((names) => {
         // Delete all the cache files
         names.forEach((name) => {
@@ -157,95 +197,59 @@ const AccountModal = (props) => {
     }
     try {
       const chainId = await web3.eth.getChainId();
-      console.log(chainId);
-
-      if (chainId.toString() !== "80001") {
-        console.log("Wrong network");
-        setWrongNetwork(true);
-        setIsPopup(true);
-        props.dispatch(
-          accountUpdate({
-            account: null,
-            chainId: chainId,
-            balance: null,
-          })
-        );
-      } else {
-        // Get list of accounts of the connected wallet
-        setWrongNetwork(false);
-        setIsPopup(false);
+      console.log('chain id', chainId);
+      console.log('222', chainId.toString() !== process.env.REACT_APP_CHAIN_ID);
+      window.sessionStorage.setItem('chain_id', chainId.toString());
+      // if (chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
+      //   console.log("Wrong network");
+      // setWrongNetwork(true);
+      // setIsPopup(true);
+      // } else {
+      // Get list of accounts of the connected wallet
+      // setWrongNetwork(false);
+      // setIsPopup(false);
+      if (web3 && web3.eth) {
         const accounts = await web3.eth.getAccounts();
 
-        // MetaMask does not give you all accounts, only the selected account
-        window.sessionStorage.setItem("selected_account", accounts[0]);
-        const chainId = await web3.eth.getChainId();
+        setCookie('selected_account', accounts[0], { path: '/' });
         let bal = await web3.eth.getBalance(accounts[0]);
-        console.log("bal", bal);
-        window.sessionStorage.setItem("balance", bal);
-        props.dispatch(
-          accountUpdate({
-            account: accounts[0],
-            chainId: chainId,
-            balance: bal,
-          })
-        );
+
+        setCookie('balance', bal, { path: '/' });
+
         setCurrentAccount(accounts[0]);
-
-        let response1 = await checkuseraddress(
-          window.sessionStorage.getItem("selected_account")
-        );
-        console.log(response1);
-        // let response = "User Not found";
-
-        if (response1.message === "User Not Found") {
+        let response = await checkuseraddress(accounts[0]);
+        if (response === 'User not found') {
           try {
-            await Register(window.sessionStorage.getItem("selected_account"));
-            console.log("User Registered Successfully");
-            // setTimeout(() => (window.location.href = "/profile"), 2000);
+            await Register(accounts[0]);
+            NotificationManager.success('User Registered Successfully', '', 800);
           } catch (e) {
-            console.log("Failed to Register");
+            NotificationManager.error('Failed to Register', '', 800);
             return;
           }
           try {
-            let token = await Login(
-              window.sessionStorage.getItem("selected_account")
-            );
-            console.log(token);
-            props.dispatch(
-              tokenUpdate({
-                token: token,
-              })
-            );
-            console.log("Logged In Successfully");
-
-            // setTimeout(() => (window.location.href = "/profile"), 2000);
+            console.log('cookies.selected_account', accounts[0]);
+            let token = await Login(accounts[0]);
+            setCookie('Authorization', token);
           } catch (e) {
-            console.log("Failed to Login");
+            NotificationManager.error('Failed to Login', '', 800);
             return;
           }
         } else {
           try {
-            let token = await Login(
-              window.sessionStorage.getItem("selected_account")
-            );
-            console.log(token);
-            props.dispatch(
-              tokenUpdate({
-                token: token,
-              })
-            );
-            console.log("Logged In Successfully");
-            // setTimeout(() => (window.location.href = "/profile"), 2000);
-            // window.location.href = "/profile";
+            let token = await Login(accounts[0]);
+            setCookie('Authorization', token);
+
+            NotificationManager.success('Logged In Successfully', '', 800);
           } catch (e) {
-            console.log("Failed to Login");
+            NotificationManager.error('Failed to Login', '', 800);
             return;
           }
         }
+        // }
       }
     } catch (error) {
       if (error.message) {
-        console.log("error", error.message);
+        console.log('error', error.message);
       }
     }
   };
@@ -254,200 +258,63 @@ const AccountModal = (props) => {
 
   const onDisconnect = useCallback(async () => {
     if (!web3) {
-      window.sessionStorage.removeItem("selected_account");
+      removeCookie('selected_account', { path: '/' });
+      removeCookie('balance', { path: '/' });
+      removeCookie('Authorization', { path: '/' });
     }
-    if (web3) {
-      const chainId = await web3.eth.getChainId();
-      props.dispatch(
-        accountUpdate({
-          account: null,
-          chainId: chainId,
-          balance: null,
-        })
-      );
-    }
-    window.sessionStorage.removeItem("selected_account");
-    window.sessionStorage.removeItem("Provider");
-    window.sessionStorage.removeItem("balance");
-    await setCurrentAccount(null);
+
+    removeCookie('balance', { path: '/' });
+    removeCookie('selected_account', { path: '/' });
+    removeCookie('Authorization', { path: '/' });
+    setCurrentAccount(null);
     await web3Modal.clearCachedProvider();
     web3Modal = null;
     await Logout();
     if (web3 && web3.currentProvider && web3.currentProvider.close) {
       await web3.currentProvider.disconnect();
     }
-    if ("caches" in window) {
+    if ('caches' in window) {
       caches.keys().then((names) => {
         // Delete all the cache files
         names.forEach((name) => {
           caches.delete(name);
         });
       });
-
-      if (!wrongNetwork) window.location.reload(true);
     }
-  }, [currentAccount]);
+    window.location.reload(true);
+  }, []);
 
   useEffect(() => {
     if (provider) {
-      provider.on("chainChanged", async (_chainId) => {
-        const chainId = parseInt(_chainId, 16);
-        console.log(process.env.REACT_APP_CHAIN_ID);
-        console.log(chainId);
-
-        if (chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
-          setWrongNetwork(true);
-          setIsPopup(true);
-          props.dispatch(
-            accountUpdate({
-              account: null,
-              chainId: chainId,
-              balance: null,
-            })
-          );
-
-          props.dispatch(
-            tokenUpdate({
-              token: null,
-            })
-          );
-          onDisconnect();
-        } else {
-          console.log("accountt", currentAccount);
-          setWrongNetwork(false);
-          setIsPopup(false);
-          web3 = initWeb3(provider);
-          let bal = await web3.eth.getBalance(currentAccount);
-          console.log("bal", bal);
-          window.sessionStorage.setItem("balance", bal);
-          console.log("accounttt", currentAccount);
-          props.dispatch(
-            accountUpdate({
-              account: currentAccount,
-              chainId: chainId,
-              balance: bal,
-            })
-          );
-        }
+      provider.on('chainChanged', async (_chainId) => {
+        console.log(
+          '444',
+          parseInt(_chainId, 16).toString() !== process.env.REACT_APP_CHAIN_ID,
+          parseInt(_chainId, 16).toString(),
+          process.env.REACT_APP_CHAIN_ID,
+        );
+        window.sessionStorage.setItem('chain_id', parseInt(_chainId, 16).toString());
+        // if (_chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
+        //   setWrongNetwork(true);
+        //   setIsPopup(true);
+        // } else {
+        //   setWrongNetwork(false);
+        //   setIsPopup(false);
+        // }
       });
     }
-  }, [onDisconnect, currentAccount, props, provider]);
-
-  // function to detect account change
-
-  useEffect(() => {
-    if (provider) {
-      provider.on("accountsChanged", async function (accounts) {
-        const id = await provider.request({ method: "eth_chainId" });
-        const chainId = parseInt(id, 16);
-        if (
-          chainId.toString() === process.env.REACT_APP_CHAIN_ID &&
-          currentAccount
-        ) {
-          console.log("accountt", accounts[0]);
-          setCurrentAccount(accounts[0]);
-          window.sessionStorage.removeItem("selected_account");
-          window.sessionStorage.setItem("selected_account", accounts[0]);
-          web3 = initWeb3(provider);
-          let bal = await web3.eth.getBalance(accounts[0]);
-          console.log("bal", bal);
-          window.sessionStorage.setItem("balance", bal);
-          props.dispatch(
-            accountUpdate({
-              account: accounts[0],
-              chainId: chainId,
-              balance: bal,
-            })
-          );
-          let response = await checkuseraddress(
-            window.sessionStorage.getItem("selected_account")
-          );
-          if (response === "User not found") {
-            try {
-              await Register(
-                window.sessionStorage.getItem("selected_account", accounts[0])
-              );
-              // setTimeout(() => (window.location.href = "/profile"), 2000);
-              console.log("New Wallet Registered Successfully");
-            } catch (e) {
-              console.log("Failed to Register");
-              return;
-            }
-            try {
-              let token = await Login(
-                window.sessionStorage.getItem("selected_account")
-              );
-              props.dispatch(
-                tokenUpdate({
-                  token: token,
-                })
-              );
-              console.log("Logged In Successfully");
-              // setTimeout(() => (window.location.href = "/profile"), 2000);
-              // window.location.href = "/profile";
-            } catch (e) {
-              console.log("Failed to Login");
-              return;
-            }
-          } else {
-            try {
-              let token = await Login(
-                window.sessionStorage.getItem("selected_account")
-              );
-              props.dispatch(
-                tokenUpdate({
-                  token: token,
-                })
-              );
-              console.log("Logged In Successfully");
-              // setTimeout(() => (window.location.href = "/profile"), 2000);
-              // window.location.href = "/profile";
-            } catch (e) {
-              console.log("Failed to Login");
-              return;
-            }
-          }
-        } else if (chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
-          setWrongNetwork(true);
-          setIsPopup(true);
-
-          props.dispatch(
-            accountUpdate({
-              account: null,
-              chainId: chainId,
-              balance: null,
-            })
-          );
-          window.sessionStorage.removeItem("selected_account");
-          setCurrentAccount(null);
-          await onDisconnect();
-        }
-        window.location.reload();
-      });
-    }
-  }, [currentAccount, provider]);
-
-  // function to detect network change
+  }, [currentAccount, props, provider]);
 
   useEffect(() => {
     async function updateAccount() {
       if (provider) {
-        const id = await provider.request({ method: "eth_chainId" });
-        window.sessionStorage.setItem("selected_account", currentAccount);
+        setCookie('selected_account', currentAccount, { path: '/' });
 
-        const chainId = parseInt(id, 16);
         web3 = initWeb3(provider);
-        let bal = await web3.eth.getBalance(currentAccount);
-        console.log("bal", bal);
-        window.sessionStorage.setItem("balance", currentAccount);
-        console.log("accounttt", currentAccount);
-        props.dispatch(
-          accountUpdate({
-            account: currentAccount,
-            chainId: chainId,
-            balance: bal,
-          })
-        );
+        if (web3 && web3.eth) {
+          let bal = await web3?.eth?.getBalance(currentAccount);
+          setCookie('balance', bal);
+        }
       }
     }
     if (currentAccount) {
@@ -455,12 +322,20 @@ const AccountModal = (props) => {
     }
   }, [currentAccount, provider]);
 
+  useEffect(() => {
+    if (provider) {
+      provider.on('disconnect', (error) => {
+        console.log(error);
+      });
+    }
+  }, [provider]);
+
   const changeNetwork = async ({ networkName }) => {
     try {
-      console.log("networkName", networkName);
-      if (!window.ethereum) throw new Error("No crypto wallet found");
+      console.log('networkName', networkName);
+      if (!window.ethereum) throw new Error('No crypto wallet found');
       await window.ethereum.request({
-        method: "wallet_addEthereumChain",
+        method: 'wallet_addEthereumChain',
         params: [
           {
             ...Networks[networkName],
@@ -468,47 +343,80 @@ const AccountModal = (props) => {
         ],
       });
     } catch (err) {
-      // setError(err.message);
+      console.log('error in network switch', err);
     }
   };
 
   const handleNetworkSwitch = async (networkName) => {
-    await changeNetwork({ networkName });
-    onConnect();
+    // setIsPopup(false);
+    // setWrongNetwork(false);
+    try {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: Networks[networkName].chainId }],
+        });
+        // setIsPopup(false);
+        // setWrongNetwork(false);
+        NotificationManager.success('Chain switched successfully');
+      } catch (e) {
+        if (e.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{ ...Networks[networkName] }],
+            });
+          } catch (addError) {
+            console.error(addError);
+            NotificationManager.success('Something went wrong');
+          }
+        } else {
+          NotificationManager.success('Something went wrong');
+        }
+        // console.error(e)
+      }
+
+      // let res = await changeNetwork({ networkName });
+      // console.log("resss", res);
+    } catch (e) {
+      console.log('error in switch', e);
+    }
+    // onConnect();
   };
 
   const togglePopup = () => {
     setIsPopup(!isPopup);
   };
 
+  useEffect(() => {
+    setCurrentAccount(cookies.selected_account);
+  }, [cookies.selected_account]);
+
   return (
     <>
       <button
         className="btn-main"
         style={{ color: props.color }}
-        onClick={currentAccount ? onDisconnect : onConnect}
+        onClick={
+          // localStorage.getItem("selected_account")
+          currentAccount ? onDisconnect : onConnect
+        }
       >
-        {window.sessionStorage.getItem("selected_account") &&
-        window.sessionStorage.getItem("selected_account") !== "undefined"
-          ? window.sessionStorage.getItem("selected_account").slice(0, 5) +
-            "..." +
-            window.sessionStorage.getItem("selected_account").slice(37, 42)
-          : "Connect Wallet"}
+        {currentAccount ? currentAccount.slice(0, 5) + '...' + currentAccount.slice(37, 42) : 'Connect Wallet'}
       </button>
-      {/* {wrongNetwork ? (
+      {wrongNetwork ? (
         <>
           {isPopup && (
             <PopupModal
               content={
                 <div className="popup-content">
+                  <BsExclamationLg className="BsExclamationLg" />
                   <h2>WRONG NETWORK</h2>
                   <p>Please switch to {process.env.REACT_APP_NETWORK}</p>
                   <button
                     className="btn-main content-btn"
                     style={{ color: props.color }}
-                    onClick={() =>
-                      handleNetworkSwitch(process.env.REACT_APP_NETWORK)
-                    }
+                    onClick={() => handleNetworkSwitch(process.env.REACT_APP_NETWORK)}
                   >
                     Switch Network
                   </button>
@@ -518,14 +426,13 @@ const AccountModal = (props) => {
             />
           )}
         </>
-      ) : null} */}
+      ) : null}
     </>
   );
 };
 
 const mapStateToProps = (state) => {
   return {
-    account: state.account,
     token: state.token,
     profileData: state.profileData,
   };

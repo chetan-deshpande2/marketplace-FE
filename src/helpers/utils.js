@@ -1,11 +1,11 @@
-import contracts from "../config/contracts";
-import { Networks } from "./../components/components/AccountModal/networks";
-import NotificationManager from "react-notifications/lib/NotificationManager";
-import { getBalance } from "./getterFunctions";
-import { Cookies } from "react-cookie";
+import contracts from '../Config/contracts';
+import { Networks } from './../components/menu/AccountModal/networks';
+import NotificationManager from 'react-notifications/lib/NotificationManager';
+import { getBalance } from './getterFunctions';
+import { Cookies } from 'react-cookie';
 
 export const checkIfValidFileExtension = (file, validExtensions) => {
-  let extension = file.type.split("/").pop();
+  let extension = file.type.split('/').pop();
   let isValid = validExtensions.filter((e) => {
     return e === extension;
   });
@@ -28,22 +28,22 @@ export const getMaxAllowedDate = () => {
   var month = dtToday.getMonth() + 1;
   var day = dtToday.getDate();
   var year = dtToday.getFullYear();
-  if (month < 10) month = "0" + month.toString();
-  if (day < 10) day = "0" + day.toString();
+  if (month < 10) month = '0' + month.toString();
+  if (day < 10) day = '0' + day.toString();
 
-  var maxDate = year + "-" + month + "-" + day;
+  var maxDate = year + '-' + month + '-' + day;
   return maxDate;
 };
 
 export const getTokenSymbolByAddress = (addr) => {
   if (addr === contracts.WMATIC) {
-    return "WMATIC";
+    return 'WMATIC';
   } else if (addr === contracts.USDC) {
-    return "USDC";
+    return 'USDC';
   } else if (addr === contracts.USDT) {
-    return "USDT";
+    return 'USDT';
   }
-  return "";
+  return '';
 };
 
 export const handleNetworkSwitch = async (account) => {
@@ -52,39 +52,38 @@ export const handleNetworkSwitch = async (account) => {
   try {
     try {
       let res1 = await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
+        method: 'wallet_switchEthereumChain',
         params: [
           {
             chainId: Networks[process.env.REACT_APP_NETWORK].chainId,
           },
         ],
       });
-      console.log("switched", res1);
+      console.log('switched', res1);
       let res = await getBalance(account);
       return res;
     } catch (e) {
       if (e.code === 4902) {
         try {
           await window.ethereum.request({
-            method: "wallet_addEthereumChain",
+            method: 'wallet_addEthereumChain',
             params: [{ ...Networks[process.env.REACT_APP_NETWORK] }],
           });
           let res = await getBalance(account);
           return res;
         } catch (addError) {
           console.error(addError);
-          if (addError.code === 4001)
-            NotificationManager.error("User denied", "", 800);
+          if (addError.code === 4001) NotificationManager.error('User denied', '', 800);
           return false;
         }
       } else {
-        NotificationManager.error("Something went wrong", "", 800);
+        NotificationManager.error('Something went wrong', '', 800);
         return false;
       }
     }
   } catch (e) {
-    if (e.code === 4001) NotificationManager.error("User denied", "", 800);
-    console.log("error in switch", e);
+    if (e.code === 4001) NotificationManager.error('User denied', '', 800);
+    console.log('error in switch', e);
     return false;
   }
 };

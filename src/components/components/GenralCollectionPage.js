@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import styled from "styled-components";
-import { getCollections, isEmpty } from "../../helpers/getterFunctions";
-import { Pagination } from "@material-ui/lab";
-import Placeholder from "./placeholder";
-import { perPageCount } from "../../helpers/constants";
+import React, { useEffect, useState } from 'react';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import styled from 'styled-components';
+import { getCollections, isEmpty } from '../../helpers/getterFunctions';
+// import { Pagination } from '@material-ui/lab';
+import Placeholder from './placeholder';
+import { perPageCount } from '../../helpers/constants';
 
 const Outer = styled.div`
   display: flex;
@@ -22,7 +22,7 @@ const CollectionsList = (props) => {
   const [collections, setCollections] = useState([]);
   const [currPage, setCurrPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [isAllCollections, setIsAllCollections] = useState("");
+  const [isAllCollections, setIsAllCollections] = useState('');
   const onImgLoad = ({ target: img }) => {
     let currentHeight = height;
     if (currentHeight < img.offsetHeight) {
@@ -40,14 +40,7 @@ const CollectionsList = (props) => {
       setLoading(true);
       let _collections = [];
       if (props.isAllCollections) {
-        _collections = await getCollections(
-          currPage,
-          perPageCount,
-          null,
-          true,
-          props.isERC721,
-          props.searchedData
-        );
+        _collections = await getCollections(currPage, perPageCount, null, true, props.isERC721, props.searchedData);
 
         if (_collections && _collections.length > 0) {
           setTotalPages(Math.ceil(_collections[0].count / perPageCount));
@@ -55,12 +48,7 @@ const CollectionsList = (props) => {
         setCollections(_collections);
         setLoading(false);
       } else if (props && props.userId) {
-        _collections = await getCollections(
-          currPage,
-          perPageCount,
-          props.userId,
-          false
-        );
+        _collections = await getCollections(currPage, perPageCount, props.userId, false);
         if (_collections && _collections.length > 0) {
           setTotalPages(Math.ceil(_collections[0]?.count / perPageCount));
         }
@@ -92,24 +80,15 @@ const CollectionsList = (props) => {
     <div className="row">
       {collections?.length >= 1 && !isEmpty(collections[0])
         ? collections.map((collection, index) => (
-            <div
-              key={index}
-              className="d-item col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12"
-            >
+            <div key={index} className="d-item col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
               <div className="nft__item">
                 <div className="author_list_pp_explore_page">
-                  <span
-                    onClick={() =>
-                      (window.location.href = "/author/" + collection.authorId)
-                    }
-                  >
+                  <span onClick={() => (window.location.href = '/author/' + collection.authorId)}>
                     <img
                       title={
                         collection.authorAddress
-                          ? collection.authorAddress.slice(0, 3) +
-                            "..." +
-                            collection.authorAddress.slice(39, 42)
-                          : ""
+                          ? collection.authorAddress.slice(0, 3) + '...' + collection.authorAddress.slice(39, 42)
+                          : ''
                       }
                       className="lazy author_image"
                       src={collection.authorImage}
@@ -118,17 +97,9 @@ const CollectionsList = (props) => {
                     <i className="fa fa-check"></i>
                   </span>
                 </div>
-                <div
-                  className="nft__item_wrap"
-                  style={{ height: `${height}px` }}
-                >
+                <div className="nft__item_wrap" style={{ height: `${height}px` }}>
                   <Outer>
-                    <span
-                      onClick={() =>
-                        (window.location.href =
-                          "/collection/" + collection.collectionAddress)
-                      }
-                    >
+                    <span onClick={() => (window.location.href = '/collection/' + collection.collectionAddress)}>
                       <img
                         onLoad={onImgLoad}
                         src={collection.collectionImage}
@@ -139,18 +110,13 @@ const CollectionsList = (props) => {
                   </Outer>
                 </div>
                 <div className="nft__item_info col_info">
-                  <span
-                    onClick={() =>
-                      (window.location.href =
-                        "/collection/" + collection.collectionAddress)
-                    }
-                  >
+                  <span onClick={() => (window.location.href = '/collection/' + collection.collectionAddress)}>
                     <h4 className="nft_title_class">
                       {collection.collectionName
                         ? collection.collectionName.length > 15
-                          ? collection.collectionName.slice(0, 15) + "..."
+                          ? collection.collectionName.slice(0, 15) + '...'
                           : collection.collectionName
-                        : ""}
+                        : ''}
                     </h4>
                   </span>
 
@@ -159,20 +125,19 @@ const CollectionsList = (props) => {
               </div>
             </div>
           ))
-        : ""}
+        : ''}
 
-      {totalPages > 1 ? (
-        <Pagination
-          count={totalPages}
-          size="large"
-          page={currPage}
-          variant="outlined"
-          shape="rounded"
-          onChange={handleChange}
-        />
-      ) : (
-        ""
-      )}
+      {totalPages > 1
+        ? // <Pagination
+          //   count={totalPages}
+          //   size="large"
+          //   page={currPage}
+          //   variant="outlined"
+          //   shape="rounded"
+          //   onChange={handleChange}
+          // />
+          'null'
+        : ''}
     </div>
   );
 };

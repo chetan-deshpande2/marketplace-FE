@@ -1,45 +1,45 @@
-import React from "react";
-import { Router, Location, Redirect } from "@reach/router";
-import { connect } from "react-redux";
-import ScrollToTopBtn from "./menu/ScrollToTop";
-import Header from "./menu/header";
-import Home from "./pages/home";
-import Home1 from "./pages/home1";
-import Home2 from "./pages/home2";
-import Home3 from "./pages/home3";
-import Explore from "./pages/explore";
-import Explore2 from "./pages/explore2";
-import Rangking from "./pages/rangking";
-import Auction from "./pages/Auction";
-import Helpcenter from "./pages/helpcenter";
-import ItemDetail from "./pages/ItemDetail";
+import React from 'react';
+import { Router, Location, Redirect } from '@reach/router';
+import { connect } from 'react-redux';
+import ScrollToTopBtn from './menu/ScrollToTop';
+import Header from './menu/header';
+import Home from './pages/home';
+import Home1 from './pages/home1';
+import Home2 from './pages/home2';
+import Home3 from './pages/home3';
+import Explore from './pages/explore';
+import Explore2 from './pages/explore2';
+import Rangking from './pages/rangking';
+import Auction from './pages/Auction';
+import Helpcenter from './pages/helpcenter';
+import ItemDetail from './pages/ItemDetail';
 // import Author from "./pages/Author";
-import Wallet from "./pages/wallet";
-import Login from "./pages/login";
-import LoginTwo from "./pages/loginTwo";
-import Register from "./pages/register";
-import Price from "./pages/price";
+import Wallet from './pages/wallet';
+import Login from './pages/login';
+import LoginTwo from './pages/loginTwo';
+import Register from './pages/register';
+import Price from './pages/price';
 
-import News from "./pages/news";
-import Create from "./pages/create";
-import Create2 from "./pages/create2";
-import Create3 from "./pages/create3";
-import Createoption from "./pages/createOptions";
-import Activity from "./pages/activity";
-import Contact from "./pages/contact";
-import ElegantIcons from "./pages/elegantIcons";
-import EtlineIcons from "./pages/etlineIcons";
-import FontAwesomeIcons from "./pages/fontAwesomeIcons";
-import Accordion from "./pages/accordion";
-import Alerts from "./pages/alerts";
-import Progressbar from "./pages/progressbar";
-import Tabs from "./pages/tabs";
-import PersonalProfile from "./pages/PersonalProfile";
-import UpdateProfile from "./pages/updateProfile";
-import ItemNotFound from "./pages/ItemNotFound";
-// import ItemDetail2 from "./pages/ItemDetail2";
+import News from './pages/news';
+import Create from './pages/create';
+import Create2 from './pages/create2';
+import Create3 from './pages/create3';
+import Createoption from './pages/createOptions';
+import Activity from './pages/activity';
+import Contact from './pages/contact';
+import ElegantIcons from './pages/elegantIcons';
+import EtlineIcons from './pages/etlineIcons';
+import FontAwesomeIcons from './pages/fontAwesomeIcons';
+import Accordion from './pages/accordion';
+import Alerts from './pages/alerts';
+import Progressbar from './pages/progressbar';
+import Tabs from './pages/tabs';
+import PersonalProfile from './pages/PersonalProfile';
+import UpdateProfile from './pages/updateProfile';
+import ItemNotFound from './pages/ItemNotFound';
+import ItemDetails2 from './pages/ItemDetail2';
 
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   :root {
@@ -82,11 +82,9 @@ const app = () => (
         <Auction path="/Auction" />
         <Helpcenter path="/helpcenter" />
         <ItemDetail path="/itemDetail/:id" />
-        {/*
-             <ItemDetail path="/itemDetail">
-             <ItemDetail path="/itemDetail/:id" />
-      </ItemDetail>*/}
-        {/* <ItemDetail2 path="/itemDetails2" /> */}
+
+        <ItemDetails2 path="/itemDetail2/:id" />
+
         <UpdateProfile path="/updateProfile" />
         <PersonalProfile path="/personalProfile" />
         {/* <Author path="/Author" /> */}
