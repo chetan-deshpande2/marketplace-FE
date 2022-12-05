@@ -6,6 +6,8 @@ import { getUsersNFTs } from "../../helpers/getterFunctions";
 import { LikeNft } from "../../apiServices";
 import { GENERAL_DATE } from "../../helpers/constants";
 
+import { useNavigate } from "@reach/router";
+
 const Outer = styled.div`
   display: flex;
   justify-content: center;
@@ -18,11 +20,12 @@ const Outer = styled.div`
 const ColumnZero = (props) => {
   const [nfts, setNfts] = useState([]);
   const [height, setHeight] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("props", props);
     const fetch = async () => {
       // setLoading(true);
-      console.log("props", props);
 
       let data;
 
@@ -55,6 +58,7 @@ const ColumnZero = (props) => {
             false
           );
         }
+        console.log(data);
 
         console.log("here I am");
       }
@@ -89,11 +93,7 @@ const ColumnZero = (props) => {
                   </div>
                 )}
                 <div className="author_list_pp1">
-                  <span
-                    onClick={
-                      (() => (window.location.href = nft.authorLink), "_self")
-                    }
-                  >
+                  <span onClick={() => navigate(`nft.authorLink`)}>
                     <img
                       className="lazy author_list_pp1_img"
                       src={
@@ -124,11 +124,7 @@ const ColumnZero = (props) => {
                   </Outer>
                 </div>
                 <div className="nft__item_info">
-                  <span
-                    onClick={() =>
-                      (window.location.href = "/itemDetail/" + nft.id)
-                    }
-                  >
+                  <span onClick={() => navigate(`/itemDetail/${nft.id}`)}>
                     <h4>{nft.title}</h4>
                   </span>
                   <div className="nft__item_price">
@@ -138,11 +134,11 @@ const ColumnZero = (props) => {
                   <div className="nft__item_action">
                     {console.log("nft.id", nft)}
                     <span
-                      onClick={() =>
-                        (window.location.href = "/itemDetail/" + nft.id)
-                      }
+                      onClick={() => {
+                        navigate(`/itemDetails/${nft.id} `);
+                      }}
                     >
-                      Buy Now
+                      Item Details
                     </span>
                   </div>
                   <div className="nft__item_like">

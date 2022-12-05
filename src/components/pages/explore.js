@@ -13,6 +13,7 @@ import { useNavigate } from "@reach/router";
 // import ReactDOM from 'react-dom';
 import ReactPaginate from "react-paginate";
 import Loader from "../components/loader";
+import "../../assets/changes.css";
 
 // import Pagination from './Pagination.js';
 const ipfsAPI = require("ipfs-api");

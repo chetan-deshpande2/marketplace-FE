@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Clock from "./Clock";
-import { GetOnSaleItems, GetSearchedNft, LikeNft } from "../../apiServices";
-import { connect } from "react-redux";
-import { useNavigate } from "@reach/router";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Clock from './Clock';
+import { GetOnSaleItems, GetSearchedNft, LikeNft } from '../../apiServices';
+import { connect } from 'react-redux';
+import { useNavigate } from '@reach/router';
+import '../../assets/changes.css';
 // import ReactDOM from 'react-dom';
 import ReactPaginate from "react-paginate";
 // import Pagination from './Pagination.js';
 
-const ipfsAPI = require("ipfs-api");
+const ipfsAPI = require('ipfs-api');
 
-const ipfs = ipfsAPI("ipfs.infura.io", "5001", {
-  protocol: "https",
-  auth: "21w11zfV67PHKlkAEYAZWoj2tsg:f2b73c626c9f1df9f698828420fa8439",
+const ipfs = ipfsAPI('ipfs.infura.io', '5001', {
+  protocol: 'https',
+  auth: '21w11zfV67PHKlkAEYAZWoj2tsg:f2b73c626c9f1df9f698828420fa8439',
 });
 
 const Outer = styled.div`
@@ -25,7 +26,7 @@ const Outer = styled.div`
 `;
 
 var NftPreview = {
-  background: "red",
+  background: 'red',
   // backgroundImage: "",
 };
 
@@ -46,7 +47,7 @@ function ColumnNew (props, itemsPerPage){
 
   useEffect(() => {
     async function fetch() {
-      console.log("propss", props);
+      console.log('propss', props);
       let data;
       let itemsOnSale = [];
 
@@ -79,14 +80,14 @@ function ColumnNew (props, itemsPerPage){
           length: 48,
           start: 0,
           sTextsearch: props.searchedData,
-          sSellingType: "",
-          sSortingType: "",
+          sSellingType: '',
+          sSortingType: '',
           page: 1,
           limit: 4,
         };
         itemsOnSale = await GetSearchedNft(reqParams);
       }
-      console.log("itemsOnSale", itemsOnSale.results.length);
+      console.log('itemsOnSale', itemsOnSale.results.length);
       let localRes = [];
       // for (let i = 0; i < itemsOnSale?.results?.length; i++) {
       //   console.log("resssss111", itemsOnSale.results[i].nHash);
@@ -98,9 +99,7 @@ function ColumnNew (props, itemsPerPage){
       // }
 
       for (let i = 0; i < itemsOnSale?.results[0]?.length; i++) {
-        itemsOnSale.results[i].imageHash = JSON.parse(
-          localRes[i].toString("utf8")
-        ).image;
+        itemsOnSale.results[i].imageHash = JSON.parse(localRes[i].toString('utf8')).image;
       }
 
       setItems(itemsOnSale && itemsOnSale.results ? itemsOnSale.results : []);
@@ -125,7 +124,7 @@ function ColumnNew (props, itemsPerPage){
   };
 
   return (
-    <><div className="row">
+    <><div className="row items-cards">
       {items
         ? items.map((nft, index) => {
           return (

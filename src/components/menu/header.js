@@ -251,8 +251,11 @@ const Header = function () {
                     </div>
                   </div>
                   <div className="navbar-item">
-                    <NavLink to="/activity" onClick={() => btn_icon(!showmenu)}>
-                      Activity
+                    <NavLink
+                      to="/personalProfile"
+                      onClick={() => btn_icon(!showmenu)}
+                    >
+                      Profile
                     </NavLink>
                   </div>
                   {/* <div className="navbar-item">
@@ -338,12 +341,6 @@ const Header = function () {
                         <div className="item-dropdown">
                           <div className="dropdown" onClick={closeMenu1}>
                             <NavLink to="/explore">Explore</NavLink>
-                            {/* <NavLink to="/explore2">Explore 2</NavLink>
-                            <NavLink to="/rangking">Rangking</NavLink>
-                            <NavLink to="/colection">Collection</NavLink>
-                            <NavLink to="/ItemDetail">Items Details</NavLink>
-                            <NavLink to="/Auction">Live Auction</NavLink>
-                            <NavLink to="/helpcenter">Help Center</NavLink> */}
                           </div>
                         </div>
                       )}
@@ -370,7 +367,7 @@ const Header = function () {
                   </div>
                 </div>
                 <div className="navbar-item">
-                  <NavLink to="/Author">
+                  <NavLink to="/personalProfile">
                     Profile
                     <span className="lines"></span>
                   </NavLink>

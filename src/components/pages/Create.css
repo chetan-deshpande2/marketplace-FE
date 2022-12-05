@@ -46,16 +46,39 @@
 }
 .choose-collection-img {
   width: -webkit-fill-available;
-  height: 11vh;
-  border-radius: 12px;
+  border-radius: 0px;
+  max-height: 55px;
+  height: 35px;
 }
-
+#custom-create .de_nav li.active span {
+  min-width: 160px;
+  height: 154px;
+}
+#custom-create .de_nav li span {
+  padding: 15px;
+  min-width: 140px;
+}
 .scrollable {
   float: left;
   width: 800px;
   overflow-y: auto;
   height: 300px;
 }
+/* .author_list_pp .c-author-img {
+  top: -5px;
+  position: absolute;
+}
+.c-items {
+  max-height: 200px;
+  overflow: hidden;
+}
+.nft__item_wrap .c-previous-items {
+  max-height: 200px;
+}
+.nft__item_wrap .c-previous-items img{
+  max-height: 125px;
+  max-width: 185px;
+} */
 
 @media screen and (max-width: 767px) {
   .loader_popup-box {

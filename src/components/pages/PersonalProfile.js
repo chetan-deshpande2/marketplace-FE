@@ -1,38 +1,50 @@
-import React, { useState, useEffect, useRef } from "react";
-import ColumnZero from "../components/ColumnZero";
-import ColumnZeroTwo from "../components/ColumnZeroTwo";
-import ColumnZeroThree from "../components/ColumnZeroThree";
-import Footer from "../components/footer";
-import { createGlobalStyle } from "styled-components";
-import { connect } from "react-redux";
-import { getProfile } from "../../apiServices";
-import Avatar from "../../assets/images/avatar5.jpg";
-import { BsPencilSquare } from "react-icons/bs";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { NotificationManager } from "react-notifications";
-import {
-  nftListParamsUpdate,
-  userProfileDataLoaded,
-} from "../../redux/actions";
+import React, { useState, useEffect, useRef } from 'react';
+import ColumnZero from '../components/ColumnZero';
+import Footer from '../components/footer';
+import { createGlobalStyle } from 'styled-components';
+import { connect } from 'react-redux';
+import { getProfile } from '../../apiServices';
+import Avatar from '../../assets/images/avatar5.jpg';
+import { BsPencilSquare } from 'react-icons/bs';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { NotificationManager } from 'react-notifications';
+import { nftListParamsUpdate, userProfileDataLoaded } from '../../redux/actions';
 // import "./profilePage.css";
+import { useNavigate } from '@reach/router';
 
 const GlobalStyles = createGlobalStyle`
-  header#myHeader.navbar.white {
-    background: #fff;
+  header#myHeader.navbar.sticky.white {
+    background: #403f83;
+    border-bottom: solid 1px #403f83;
+  }
+  header#myHeader.navbar .search #quick_search{
+    color: #fff;
+    background: rgba(255, 255, 255, .1);
+  }
+  header#myHeader.navbar.white .btn, .navbar.white a, .navbar.sticky.white a{
+    color: #fff;
+  }
+  header#myHeader .dropdown-toggle::after{
+    color: rgba(255, 255, 255, .5);
+  }
+  header#myHeader .logo .d-block{
+    display: none !important;
+  }
+  header#myHeader .logo .d-none{
+    display: block !important;
   }
   @media only screen and (max-width: 1199px) {
     .navbar{
       background: #403f83;
     }
     .navbar .menu-line, .navbar .menu-line1, .navbar .menu-line2{
-      background: #111;
+      background: #fff;
     }
     .item-dropdown .dropdown a{
-      color: #111 !important;
+      color: #fff !important;
     }
   }
 `;
-
 const PersonalProfile = (props) => {
   const [openMenu, setOpenMenu] = useState(true);
   const [openMenu1, setOpenMenu1] = useState(false);
@@ -40,47 +52,46 @@ const PersonalProfile = (props) => {
   const [openMenu3, setOpenMenu3] = useState(false);
   const [openMenu4, setOpenMenu4] = useState(false);
   const [profilePic, setProfilePic] = useState(Avatar);
-  const [fullName, setFullName] = useState("Unnamed");
-  const [userName, setUserName] = useState("@unnamed");
-  const [address, setAddress] = useState("0x0..");
-  const [authorization, setAuthorization] = useState("");
+  const [fullName, setFullName] = useState('Unnamed');
+  const [userName, setUserName] = useState('@unnamed');
+  const [address, setAddress] = useState('0x0..');
+  const [authorization, setAuthorization] = useState('');
   const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({});
   const isMounted = useRef(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setAuthorization(localStorage.getItem("Authorization"));
+    console.log(props);
+    setAuthorization(localStorage.getItem('Authorization'));
     props.dispatch(
       nftListParamsUpdate({
         paramType: 0,
-      })
+      }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localStorage.getItem("Authorization")]);
+  }, [localStorage.getItem('Authorization')]);
 
   useEffect(() => {
     async function fetchData() {
+      console.log(props);
       if ((props.token && props.token.token) || authorization) {
         setLoading(true);
         const profileInfo = await getProfile();
-        if (profileInfo && profileInfo.data) {
-          let profileData = profileInfo.data;
-          if (
-            profileData.oName &&
-            profileData.oName.sFirstname &&
-            profileData.oName.sLastname
-          ) {
-            setFullName(
-              profileData.oName.sFirstname + " " + profileData.oName.sLastname
-            );
+        console.log(profileInfo.user);
+        if (profileInfo) {
+          let profileData = profileInfo.user;
+          if (profileData.oName && profileData.oName.sFirstname && profileData.oName.sLastname) {
+            setFullName(profileData.oName.sFirstname + ' ' + profileData.oName.sLastname);
           } else {
-            setFullName("Unnamed");
+            console.log('in else');
+            setFullName('Unnamed');
           }
 
           if (profileData.sUserName) {
-            setUserName("@" + profileData.sUserName);
+            setUserName('@' + profileData.sUserName);
           } else {
-            setUserName("@unnamed");
+            setUserName('@unnamed');
           }
 
           if (profileData.sWalletAddress) {
@@ -88,28 +99,30 @@ const PersonalProfile = (props) => {
           } else if (props.account && props.account.account) {
             setAddress(props.account.account);
           } else {
-            setAddress("0x0..");
+            setAddress('0x0..');
           }
 
           let sProfilePicUrl =
             profileData.sProfilePicUrl === undefined
               ? Avatar
-              : "https://decryptnft.mypinata.cloud/ipfs/" +
-                profileData.sProfilePicUrl;
+              : 'https://decryptnft.mypinata.cloud/ipfs/' + profileData.sProfilePicUrl;
           setProfilePic(sProfilePicUrl);
           setProfileData(profileData);
           setLoading(false);
         }
       }
     }
-    if ((props.token && props.token.token) || authorization) fetchData();
+    if (props.token || authorization) fetchData();
   }, [props.token, authorization, props.account]);
 
   useEffect(() => {
+    setTimeout(() => {
+      console.log(profileData);
+    }, 5000);
     props.dispatch(
       userProfileDataLoaded({
         profileData: profileData,
-      })
+      }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileData]);
@@ -125,15 +138,15 @@ const PersonalProfile = (props) => {
     setOpenMenu2(false);
     setOpenMenu3(false);
     setOpenMenu4(false);
-    document.getElementById("Mainbtn").classList.add("active");
-    document.getElementById("Mainbtn1").classList.remove("active");
-    document.getElementById("Mainbtn2").classList.remove("active");
-    document.getElementById("Mainbtn3").classList.remove("active");
-    document.getElementById("Mainbtn4").classList.remove("active");
+    document.getElementById('Mainbtn').classList.add('active');
+    document.getElementById('Mainbtn1').classList.remove('active');
+    document.getElementById('Mainbtn2').classList.remove('active');
+    document.getElementById('Mainbtn3').classList.remove('active');
+    document.getElementById('Mainbtn4').classList.remove('active');
     props.dispatch(
       nftListParamsUpdate({
         paramType: 0,
-      })
+      }),
     );
   };
 
@@ -143,15 +156,15 @@ const PersonalProfile = (props) => {
     setOpenMenu(false);
     setOpenMenu3(false);
     setOpenMenu4(false);
-    document.getElementById("Mainbtn").classList.remove("active");
-    document.getElementById("Mainbtn1").classList.add("active");
-    document.getElementById("Mainbtn2").classList.remove("active");
-    document.getElementById("Mainbtn3").classList.remove("active");
-    document.getElementById("Mainbtn4").classList.remove("active");
+    document.getElementById('Mainbtn').classList.remove('active');
+    document.getElementById('Mainbtn1').classList.add('active');
+    document.getElementById('Mainbtn2').classList.remove('active');
+    document.getElementById('Mainbtn3').classList.remove('active');
+    document.getElementById('Mainbtn4').classList.remove('active');
     props.dispatch(
       nftListParamsUpdate({
         paramType: 1,
-      })
+      }),
     );
   };
 
@@ -161,15 +174,15 @@ const PersonalProfile = (props) => {
     setOpenMenu1(false);
     setOpenMenu3(false);
     setOpenMenu4(false);
-    document.getElementById("Mainbtn").classList.remove("active");
-    document.getElementById("Mainbtn1").classList.remove("active");
-    document.getElementById("Mainbtn2").classList.add("active");
-    document.getElementById("Mainbtn3").classList.remove("active");
-    document.getElementById("Mainbtn4").classList.remove("active");
+    document.getElementById('Mainbtn').classList.remove('active');
+    document.getElementById('Mainbtn1').classList.remove('active');
+    document.getElementById('Mainbtn2').classList.add('active');
+    document.getElementById('Mainbtn3').classList.remove('active');
+    document.getElementById('Mainbtn4').classList.remove('active');
     props.dispatch(
       nftListParamsUpdate({
         paramType: 2,
-      })
+      }),
     );
   };
 
@@ -179,15 +192,15 @@ const PersonalProfile = (props) => {
     setOpenMenu1(false);
     setOpenMenu3(!openMenu3);
     setOpenMenu4(false);
-    document.getElementById("Mainbtn").classList.remove("active");
-    document.getElementById("Mainbtn1").classList.remove("active");
-    document.getElementById("Mainbtn2").classList.remove("active");
-    document.getElementById("Mainbtn3").classList.add("active");
-    document.getElementById("Mainbtn4").classList.remove("active");
+    document.getElementById('Mainbtn').classList.remove('active');
+    document.getElementById('Mainbtn1').classList.remove('active');
+    document.getElementById('Mainbtn2').classList.remove('active');
+    document.getElementById('Mainbtn3').classList.add('active');
+    document.getElementById('Mainbtn4').classList.remove('active');
     props.dispatch(
       nftListParamsUpdate({
         paramType: 3,
-      })
+      }),
     );
   };
 
@@ -197,27 +210,27 @@ const PersonalProfile = (props) => {
     setOpenMenu1(false);
     setOpenMenu3(false);
     setOpenMenu4(!openMenu4);
-    document.getElementById("Mainbtn").classList.remove("active");
-    document.getElementById("Mainbtn1").classList.remove("active");
-    document.getElementById("Mainbtn2").classList.remove("active");
-    document.getElementById("Mainbtn3").classList.remove("active");
-    document.getElementById("Mainbtn4").classList.add("active");
+    document.getElementById('Mainbtn').classList.remove('active');
+    document.getElementById('Mainbtn1').classList.remove('active');
+    document.getElementById('Mainbtn2').classList.remove('active');
+    document.getElementById('Mainbtn3').classList.remove('active');
+    document.getElementById('Mainbtn4').classList.add('active');
     props.dispatch(
       nftListParamsUpdate({
         paramType: 4,
-      })
+      }),
     );
   };
 
   return (
     <div>
-      {" "}
+      {' '}
       <GlobalStyles />
       <section
         id="profile_banner"
         className="jumbotron breadcumb no-bg"
         style={{
-          backgroundImage: `url(${"./img/background/subheader.jpg"})`,
+          backgroundImage: `url(${'./img/background/subheader.jpg'})`,
         }}
       >
         <div className="mainbreadcumb"></div>
@@ -228,7 +241,7 @@ const PersonalProfile = (props) => {
             <div className="d_profile de-flex">
               <div className="de-flex-col">
                 <div className="profile_avatar">
-                  <img src={profilePic ? profilePic : ""} alt="" />
+                  <img src={profilePic ? profilePic : ''} alt="" />
                   <i className="fa fa-check"></i>
                   <div className="profile_name">
                     <h4>
@@ -237,20 +250,18 @@ const PersonalProfile = (props) => {
                         <BsPencilSquare
                           className="BsPencilSquare"
                           onClick={() => {
-                            window.location.href = "/updateProfile";
+                            navigate('/updateProfile');
                           }}
                         />
                       </div>
-                      <span className="profile_username">
-                        {userName ? userName : "@unnamed"}
-                      </span>
+                      <span className="profile_username">{userName ? userName : '@unnamed'}</span>
                       <span id="wallet" className="profile_wallet">
-                        {address ? address : "0x00.."}
+                        {address ? address : '0x00..'}
                       </span>
                       <CopyToClipboard
                         text={address}
                         onCopy={() => {
-                          NotificationManager.success("Copied!!");
+                          NotificationManager.success('Copied!!');
                         }}
                       >
                         <button id="btn_copy" title="Copy Text">
@@ -262,14 +273,7 @@ const PersonalProfile = (props) => {
                 </div>
               </div>
 
-              <div className="profile_follow de-flex">
-                <div className="de-flex-col">
-                  <div className="profile_follower">0 followers</div>
-                </div>
-                <div className="de-flex-col">
-                  <div className="profile_following">0 following</div>
-                </div>
-              </div>
+              {/* <div className="profile_follow de-flex"></div> */}
             </div>
           </div>
         </div>
@@ -300,6 +304,26 @@ const PersonalProfile = (props) => {
             <ColumnZero />
           </div>
         )}
+        {openMenu1 && (
+          <div id="zero2" className="onStep fadeIn">
+            <ColumnZero />
+          </div>
+        )}
+        {openMenu2 && (
+          <div id="zero3" className="onStep fadeIn">
+            <ColumnZero />
+          </div>
+        )}
+        {openMenu3 && (
+          <div id="zero4" className="onStep fadeIn">
+            <ColumnZero />
+          </div>
+        )}
+        {/* {openMenu4 && (
+          <div id="zero5" className="onStep fadeIn">
+            <GeneralCollectionsPage />
+          </div>
+        )} */}
       </section>
       <Footer />
     </div>
