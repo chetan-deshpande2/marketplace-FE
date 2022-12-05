@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
-import ColumnNew from "../components/ColumnNew";
+
 import Footer from "../components/footer";
 import { createGlobalStyle } from "styled-components";
 import { connect } from "react-redux";
 import { exploreSaleTypeUpdated } from "../../redux/actions";
 import styled from "styled-components";
 import Clock from "../components/Clock";
-import { GetOnSaleItems, GetSearchedNft, LikeNft } from "../../apiServices";
-// import { connect } from "react-redux";
+import { GetOnSaleItems, GetSearchedNft } from "../../apiServices";
 import { useNavigate } from "@reach/router";
-// import ReactDOM from 'react-dom';
+
 import ReactPaginate from "react-paginate";
 import Loader from "../components/loader";
 import "../../assets/changes.css";
 
-// import Pagination from './Pagination.js';
 const ipfsAPI = require("ipfs-api");
 
 const ipfs = ipfsAPI("ipfs.infura.io", "5001", {
@@ -32,11 +30,10 @@ const Outer = styled.div`
   border-radius: 8px;
 `;
 
-const itemPerPage = 4
+const itemPerPage = 4;
 
 var NftPreview = {
   background: "red",
-  // backgroundImage: "",
 };
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -117,8 +114,7 @@ const options2 = [
 
 const Explore = (props) => {
   const [saleType, setSaleType] = useState(-1);
-  const [nftType, setNftType] = useState(-1);
-  const [searchedData, setSearchedData] = useState("");
+  
 
   useEffect(() => {
     props.dispatch(
@@ -128,63 +124,10 @@ const Explore = (props) => {
     );
   }, [saleType]);
 
-  const handleSaleTypeChange = (e) => {
-    console.log("ee", e);
-
-    console.log("valuee", e.value);
-    if (e.value === "All Sale Type") {
-      setSaleType(-1);
-      props.dispatch(
-        exploreSaleTypeUpdated({
-          exploreSaleType: -1,
-        })
-      );
-    } else if (e.value === "Buy Now") {
-      setSaleType(0);
-      props.dispatch(
-        exploreSaleTypeUpdated({
-          exploreSaleType: 0,
-        })
-      );
-    } else if (e.value === "On Auction") {
-      setSaleType(1);
-      props.dispatch(
-        exploreSaleTypeUpdated({
-          exploreSaleType: 1,
-        })
-      );
-    } else if (e.value === "Floor Price Bid") {
-      setSaleType(2);
-      props.dispatch(
-        exploreSaleTypeUpdated({
-          exploreSaleType: 2,
-        })
-      );
-    }
-  };
-
-  const handleNftTypeChange = (e) => {
-    console.log("ee", e);
-
-    console.log("valuee", e.value);
-    if (e.value === "All Items") {
-      setNftType(-1);
-    } else if (e.value === "Single Items") {
-      setNftType(1);
-    } else if (e.value === "Multiple Items") {
-      setNftType(2);
-    }
-  };
-
-  const handleSearch = (e) => {
-    setSearchedData(e.target.value);
-  };
   const [height, setHeight] = useState(0);
-  const [itemOffset, setItemOffset] = useState(0);
   const [items, setItems] = useState([]);
-  const [countItem, setCountItem] = useState(0)
-  const [likeEvent, setLikeEvent] = useState(false);
-  const [loading, setLoading] = useState(true)
+  const [countItem, setCountItem] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -195,71 +138,64 @@ const Explore = (props) => {
     }
   };
 
-  const fetch  =  useCallback(
-    async (_page_no = 1)  => {
-       setLoading(true)
-        let data;
-        let itemsOnSale = [];
-    
-        if (!props.searchedData) {
-          if (props.exploreSaleType?.exploreSaleType === -1) {
-            data = {
-              page: _page_no,
-              limit: itemPerPage,
-              itemType: 1,
-              sSellingType: 0,
-            };
-          } else {
-            data = {
-              page: _page_no,
-              limit: itemPerPage,
-              itemType: 1,
-              // sSellingType: props.exploreSaleType?.exploreSaleType,
-              sSellingType: 0,
-            };
-          }
-          itemsOnSale = await GetOnSaleItems(data);
-    
-          let nftType = 1;
-          if (nftType !== -1)
-            itemsOnSale.results = itemsOnSale.results.filter((item) => {
-              return item.nType === nftType;
-            });
-        } else {
-          let reqParams = {
-            length: 48,
-            start: 0,
-            sTextsearch: props.searchedData,
-            sSellingType: "",
-            sSortingType: "",
-            page: _page_no,
-            limit: 4,
-          };
-          itemsOnSale = await GetSearchedNft(reqParams);
-        }
-        setCountItem(itemsOnSale?.count / itemPerPage)
-        let localRes = [];
-        for (let i = 0; i < itemsOnSale?.results[0]?.length; i++) {
-          itemsOnSale.results[i].imageHash = JSON.parse(
-            localRes[i].toString("utf8")
-          ).image;
-        }
-        setItems(itemsOnSale && itemsOnSale.results ? itemsOnSale.results : []);
-        setLoading(false)
-    },[])
-  
+  const fetch = useCallback(async (_page_no = 1) => {
+    setLoading(true);
+    let data;
+    let itemsOnSale = [];
+
+    if (!props.searchedData) {
+      if (props.exploreSaleType?.exploreSaleType === -1) {
+        data = {
+          page: _page_no,
+          limit: itemPerPage,
+          itemType: 1,
+          sSellingType: 0,
+        };
+      } else {
+        data = {
+          page: _page_no,
+          limit: itemPerPage,
+          itemType: 1,
+          sSellingType: 0,
+        };
+      }
+      itemsOnSale = await GetOnSaleItems(data);
+
+      let nftType = 1;
+      if (nftType !== -1)
+        itemsOnSale.results = itemsOnSale.results.filter((item) => {
+          return item.nType === nftType;
+        });
+    } else {
+      let reqParams = {
+        length: 48,
+        start: 0,
+        sTextsearch: props.searchedData,
+        sSellingType: "",
+        sSortingType: "",
+        page: _page_no,
+        limit: 4,
+      };
+      itemsOnSale = await GetSearchedNft(reqParams);
+    }
+    setCountItem(itemsOnSale?.count / itemPerPage);
+    let localRes = [];
+    for (let i = 0; i < itemsOnSale?.results[0]?.length; i++) {
+      itemsOnSale.results[i].imageHash = JSON.parse(
+        localRes[i].toString("utf8")
+      ).image;
+    }
+    setItems(itemsOnSale && itemsOnSale.results ? itemsOnSale.results : []);
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
     fetch();
   }, [props]);
-  const endOffset = itemOffset + 3;
-  console.log(endOffset)
-  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
 
-  const pages = items;
-  
   const handlePageClick = (page_no) => {
-    let page_no_val = page_no?.selected
-    fetch(page_no_val+1)
+    let page_no_val = page_no?.selected;
+    fetch(page_no_val + 1);
   };
 
   return (
@@ -329,106 +265,105 @@ const Explore = (props) => {
             </div>
           </div>
         </div>
-        
-      
-         <><div className="row">
-         {(!loading && items)
-          ? items.map((nft, index) => {
-            return (
-              <div
-                key={index}
-                className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4"
-              >
-                <div className="nft__item m-0">
-                  {" "}
-                  {nft.deadline && (
-                    <div className="de_countdown">
-                      <Clock deadline={nft.nOrders.oValidUpto} />
-                    </div>
-                  )}
-                  <div className="author_list_pp_explore_page">
-                    <span
-                      onClick={() => {
-                        navigate(`/itemDetail/${nft.nCreater._id}`);
-                      } }
+
+        <>
+          <div className="row">
+            {!loading && items
+              ? items.map((nft, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4"
                     >
-                      <img
-                        style={NftPreview}
-                        className="lazy "
-                        src={nft.nCreater?.sProfilePicUrl
-                          ? "https://gateway.pinata.cloud/ipfs/QmdaGBG8mjZgkg3Z2uvzJ57tdGTJscSGJcuR3fxqdtJbmM" +
-                          nft.nCreater.sProfilePicUrl
-                          : "https://gateway.pinata.cloud/ipfs/QmdaGBG8mjZgkg3Z2uvzJ57tdGTJscSGJcuR3fxqdtJbmM"}
-                        alt="" />
-                    </span>
-                  </div>
-                  <div
-                    // onClick={console.log("nftId===========", nft._id)}
-                    onClick={() => navigate(`./itemDetail/${nft._id}`)}
-                    className="nft__item_wrap"
-                    style={{ height: `${height}px` }}
-                  >
-                    <Outer>
-                      <span>
-                        <img
-                          onLoad={onImgLoad}
-                          src={nft.imageHash}
-                          className="lazy nft__item_preview slider-img-preview"
-                          alt="" />
-                      </span>
-                    </Outer>
-                  </div>
-                  <div className="nft__item_info">
-                    <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
-                      <h4>{nft.nTitle}</h4>
-                    </span>
-                    <div className="nft__item_price">
-                      {/* {convertToEth(nft?.nOrders[0]?.oPrice.$numberDecimal)} ETH */}
+                      <div className="nft__item m-0">
+                        {" "}
+                        {nft.deadline && (
+                          <div className="de_countdown">
+                            <Clock deadline={nft.nOrders.oValidUpto} />
+                          </div>
+                        )}
+                        <div className="author_list_pp_explore_page">
+                          <span
+                            onClick={() => {
+                              navigate(`/itemDetail/${nft.nCreater._id}`);
+                            }}
+                          >
+                            <img
+                              style={NftPreview}
+                              className="lazy "
+                              src={
+                                nft.nCreater?.sProfilePicUrl
+                                  ? "https://gateway.pinata.cloud/ipfs/QmdaGBG8mjZgkg3Z2uvzJ57tdGTJscSGJcuR3fxqdtJbmM" +
+                                    nft.nCreater.sProfilePicUrl
+                                  : "https://gateway.pinata.cloud/ipfs/QmdaGBG8mjZgkg3Z2uvzJ57tdGTJscSGJcuR3fxqdtJbmM"
+                              }
+                              alt=""
+                            />
+                          </span>
+                        </div>
+                        <div
+                          onClick={() => navigate(`./itemDetail/${nft._id}`)}
+                          className="nft__item_wrap"
+                          style={{ height: `${height}px` }}
+                        >
+                          <Outer>
+                            <span>
+                              <img
+                                onLoad={onImgLoad}
+                                src={nft.imageHash}
+                                className="lazy nft__item_preview slider-img-preview"
+                                alt=""
+                              />
+                            </span>
+                          </Outer>
+                        </div>
+                        <div className="nft__item_info">
+                          <span
+                            onClick={() => navigate(`/itemDetail/${nft._id}`)}
+                          >
+                            <h4>{nft.nTitle}</h4>
+                          </span>
+                          <div className="nft__item_price"></div>
+                          <div className="nft__item_action">
+                            <span
+                              onClick={() => navigate(`/itemDetail/${nft._id}`)}
+                            >
+                              View Item
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="nft__item_action">
-                      <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
-                        View Item
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-          : ""}
+                  );
+                })
+              : ""}
 
-          {loading &&  <Loader /> }
-         
+            {loading && <Loader />}
 
-      {/* <ColumnNew itemsPerPage={4} /> */}
-    </div>
-    
-    <ReactPaginate
-        previousLabel="Previous"
-        nextLabel="Next"
-        pageClassName="page-item"
-        pageLinkClassName="page-link"
-        previousClassName="page-item"
-        previousLinkClassName="page-link"
-        nextClassName="page-item"
-        nextLinkClassName="page-link"
-        breakLabel="..."
-        breakClassName="page-item"
-        breakLinkClassName="page-link"
-        containerClassName="pagination"
-        activeClassName="active"
-        onPageChange={handlePageClick}
-        Displayed 
-        Page 
-        Range={itemPerPage}
-        pageCount={countItem}
-        renderOnZeroPageCount={null} /></>  
+          </div>
 
-
-{/* // ReactDOM.render(
-//   <ColumnNew itemsPerPage={4} />,
-//   document.getElementById('container')
-// ); */}
+          <ReactPaginate
+            previousLabel="Previous"
+            nextLabel="Next"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakLabel="..."
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            onPageChange={handlePageClick}
+            Displayed
+            Page
+            Range={itemPerPage}
+            pageCount={countItem}
+            renderOnZeroPageCount={null}
+          />
+        </>
       </section>
 
       <Footer />

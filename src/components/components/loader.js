@@ -1,9 +1,12 @@
-const Loader = () => {
+import React from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+
+function Loader() {
   return (
     <div className="loader-div">
-       <h4>Loading...</h4> 
+      <CircularProgress />{" "}
     </div>
   );
-};
+}
 
 export default Loader;

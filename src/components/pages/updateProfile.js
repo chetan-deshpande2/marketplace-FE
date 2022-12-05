@@ -56,7 +56,6 @@ const UpdateProfile = (props) => {
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      console.log(img);
       setProfilePic(img);
     }
   };
@@ -76,7 +75,6 @@ const UpdateProfile = (props) => {
   };
 
   const handleUpdateProfile = async () => {
-    console.log(props.account.account);
     let data = {
       uname: uname,
       fname: fname,
@@ -87,7 +85,6 @@ const UpdateProfile = (props) => {
       userProfile: profilePic,
       email: email,
     };
-    console.log(data);
     let res = await isValidEmail(email);
     if (!res) {
       return;
@@ -96,7 +93,6 @@ const UpdateProfile = (props) => {
       setLoading(true);
       try {
         let res = await updateProfile(props.account.account, data);
-        console.log(res);
         if (res === "User Details updated") {
           NotificationManager.success(res);
           navigate("/personalProfile");
@@ -104,7 +100,6 @@ const UpdateProfile = (props) => {
           NotificationManager.error(res);
         }
       } catch (e) {
-        console.log("error", e);
         NotificationManager.error("Something Went Wrong");
       }
 
@@ -125,7 +120,6 @@ const UpdateProfile = (props) => {
             <div className="row">
               <div className="col-md-12 text-center">
                 <h1>Update Profile</h1>
-                {/* <p>Anim pariatur cliche reprehenderit</p> */}
               </div>
             </div>
           </div>
