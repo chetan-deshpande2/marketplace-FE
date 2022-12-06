@@ -771,7 +771,7 @@ const Create2 = (props) => {
                                   <div id="form-create-item" className="form-border" action="#">
                                     <div className="collection-field-set">
                                       <h5 className="mb-3">Upload Collection Cover</h5>
-                                      <div className="row align-items-center">
+                                      <div className="row align-items-center justify-content-center">
                                         <span className="col-md-5 col-sm-12 padding_span text-center">
                                           <img
                                             src={image ? URL.createObjectURL(image) : null}
