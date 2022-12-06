@@ -53,10 +53,11 @@
 }
 
 .de_nav li span img {
-  max-height: 123px;
+  min-height: 125px;
   max-width: 185px;
   object-fit: cover;
   object-position: center;
+  height: 200px;
 }
 #custom-create .de_nav li.active span {
   min-width: 160px;

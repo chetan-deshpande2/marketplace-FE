@@ -184,7 +184,7 @@ const CarouselNew = (props) => {
                       />
                     </span>
                   </div>
-                  <div
+                  {/* <div
                     // onClick={console.log("nftId===========", nft._id)}
                     onClick={() => navigate(`./itemDetail/${nft._id}`)}
                     className="nft__item_wrap"
@@ -200,9 +200,9 @@ const CarouselNew = (props) => {
                         />
                       </span>
                     </Outer>
-                  </div>
-                  <div className="nft__item_info">
-                    <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
+                  </div> */}
+                  <div className="nft__item_info mt-3">
+                    <span className='text-center' onClick={() => navigate(`/itemDetail/${nft._id}`)}>
                       <h4>{nft.nTitle}</h4>
                     </span>
 
