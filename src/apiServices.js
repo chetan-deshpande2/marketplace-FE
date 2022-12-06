@@ -854,8 +854,8 @@ export const GetHistory = async (data) => {
     let response = await fetch(REACT_APP_API_BASE_URL + '/history/fetchHistory', requestOptions);
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
-    return datas.data;
+    console.log(datas.results);
+    return datas.results;
   } catch (err) {
     return err;
   }
