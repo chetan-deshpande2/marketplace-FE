@@ -18,7 +18,7 @@ const fadeInUp = keyframes`
 `;
 
 const FeatureBox = () => (
-  <div className="row">
+  <div className="row c-tabs-nft">
     {/* <h1 className="Create-sell-h1">How it works.</h1> */}
     <div className="col-lg-12">
       <div className="text-center">

@@ -1036,7 +1036,7 @@ const Create3 = (props) => {
                 <h5 className="required">Choose Collection</h5>
 
                 <div className="de_tab tab_methods">
-                  <div className="scrollable mb-5">
+                  <div className="scrollable mb-5 c-collections">
                     <ul className="de_nav">
                       <li id="btn4" className="active" onClick={handleShow3}>
                         <span onClick={togglePopup}>

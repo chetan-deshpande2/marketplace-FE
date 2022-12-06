@@ -47,6 +47,17 @@ iframe {
 .custom-popup-box .close-icon{
   background-color: rgb(131, 100, 226);
 }
+.c-tabs-nft .feature-box.howitwork{
+  min-height: 421px;
+}
+.items-cards .d-item .nft__item{
+  min-height: 245px;
+  display: flex;
+  justify-content: space-between;
+}
+.c-collections .de_nav:not(:first-child) span{
+  padding:10px
+}
 @media (max-width: 991px) {
   .offset-lg-1 {
     margin-left: 0;
