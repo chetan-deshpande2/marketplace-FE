@@ -1,0 +1,12 @@
+.hidden-content-label {
+  display: none;
+}
+
+.item_info_lock:hover + .hidden-content-label {
+  display: block;
+  color: rgb(90, 78, 78);
+}
+
+.item_info_lock {
+  cursor: pointer;
+}

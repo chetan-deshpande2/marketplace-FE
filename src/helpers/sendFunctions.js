@@ -52,7 +52,6 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
         collectionData.symbol,
         collectionData.nftFile,
         collectionData.sRoyaltyPercentage,
-        
       );
     else {
       res1 = await creator.deploySimpleERC1155(collectionData.nftFile, collectionData.sRoyaltyPercentage);
@@ -69,7 +68,7 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
     contractAddress = await readReceipt(hash);
     console.log('contract receipt', contractAddress);
     let royalty = await exportInstance(contractAddress, isSingle ? erc721Abi.abi : erc1155Abi.abi);
-    console.log('account detail', account);
+    console.log('account detail', account, collectionData.sRoyaltyPercentage);
 
     let res = await royalty.setDefaultRoyaltyDistribution([account], [collectionData.sRoyaltyPercentage]);
     res = await res.wait();

@@ -26,7 +26,6 @@ export function web3Loaded(payload) {
 }
 
 export function accountUpdateOnDisconnect() {
-  localStorage.removeItem("selected_account");
   return { type: ACCOUNT_UPDATE_ON_DISCONNECT };
 }
 
