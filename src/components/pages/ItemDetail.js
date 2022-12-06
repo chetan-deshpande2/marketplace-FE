@@ -348,7 +348,7 @@ const ItemDetails = function (props) {
             <div className="bid_user_address">
               <div>
                 <span className="adr">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
-                <span class="badge badge-success">Connected</span>
+                <span className="badge badge-success">Connected</span>
               </div>
               <span className="pgn">Polygon</span>
             </div>
@@ -669,7 +669,7 @@ const ItemDetails = function (props) {
             <div className="bid_user_address">
               <div>
                 <span className="adr">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
-                <span class="badge badge-success">Connected</span>
+                <span className="badge badge-success">Connected</span>
               </div>
               <span className="pgn">Polygon</span>
             </div>

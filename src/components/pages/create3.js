@@ -81,82 +81,6 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const Create3 = (props) => {
-  // const [open, setOpen] = React.useState(false);
-
-  // const [file, setFile] = useState();
-  // const [show3, setShow3] = useState(false);
-  // const [mint, setMint] = useState(true);
-  // const [toggle, setToggle] = useState(false);
-  // const [count, setCount] = useState(0);
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
-  // const [show1, setShow1] = useState(false);
-
-  // const [auction, setAuction] = useState(false);
-  // const [bids, setBids] = useState(false);
-  // const [startDate, setStartDate] = useState(new Date());
-
-  // //* ============================================================
-
-  // const [nftFiles, setNftFiles] = useState([]);
-  // const [isActive, setIsActive] = useState(false);
-  // const [isUnlock, setIsUnlock] = useState(false);
-  // const [files, setFiles] = useState([]);
-  // const [image, setImage] = useState();
-  // const [title, setTitle] = useState('');
-  // const [symbol, setSymbol] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [royalty, setRoyalty] = useState(0);
-  // const [loading, setLoading] = useState(false);
-  // const [price, setPrice] = useState(0);
-  // const [collections, setCollections] = useState([]);
-  // const [nftContractAddress, setNftContractAddress] = useState('');
-  // const [nftImage, setNftImage] = useState('');
-  // const [nftDesc, setNftDesc] = useState('');
-  // const [nftTitle, setNftTitle] = useState('');
-  // const [nextId, setNextId] = useState('');
-  // const [profilePic, setProfilePic] = useState();
-  // const [isOpenForBid, setIsOpenForBid] = useState();
-  // const [timeLeft, setTimeLeft] = useState();
-  // const [isTimedAuction, setIsTimedAuction] = useState();
-
-  // const [collaborators, setCollaborators] = useState([]);
-  // const [currCollaborator, setCurrCollaborator] = useState();
-  // const [collaboratorPercents, setCollaboratorPercents] = useState([]);
-  // const [currCollaboratorPercent, setCurrCollaboratorPercent] = useState();
-
-  // const [propertyKeys, setPropertyKeys] = useState([]);
-  // const [currPropertyKey, setCurrPropertyKey] = useState();
-  // const [propertyValues, setPropertyValues] = useState([]);
-  // const [currPropertyValue, setCurrPropertyValue] = useState();
-
-  // const [saleType, setSaleType] = useState(0);
-  // const [quantity, setQuantity] = useState(1);
-  // const [salt, setSalt] = useState();
-  // const [isPopup, setIsPopup] = useState(false);
-  // const [isPutOnMarketplace, setIsPutOnMarketPlace] = useState(false);
-  // const [chosenType, setChosenType] = useState(0);
-  // const [minimumBid, setMinimumBid] = useState(0);
-  // const [endTime, setEndTime] = useState();
-  // const [selectedTokenAddress, setSelectedTokenAddress] = useState();
-  // const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
-
-  // /************ Create NFT Popup Checks ********** */
-  // const [isShowPopup, setisShowPopup] = useState(false);
-  // const [hideClosePopup, sethideClosePopup] = useState(true);
-  // const [hideRedirectPopup, sethideRedirectPopup] = useState(false);
-  // const [ClosePopupDisabled, setClosePopupDisabled] = useState(true);
-  // const [RedirectPopupDisabled, setRedirectPopupDisabled] = useState(true);
-
-  // const [isUploadPopupClass, setisUploadPopupClass] = useState('checkiconDefault');
-  // const [isApprovePopupClass, setisApprovePopupClass] = useState('checkiconDefault');
-  // const [isMintPopupClass, setisMintPopupClass] = useState('checkiconDefault');
-  // const [isRoyaltyPopupClass, setisRoyaltyPopupClass] = useState('checkiconDefault');
-  // const [isPutOnSalePopupClass, setisPutOnSalePopupClass] = useState('checkiconDefault');
-  // const [lockedContent, setLockedContent] = useState('');
-  // const myRef = React.createRef();
-
-  //*=============================================
   const [nftFiles, setNftFiles] = useState([]);
   const [isActive, setIsActive] = useState(false);
   const [isUnlock, setIsUnlock] = useState(true);
@@ -1148,7 +1072,7 @@ const Create3 = (props) => {
                                               <img
                                                 src={URL.createObjectURL(image)}
                                                 id="get_file_2"
-                                                className="collection_cover_preview img-fluid" 
+                                                className="collection_cover_preview img-fluid"
                                                 alt=""
                                                 onClick={() => fileRefCollection.current.click()}
                                               />
@@ -1730,7 +1654,7 @@ const Create3 = (props) => {
                                     handleRemoveProperty(key);
                                   }}
                                 >
-                                  <i class="fa fa-trash" aria-hidden="true"></i>
+                                  <i className="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                               </div>
                             </div>

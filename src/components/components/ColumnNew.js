@@ -23,7 +23,7 @@ const Outer = styled.div`
 `;
 
 var NftPreview = {
-  background: 'red',
+  background: 'blue',
   // backgroundImage: "",
 };
 

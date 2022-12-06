@@ -68,7 +68,7 @@ export default class Createpage extends Component {
                 Choose "Single" if you want your collectible to be one of a kind or "Multiple" if you want to sell one
                 collectible times
               </p>
-              <div class="d-flex justify-content-between custom-collection-card">
+              <div className="d-flex justify-content-between custom-collection-card">
                 <Link to="/create2" className="opt-create">
                   <img src="./img/misc/coll-single.png" alt="" />
                   <h3 className="mt-3">Single</h3>

@@ -40,6 +40,7 @@ import ItemNotFound from './pages/ItemNotFound';
 import ItemDetails2 from './pages/ItemDetail2';
 
 import { createGlobalStyle } from 'styled-components';
+import { NotificationContainer } from 'react-notifications';
 
 const GlobalStyles = createGlobalStyle`
   :root {
@@ -111,6 +112,7 @@ const app = () => (
       </ScrollTop>
     </PosedRouter>
     <ScrollToTopBtn />
+    <NotificationContainer />
   </div>
 );
 

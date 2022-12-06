@@ -1,5 +1,5 @@
-import React from "react";
-import PolygonLogo from "../../../assets/images/polygonLogo.png";
+import React from 'react';
+import PolygonLogo from '../../../assets/images/polygonLogo.png';
 
 const CheckoutModal = (props) => {
   return (
@@ -8,8 +8,7 @@ const CheckoutModal = (props) => {
         <h4 className="checkout-header">Checkout</h4>
         <div className="checkout-body">
           <p>
-            You are about to purchase a <strong> {props.title} </strong>from{" "}
-            <strong>{props.author}</strong>
+            You are about to purchase a <strong> {props.title} </strong>from <strong>{props.author}</strong>
           </p>
           <div className="checkout-mid-box">
             <img src={PolygonLogo} />
@@ -17,9 +16,9 @@ const CheckoutModal = (props) => {
               <span className="span1">0x2d376f987...9843</span>
               <span className="span2">Polygon</span>
             </div>
-            <span class="badge connected-badge">Connected</span>
+            <span className="badge connected-badge">Connected</span>
           </div>
-          {props.typeofCol !== "1" && props.orderType === "On Auction" ? (
+          {props.typeofCol !== '1' && props.orderType === 'On Auction' ? (
             <>
               <input
                 className="form-control form-control-sm mt-3 mb-2 checkout-inputbox"
@@ -32,7 +31,7 @@ const CheckoutModal = (props) => {
                 placeholder="Please Enter the Bid Price"
               ></input>
             </>
-          ) : props.typeofCol !== "1" && props.orderType === "Fixed price" ? (
+          ) : props.typeofCol !== '1' && props.orderType === 'Fixed price' ? (
             <>
               <input
                 className="form-control form-control-sm mt-3 checkout-inputbox"
@@ -40,7 +39,7 @@ const CheckoutModal = (props) => {
                 placeholder="Please Enter the Quantity"
               ></input>
             </>
-          ) : props.typeOfCol === "1" && props.orderType === "On Auction" ? (
+          ) : props.typeOfCol === '1' && props.orderType === 'On Auction' ? (
             <>
               <input
                 className="form-control form-control-sm mt-3 checkout-inputbox"
@@ -49,7 +48,7 @@ const CheckoutModal = (props) => {
               ></input>
             </>
           ) : (
-            ""
+            ''
           )}
 
           <div className="checkout-details">
@@ -64,7 +63,7 @@ const CheckoutModal = (props) => {
                     </div>
                   );
                 })
-              : ""}
+              : ''}
           </div>
         </div>
         <div className="box-footer">
