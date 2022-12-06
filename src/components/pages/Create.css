@@ -51,6 +51,13 @@
   height: 35px;
   width: 125px;
 }
+
+.de_nav li span img {
+  max-height: 123px;
+  max-width: 185px;
+  object-fit: cover;
+  object-position: center;
+}
 #custom-create .de_nav li.active span {
   min-width: 160px;
   height: 154px;
@@ -101,10 +108,10 @@ footer {
   justify-content: space-between;
   width: 650px;
 }
-#upload_file_Upload_collection ,
+/* #upload_file_Upload_collection ,
 #upload_file_Upload{
   display: none;
-}
+} */
 @media (max-width: 1024px) {
   .subfooter .de-flex,
   .subfooter .de-flex-col {
@@ -127,7 +134,7 @@ footer {
   .custom-popup-box .add-collection-box {
     width: 75%;
   }
-  .navbar .nav-icon{
+  .navbar .nav-icon {
     top: 45px;
   }
 }
@@ -144,7 +151,7 @@ footer {
     justify-content: left;
     padding: 5px;
   }
-  .navbar .nav-icon{
+  .navbar .nav-icon {
     top: 45px;
   }
   .scrollable {
