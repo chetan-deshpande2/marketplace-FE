@@ -948,6 +948,8 @@ const ItemDetails = function (props) {
           setIsLiked(is_user_like);
           setTotalLikes(data?.nUser_likes?.length);
           setNftDetails(data);
+          console.log(data);
+          console.log(authorData);
           setAuthorDetails(authorData);
           if (isEmpty(data)) {
             window.location.href = '/profile';
@@ -1034,7 +1036,7 @@ const ItemDetails = function (props) {
           page: currPage,
           limit: perPageCount,
         });
-        console.log(history);
+        console.log(history.count);
         setHistory(history.results[0]);
         setTotalPages(Math.ceil(history.count / perPageCount));
       }
@@ -1042,21 +1044,6 @@ const ItemDetails = function (props) {
     };
     fetch();
   }, [nftDetails, currPage]);
-
-  // useEffect(() => {
-  //   async function fetch() {
-  //     setLoading(true);
-  //     if (profile) {
-  //       let data = await GetNftDetails(id);
-  //       let is_user_like = await checkIfLiked(data._id, profile._id);
-  //       setIsLiked(is_user_like);
-  //       setTotalLikes(data?.nUser_likes?.length);
-  //     }
-  //     setLoading(false);
-  //   }
-  //   fetch();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [likeEvent, profile, id]);
 
   const RemoveFromSale = (seller, price, orderId, oCreated, deadline, key, qty, qtySold) => (
     <div className="de_tab">
@@ -2021,6 +2008,7 @@ const ItemDetails = function (props) {
                               'history time',
                               moment(h.sCreated, 'YYYY-MM-DD HH:mm:ss').add(5, 'hours').add(30, 'minutes').fromNow(),
                             );
+
                             return (
                               <div className="row customRow">
                                 <div className="col-lg-12">
