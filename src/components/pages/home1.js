@@ -132,6 +132,7 @@ const Home1 = () => {
           <FeatureBox />
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

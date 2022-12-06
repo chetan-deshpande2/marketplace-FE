@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import Footer from "../components/footer";
-import { createGlobalStyle } from "styled-components";
-import { updateProfile, getProfile } from "../../apiServices";
-import { NotificationManager } from "react-notifications";
-import Loader from "../components/loader";
-import ItemNotFound from "./ItemNotFound";
-import { useCookies } from "react-cookie";
+import React, { useState, useEffect } from 'react';
+import Footer from '../components/footer';
+import { createGlobalStyle } from 'styled-components';
+import { updateProfile, getProfile } from '../../apiServices';
+import { NotificationManager } from 'react-notifications';
+import Loader from '../components/loader';
+import ItemNotFound from './ItemNotFound';
+import { useCookies } from 'react-cookie';
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -42,19 +42,19 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const UpdateProfile = (props) => {
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [bio, setBio] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [website, setWebsite] = useState("");
-  const [uname, setUname] = useState("");
-  const [profilePic, setProfilePic] = useState("");
+  const [fname, setFname] = useState('');
+  const [lname, setLname] = useState('');
+  const [bio, setBio] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState('');
+  const [uname, setUname] = useState('');
+  const [profilePic, setProfilePic] = useState('');
   const [loading, setLoading] = useState(false);
-  const [currentUser, setCurrentUser] = useState("");
-  const [cookies] = useCookies(["selected_account"]);
+  const [currentUser, setCurrentUser] = useState('');
+  const [cookies] = useCookies(['selected_account']);
   const [profile, setProfile] = useState();
-  const [restrictSpace] = useState([" "]);
+  const [restrictSpace] = useState([' ']);
 
   useEffect(() => {
     if (cookies.selected_account) setCurrentUser(cookies.selected_account);
@@ -76,58 +76,24 @@ const UpdateProfile = (props) => {
       let firstname = profile?.oName?.sFirstname;
       let username = profile?.sUserName;
       let lastname = profile?.oName?.sLastname;
-      setFname(
-        firstname === "" || firstname === undefined || firstname === "undefined"
-          ? ""
-          : firstname.trim()
-      );
+      setFname(firstname === '' || firstname === undefined || firstname === 'undefined' ? '' : firstname.trim());
       setUname(username.trim());
-      setLname(
-        lastname === "" || lastname === undefined || lastname === "undefined"
-          ? ""
-          : lastname.trim()
-      );
+      setLname(lastname === '' || lastname === undefined || lastname === 'undefined' ? '' : lastname.trim());
 
       setWebsite(
-        profile.sWebsite &&
-          profile.sWebsite !== undefined &&
-          profile.sWebsite !== "undefined"
-          ? profile.sWebsite
-          : ""
+        profile.sWebsite && profile.sWebsite !== undefined && profile.sWebsite !== 'undefined' ? profile.sWebsite : '',
       );
-      setBio(
-        profile.sBio &&
-          profile.sBio !== undefined &&
-          profile.sBio !== "undefined"
-          ? profile.sBio
-          : ""
-      );
-      setPhone(
-        profile.sPhone &&
-          profile.sPhone !== undefined &&
-          profile.sPhone !== "undefined"
-          ? profile.sPhone
-          : ""
-      );
-      setEmail(
-        profile.sEmail &&
-          profile.sEmail !== undefined &&
-          profile.sEmail !== "undefined"
-          ? profile.sEmail
-          : ""
-      );
+      setBio(profile.sBio && profile.sBio !== undefined && profile.sBio !== 'undefined' ? profile.sBio : '');
+      setPhone(profile.sPhone && profile.sPhone !== undefined && profile.sPhone !== 'undefined' ? profile.sPhone : '');
+      setEmail(profile.sEmail && profile.sEmail !== undefined && profile.sEmail !== 'undefined' ? profile.sEmail : '');
     }
   }, [profile]);
 
   const isValidEmail = async (email) => {
-    var atposition = email.indexOf("@");
-    var dotposition = email.lastIndexOf(".");
-    if (
-      atposition < 1 ||
-      dotposition < atposition + 2 ||
-      dotposition + 2 >= email.length
-    ) {
-      alert("Please enter a valid e-mail address");
+    var atposition = email.indexOf('@');
+    var dotposition = email.lastIndexOf('.');
+    if (atposition < 1 || dotposition < atposition + 2 || dotposition + 2 >= email.length) {
+      alert('Please enter a valid e-mail address');
       return false;
     }
     return true;
@@ -149,32 +115,32 @@ const UpdateProfile = (props) => {
     //   return;
     // }
 
-    if (fname === "" || fname === undefined) {
-      NotificationManager.error("Please Enter a Valid Firstname", "", 800);
+    if (fname === '' || fname === undefined) {
+      NotificationManager.error('Please Enter a Valid Firstname', '', 800);
       return;
     } else {
       if (fname.trim().length === 0) {
-        NotificationManager.error("Space not allowed", "", 800);
+        NotificationManager.error('Space not allowed', '', 800);
         return;
       }
     }
 
-    if (lname === "" || lname === undefined) {
-      NotificationManager.error("Please Enter a Valid Lastname", "", 800);
+    if (lname === '' || lname === undefined) {
+      NotificationManager.error('Please Enter a Valid Lastname', '', 800);
       return;
     } else {
       if (lname.trim().length === 0) {
-        NotificationManager.error("Space not allowed", "", 800);
+        NotificationManager.error('Space not allowed', '', 800);
         return;
       }
     }
 
-    if (uname === "" || uname === undefined) {
-      NotificationManager.error("Please choose valid username", "", 800);
+    if (uname === '' || uname === undefined) {
+      NotificationManager.error('Please choose valid username', '', 800);
       return;
     } else {
       if (uname.trim().length === 0) {
-        NotificationManager.error("Space not allowed", "", 800);
+        NotificationManager.error('Space not allowed', '', 800);
         return;
       }
     }
@@ -190,17 +156,17 @@ const UpdateProfile = (props) => {
       setLoading(true);
       try {
         let res = await updateProfile(currentUser, data);
-        if (res === "User Details Updated successfully") {
+        if (res === 'User Details Updated successfully') {
           NotificationManager.success(res);
           setTimeout(() => {
-            window.location.href = "/profile";
+            window.location.href = '/profile';
           }, 200);
         } else {
           NotificationManager.error(res);
         }
       } catch (e) {
-        console.log("error", e);
-        NotificationManager.error("Something Went Wrong");
+        console.log('error', e);
+        NotificationManager.error('Something Went Wrong');
       }
 
       setLoading(false);
@@ -219,10 +185,10 @@ const UpdateProfile = (props) => {
   ) : (
     <div>
       <GlobalStyles />
-      {loading ? <Loader /> : ""}
+      {loading ? <Loader /> : ''}
       <section
         className="jumbotron breadcumb no-bg"
-        style={{ backgroundImage: `url(${"/img/background/Rectangle11.png"})` }}
+        style={{ backgroundImage: `url(${'/img/background/Rectangle11.png'})` }}
       >
         <div className="mainbreadcumb">
           <div className="container">
@@ -241,12 +207,7 @@ const UpdateProfile = (props) => {
           <div className="col-md-8 offset-md-2">
             <div className="spacer-10"></div>
 
-            <div
-              name="contactForm"
-              id="contact_form"
-              className="form-border"
-              action="#"
-            >
+            <div name="contactForm" id="contact_form" className="form-border" action="#">
               <div className="row">
                 <div className="col-md-6">
                   <div className="field-set ">
@@ -363,13 +324,9 @@ const UpdateProfile = (props) => {
                   <div className="field-set">
                     <label>Upload Profile Pic:</label>
                     {profilePic ? (
-                      <img
-                        className="upload-profile "
-                        src={URL.createObjectURL(profilePic)}
-                        alt="profile-pic"
-                      />
+                      <img className="upload-profile " src={URL.createObjectURL(profilePic)} alt="profile-pic" />
                     ) : (
-                      ""
+                      ''
                     )}
                     <input
                       type="file"

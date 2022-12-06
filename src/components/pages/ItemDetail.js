@@ -991,24 +991,25 @@ const ItemDetails = function (props) {
     checkIfOpenForSale();
   }, [orders]);
 
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      console.log(nftDetails.nHash, nftDetails.nNftImage);
-      if (nftDetails && nftDetails._id) {
-        let data = await getAllBidsByNftId(nftDetails._id);
-        let _highestBid = {};
-        _highestBid = data?.highestBid;
-        data = data?.data;
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     setLoading(true);
+  //     console.log(nftDetails.nHash, nftDetails.nNftImage);
+  //     if (nftDetails && nftDetails._id) {
+  //       let data = await getAllBidsByNftId(nftDetails._id);
+  //       console.log(data);
+  //       let _highestBid = {};
+  //       _highestBid = data?.highestBid;
+  //       data = data?.data;
 
-        if (data.length > 0 && isEmpty(data[0])) data = [];
-        setBids(data);
-        setHighestBid(_highestBid);
-      }
-      setLoading(false);
-    };
-    fetch();
-  }, [nftDetails]);
+  //       if (data.length > 0 && isEmpty(data[0])) data = [];
+  //       setBids(data);
+  //       setHighestBid(_highestBid);
+  //     }
+  //     setLoading(false);
+  //   };
+  //   fetch();
+  // }, [nftDetails]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -1024,9 +1025,10 @@ const ItemDetails = function (props) {
   }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
 
   useEffect(() => {
+    console.log(nftDetails);
     const fetch = async () => {
       setLoading(true);
-      console.log(nftDetails);
+
       if (nftDetails && nftDetails._id) {
         let history = await GetHistory({
           nftId: nftDetails._id,

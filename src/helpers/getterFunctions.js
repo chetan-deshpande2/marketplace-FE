@@ -122,6 +122,7 @@ export const getSignature = async (signer, ...args) => {
     console.log('order is---->', order);
     let provider = new ethers.providers.Web3Provider(window.ethereum);
     console.log('222');
+    console.log(provider.getSigner());
     const signer1 = provider.getSigner();
     console.log('signer1=========>', signer1.address);
     console.log('333');
