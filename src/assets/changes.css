@@ -26,9 +26,9 @@ iframe {
   justify-content: center;
   align-items: center;
 }
-.de_tab_content .p_list_pp {
+/* .de_tab_content .p_list_pp {
   width: 200px;
-}
+} */
 .add-collection-box .d-create-file {
   padding: 30px;
 }
@@ -44,19 +44,32 @@ iframe {
   width: 100%;
   border-radius: 0px;
 }
-.custom-popup-box .close-icon{
+.custom-popup-box .close-icon {
   background-color: rgb(131, 100, 226);
 }
-.c-tabs-nft .feature-box.howitwork{
+.c-tabs-nft .feature-box.howitwork {
   min-height: 421px;
 }
-.items-cards .d-item .nft__item{
+.items-cards .d-item .nft__item {
   min-height: 245px;
   display: flex;
   justify-content: space-between;
+  height: 245px;
+  overflow: hidden;
+
 }
-.c-collections .de_nav:not(:first-child) span{
-  padding:10px
+.items-cards .d-item .nft__item img {
+  height: 115px !important;
+  object-fit: cover;
+  object-position: center;
+}
+.de_tab.tab_methods .c-collections .de_nav li span {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 @media (max-width: 991px) {
   .offset-lg-1 {
