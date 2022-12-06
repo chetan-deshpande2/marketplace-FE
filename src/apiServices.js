@@ -1,7 +1,8 @@
 import { ethers } from 'ethers';
 import { data } from 'jquery';
 
-const REACT_APP_API_BASE_URL = 'http://192.168.1.11:3000/api/v1';
+// const REACT_APP_API_BASE_URL = 'http://192.168.1.11:3000/api/v1';
+const REACT_APP_API_BASE_URL = 'http://localhost:3000/api/v1';
 
 export const exportInstance = async (SCAddress, ABI) => {
   let provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -215,7 +216,7 @@ export const GetIndividualAuthorDetail = async (data) => {
     const datas = isJson && (await response.json());
     console.log(datas);
 
-    if (datas.data) return datas.data;
+    if (datas) return datas.user;
     return [];
   } catch (err) {
     return err;
@@ -377,6 +378,7 @@ export const GetNftDetails = async (id) => {
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
+    return datas;
     // return datas.data ? datas.data : [];
   } catch (err) {
     return err;
@@ -668,7 +670,8 @@ export const GetOrdersByNftId = async (data) => {
     let response = await fetch(REACT_APP_API_BASE_URL + '/order/getOrdersByNftId', requestOptions);
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
-    return datas.data;
+    console.log(datas.AllOrders);
+    return datas.AllOrders;
   } catch (err) {
     return err;
   }
@@ -831,13 +834,14 @@ export const InsertHistory = async (data) => {
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
-    return datas.data;
+    return datas.results;
   } catch (err) {
     return err;
   }
 };
 
 export const GetHistory = async (data) => {
+  console.log(data);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -850,6 +854,45 @@ export const GetHistory = async (data) => {
     let response = await fetch(REACT_APP_API_BASE_URL + '/history/fetchHistory', requestOptions);
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
+    console.log(datas);
+    return datas.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const GetHotCollections = async (data) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+
+  try {
+    let response = await fetch(process.env.REACT_APP_API_BASE_URL + '/nft/getHotCollections', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const datas = isJson && (await response.json());
+    console.log(datas);
+    return datas.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const UpdateTokenCount = async (data) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: window.sessionStorage.getItem('Authorization'),
+    },
+  };
+  try {
+    let response = await fetch(REACT_APP_API_BASE_URL + `/collection/updateCollectionToken/${data}`, requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const datas = isJson && (await response.json());
+    console.log(datas);
     return datas.data;
   } catch (err) {
     return err;

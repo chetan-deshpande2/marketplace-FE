@@ -1,11 +1,11 @@
 // eslint-disable array-callback-return
 
-import React, { useState } from 'react';
-import Select from 'react-select';
-import Footer from '../components/footer';
-import { createGlobalStyle } from 'styled-components';
-import { connect } from 'react-redux';
-import GeneralCollectionsPage from '../components/GenralCollectionPage';
+import React, { useState } from "react";
+import Select from "react-select";
+import Footer from "../components/footer";
+import { createGlobalStyle } from "styled-components";
+import { connect } from "react-redux";
+import GeneralCollectionsPage from "../components/GeneralCollectionsPage";
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -44,11 +44,11 @@ const GlobalStyles = createGlobalStyle`
 const customStyles = {
   option: (base, state) => ({
     ...base,
-    background: '#fff',
-    color: '#333',
-    borderRadius: state.isFocused ? '0' : 0,
-    '&:hover': {
-      background: '#eee',
+    background: "#fff",
+    color: "#333",
+    borderRadius: state.isFocused ? "0" : 0,
+    "&:hover": {
+      background: "#eee",
     },
   }),
   menu: (base) => ({
@@ -67,22 +67,22 @@ const customStyles = {
 };
 
 const options = [
-  { value: 'All Collections', label: 'All Collections' },
-  { value: 'Single Collections', label: 'Single Collections' },
-  { value: 'Multiple Collections', label: 'Multiple Collections' },
+  { value: "All Collections", label: "All Collections" },
+  { value: "Single Collections", label: "Single Collections" },
+  { value: "Multiple Collections", label: "Multiple Collections" },
 ];
 
 const ExploreCollections = (props) => {
   const [nftType, setNftType] = useState(-1);
-  const [searchedData, setSearchedData] = useState('');
+  const [searchedData, setSearchedData] = useState("");
   const [searchBtnClick, setSearchBtnClick] = useState(false);
 
   const handleNftTypeChange = (e) => {
-    if (e.value === 'All Collections') {
+    if (e.value === "All Collections") {
       setNftType(-1);
-    } else if (e.value === 'Single Collections') {
+    } else if (e.value === "Single Collections") {
       setNftType(1);
-    } else if (e.value === 'Multiple Collections') {
+    } else if (e.value === "Multiple Collections") {
       setNftType(2);
     }
   };
@@ -97,13 +97,17 @@ const ExploreCollections = (props) => {
 
       <section
         className="jumbotron breadcumb no-bg"
-        style={{ backgroundImage: `url(${'./img/background/subheader.jpg'})` }}
+        // ./../../assets/images/Rectangle11.png
+
+        style={{
+          backgroundImage: `url(${"./img/background/Rectangle11.png"})`,
+        }}
       >
         <div className="mainbreadcumb">
           <div className="container">
             <div className="row m-10-hor">
               <div className="col-12">
-                <h1 className="text-center">Explore</h1>
+                <h1 className="text-center explore-heading">Collections</h1>
               </div>
             </div>
           </div>
@@ -114,7 +118,11 @@ const ExploreCollections = (props) => {
         <div className="row">
           <div className="col-lg-12">
             <div className="items_filter">
-              <div className="row form-dark" id="form_quick_search" name="form_quick_search">
+              <div
+                className="row form-dark"
+                id="form_quick_search"
+                name="form_quick_search"
+              >
                 <div className="col">
                   <input
                     className="form-control"
@@ -127,7 +135,7 @@ const ExploreCollections = (props) => {
                     onChange={(e) => {
                       handleSearch(e);
                     }}
-                  />{' '}
+                  />{" "}
                   <button
                     id="btn-submit"
                     onClick={() => {
@@ -161,7 +169,15 @@ const ExploreCollections = (props) => {
         </div>
         <GeneralCollectionsPage
           isAllCollections={true}
-          isERC721={nftType !== '' ? (nftType === 1 ? true : nftType === 2 ? false : '') : ''}
+          isERC721={
+            nftType !== ""
+              ? nftType === 1
+                ? true
+                : nftType === 2
+                ? false
+                : ""
+              : ""
+          }
           searchedData={searchedData}
         />
         {/* <ExploreItems

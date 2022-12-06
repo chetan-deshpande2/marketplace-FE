@@ -5,6 +5,7 @@ import Footer from '../components/footer';
 import { createGlobalStyle } from 'styled-components';
 import $ from 'jquery';
 import Loader from '../components/loader';
+
 import './styles.css';
 
 //*==========
@@ -30,6 +31,7 @@ import { parseEther } from 'ethers/lib/utils.js';
 import NotificationManager from 'react-notifications/lib/NotificationManager';
 import { Row, Col } from 'react-bootstrap';
 import './Create.css';
+import { useCookies } from 'react-cookie';
 // import "./App.css";
 
 //!=============
@@ -1254,14 +1256,14 @@ const Create2 = (props) => {
             <div className="nft__item m-0 position-relative c-items">
               {/* <div className="de_countdown"></div> */}
               <div className="author_list_pp">
-                <span className='c-author-img'>
+                <span className="c-author-img">
                   <img className="lazy" src="./img/author/author-1.jpg" alt="" />
                   <i className="fa fa-check"></i>
                 </span>
               </div>
               <div className="nft__item_wrap">
                 <span>
-                  <span className='c-previous-items'>
+                  <span className="c-previous-items">
                     <img
                       src={nftImage ? URL.createObjectURL(nftImage) : ''}
                       id="get_file_2"

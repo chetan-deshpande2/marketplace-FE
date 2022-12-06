@@ -1,16 +1,18 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
+
 import React, { useEffect, useState } from "react";
 import ColumnZero from "../components/ColumnZero";
 import Footer from "../components/footer";
 import { createGlobalStyle } from "styled-components";
+import { getProfile } from "../../apiServices";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Avatar from "./../../assets/images/avatar5.jpg";
 import { NotificationManager } from "react-notifications";
-import { GetIndividualAuthorDetail, getProfile } from "../../apiServices";
-// import { Follow, GetIndividualAuthorDetail } from "../../apiServices";
-import Loader from "../components/loader";
+import "../components-css/profile-page.css";
+import { BsPencilSquare } from "react-icons/bs";
 import GeneralCollectionsPage from "../components/GeneralCollectionsPage";
-import "./../components-css/author.css";
-import { useParams } from "react-router-dom";
+import Loader from "../components/loader";
+import ItemNotFound from "./ItemNotFound";
 import { useCookies } from "react-cookie";
 
 const GlobalStyles = createGlobalStyle`
@@ -47,121 +49,81 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const Author = function (props) {
+const PersonalProfile = function (props) {
   const [openMenu, setOpenMenu] = useState(true);
   const [openMenu1, setOpenMenu1] = useState(false);
   const [openMenu2, setOpenMenu2] = useState(false);
   const [openMenu3, setOpenMenu3] = useState(false);
   const [openMenu4, setOpenMenu4] = useState(false);
-  const [profileInfo, setProfileInfo] = useState({});
   const [profilePic, setProfilePic] = useState(Avatar);
   const [fullName, setFullName] = useState("Unnamed");
   const [userName, setUserName] = useState("@unnamed");
   const [address, setAddress] = useState("0x0..");
+  const [authorization, setAuthorization] = useState("");
   const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({});
-  const [paramType, setParamType] = useState(0);
-  // const [followEvent, setFollowEvent] = useState(false);
-  // const [isFollowing, setIsFollowing] = useState(false);
-  // const [following, setFollowing] = useState(0);
-  // const [followers, setFollowers] = useState(0);
+  const [currentUser, setCurrentUser] = useState("");
   const [cookies] = useCookies(["selected_account", "Authorization"]);
-
-  let { id } = useParams();
+  const [paramType, setParamType] = useState(0);
 
   useEffect(() => {
+    setCurrentUser(cookies.selected_account);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookies.selected_account]);
+
+  useEffect(() => {
+    setAuthorization(cookies.Authorization);
     setParamType(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cookies.Authorization]);
 
   useEffect(() => {
-    // let id = props.match.params.id;
-
-    async function fetch() {
-      // if (!localStorage.getItem("Authorization")) return;
-      // if (id === props?.profileData?.profileData?._id) {
-      //   window.location.href = "/profile";
-      // }
-      if (id) {
-        setLoading(true);
-        let data = await GetIndividualAuthorDetail({
-          userId: id,
-          currUserId: "",
-        });
-        setProfileInfo(data);
-        // setIsFollowing(data?.user_followings?.length > 0);
-        // setFollowing(data?.user_followings_size);
-        // setFollowers(data?.user_followers_size);
-        setLoading(false);
-      }
-    }
-    fetch();
     async function fetchData() {
-      const profileInfo = await getProfile();
-      if (profileInfo) {
-        let profileData = profileInfo;
-        if (profileData.oName && profileData._id && profileData._id == id) {
-          window.location.href = "/profile";
+      if (currentUser) {
+        setLoading(true);
+        const profileInfo = await getProfile();
+        if (profileInfo) {
+          let profileData = profileInfo;
+          if (
+            profileData.oName &&
+            profileData.oName.sFirstname &&
+            profileData.oName.sLastname
+          ) {
+            setFullName(
+              profileData.oName.sFirstname + " " + profileData.oName.sLastname
+            );
+          } else {
+            setFullName("Unnamed");
+          }
+
+          if (profileData.sUserName) {
+            setUserName("@" + profileData.sUserName);
+          } else {
+            setUserName("@unnamed");
+          }
+
+          if (profileData.sWalletAddress) {
+            setAddress(profileData.sWalletAddress);
+          } else if (currentUser) {
+            setAddress(currentUser);
+          } else {
+            setAddress("0x0..");
+          }
+
+          let sProfilePicUrl =
+            profileData.sProfilePicUrl === undefined
+              ? Avatar
+              : profileData.sProfilePicUrl;
+          setProfilePic(sProfilePicUrl);
+          setProfileData(profileData);
+          setLoading(false);
         }
+      } else {
+        setAddress("0x0..");
       }
     }
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, cookies.Authorization]);
-
-  useEffect(() => {
-    let _profileData = profileInfo;
-    if (
-      _profileData.oName &&
-      _profileData.oName.sFirstname &&
-      _profileData.oName.sLastname
-    ) {
-      setFullName(
-        _profileData.oName.sFirstname + " " + _profileData.oName.sLastname
-      );
-    } else {
-      setFullName("Unnamed");
-    }
-
-    if (_profileData.sUserName) {
-      setUserName("@" + _profileData.sUserName);
-    } else {
-      setUserName("@unnamed");
-    }
-
-    if (_profileData.sWalletAddress) {
-      setAddress(_profileData.sWalletAddress);
-    } else {
-      setAddress("0x0..");
-    }
-
-    let sProfilePicUrl =
-      _profileData.sProfilePicUrl === undefined
-        ? Avatar
-        : _profileData.sProfilePicUrl;
-    setProfilePic(sProfilePicUrl);
-    setProfileData(_profileData);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileInfo]);
-
-  // useEffect(() => {
-  //   // let id = props.match.params.id;
-  //   async function fetch() {
-  //     let data = await GetIndividualAuthorDetail({
-  //       userId: id,
-  //       currUserId:
-  //         props.profileData && props.profileData.profileData
-  //           ? props.profileData.profileData._id
-  //           : "",
-  //     });
-  //     setIsFollowing(data?.user_followings?.length > 0);
-  //     setFollowers(data.user_followers_size);
-  //     setFollowing(data.user_followings_size);
-  //   }
-  //   fetch();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [followEvent]);
+  }, [authorization, currentUser]);
 
   const handleBtnClick = () => {
     setOpenMenu(!openMenu);
@@ -237,13 +199,14 @@ const Author = function (props) {
     setParamType(4);
   };
 
-  return loading ? (
-    <Loader />
+  return !currentUser ? (
+    <ItemNotFound />
   ) : (
     <div>
+      {loading ? <Loader /> : ""}
       <GlobalStyles />
       <section
-        id="profile_banner"
+        // id="profile_banner"
         className="jumbotron breadcumb no-bg"
         style={{
           backgroundImage: `url(${"/img/background/Rectangle11.png"})`,
@@ -257,13 +220,22 @@ const Author = function (props) {
             <div className="d_profile de-flex">
               <div className="de-flex-col">
                 <div className="profile_avatar">
-                  <img src={profilePic} alt="" />
+                  <img src={profilePic ? profilePic : ""} alt="" />
                   <i className="fa fa-check"></i>
                   <div className="profile_name">
                     <h4>
-                      <div className="d-flex">{fullName}</div>
-                      <span className="profile_username">{userName}</span>
-
+                      <div className="d-flex">
+                        {fullName}
+                        <BsPencilSquare
+                          className="BsPencilSquare"
+                          onClick={() => {
+                            window.location.href = "/updateProfile";
+                          }}
+                        />
+                      </div>
+                      <span className="profile_username">
+                        {userName ? userName : "@unnamed"}
+                      </span>
                       <CopyToClipboard
                         text={address}
                         onCopy={() => {
@@ -271,12 +243,20 @@ const Author = function (props) {
                         }}
                       >
                         <span id="wallet" className="profile_wallet">
-                          {address}
+                          {currentUser ? currentUser : "0x0.."}
                         </span>
-                        {/* <button id="btn_copy" title="Copy Text">
-                          Copy
-                        </button> */}
                       </CopyToClipboard>
+                      {/* <CopyToClipboard
+                        text={address}
+                        onCopy={() => {
+                          NotificationManager.success("Copied!!");
+                        }}
+                      >
+                        <button id="btn_copy" title="Copy Text">
+                          Copy
+                        </button>
+                        
+                      </CopyToClipboard> */}
                     </h4>
                   </div>
                 </div>
@@ -284,35 +264,19 @@ const Author = function (props) {
 
               {/* <div className="profile_follow de-flex">
                 <div className="de-flex-col">
-                  <div className="profile_follower">{following} followers</div>
-                </div>
-                <div className="de-flex-col">
-                  <div className="profile_follower">{followers} following</div>
+                  <div className="profile_follower">
+                    {profileData && profileData.user_followings_size
+                      ? profileData.user_followings_size
+                      : 0}{" "}
+                    followers
+                  </div>
                 </div>
                 <div className="de-flex-col">
                   <div className="profile_follower">
-                    <button
-                      className="follow"
-                      onClick={async () => {
-                        if (!cookies.selected_account) {
-                          NotificationManager.error(
-                            "Please try logging in",
-                            "",
-                            800
-                          );
-                          return;
-                        }
-                        if (props.authorData && props.authorData.authorData) {
-                          let res = await Follow(
-                            props.authorData.authorData._id
-                          );
-                          setFollowEvent(!followEvent);
-                          NotificationManager.success(res);
-                        }
-                      }}
-                    >
-                      {isFollowing ? "Unfollow" : "Follow"}
-                    </button>
+                    {profileData && profileData.user_followers_size
+                      ? profileData.user_followers_size
+                      : 0}{" "}
+                    following
                   </div>
                 </div>
               </div> */}
@@ -326,7 +290,7 @@ const Author = function (props) {
             <div className="items_filter">
               <ul className="de_nav text-left">
                 <li id="Mainbtn" className="active">
-                  <span onClick={handleBtnClick}>On Sale </span>
+                  <span onClick={handleBtnClick}>On Sale</span>
                 </li>
                 <li id="Mainbtn1" className="">
                   <span onClick={handleBtnClick1}>Created </span>
@@ -338,7 +302,7 @@ const Author = function (props) {
                   <span onClick={handleBtnClick3}>Owned </span>
                 </li>
                 <li id="Mainbtn4" className="">
-                  <span onClick={handleBtnClick4}>Collections</span>
+                  <span onClick={handleBtnClick4}>Collections </span>
                 </li>
               </ul>
             </div>
@@ -347,8 +311,7 @@ const Author = function (props) {
         {openMenu && (
           <div id="zero1" className="onStep fadeIn">
             <ColumnZero
-              authorId={id}
-              isAuthor={true}
+              isProfile={true}
               paramType={paramType}
               profile={profileData}
             />
@@ -357,8 +320,7 @@ const Author = function (props) {
         {openMenu1 && (
           <div id="zero2" className="onStep fadeIn">
             <ColumnZero
-              authorId={id}
-              isAuthor={true}
+              isProfile={true}
               paramType={paramType}
               profile={profileData}
             />
@@ -367,8 +329,7 @@ const Author = function (props) {
         {openMenu2 && (
           <div id="zero3" className="onStep fadeIn">
             <ColumnZero
-              authorId={id}
-              isAuthor={true}
+              isProfile={true}
               paramType={paramType}
               profile={profileData}
             />
@@ -377,8 +338,7 @@ const Author = function (props) {
         {openMenu3 && (
           <div id="zero4" className="onStep fadeIn">
             <ColumnZero
-              authorId={id}
-              isAuthor={true}
+              isProfile={true}
               paramType={paramType}
               profile={profileData}
             />
@@ -386,7 +346,10 @@ const Author = function (props) {
         )}
         {openMenu4 && (
           <div id="zero5" className="onStep fadeIn">
-            <GeneralCollectionsPage userId={id} isAllCollection={false} />
+            <GeneralCollectionsPage
+              userId={profileData?._id}
+              isAllCollections={false}
+            />
           </div>
         )}
       </section>
@@ -396,4 +359,4 @@ const Author = function (props) {
   );
 };
 
-export default Author;
+export default PersonalProfile;
