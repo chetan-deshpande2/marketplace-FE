@@ -1,0 +1,12 @@
+.selectItem-dropdown .dropdown-list li {
+  padding: 10px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #8364e2;
+  background: #fff;
+  border-radius: 10px;
+  margin: 5px;
+  width: auto;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}

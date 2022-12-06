@@ -1172,6 +1172,7 @@ const Create3 = (props) => {
                                                 id="upload_file_Upload_collection"
                                                 type="file"
                                                 ref={fileRefCollection}
+                                                className="btn-main browse-btn"
                                                 required
                                                 onChange={(e) => onCollectionImgChange(e)}
                                               />
@@ -1777,7 +1778,7 @@ const Create3 = (props) => {
                 </span>
               </div>
               <div className="nft__item_wrap">
-                <span className='c-previous-items'>
+                <span className="c-previous-items">
                   <img
                     src={nftImage ? URL.createObjectURL(nftImage) : previewImage}
                     id="get_file_2"
@@ -1800,7 +1801,7 @@ const Create3 = (props) => {
                 {/* <div className="nft__item_action">
                   <span>{isOpenForBid ? "Place a bid" : ""}</span>
                 </div> */}
-                {/* <div className="nft__item_like">
+              {/* <div className="nft__item_like">
                   <i className="fa fa-heart"></i>
                   <span>0</span>
                 </div>
