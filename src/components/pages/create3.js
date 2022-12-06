@@ -44,6 +44,7 @@ import {
 import previewImage from './../../assets/images/preview.jpeg';
 import { showProcessingModal } from '../../utils';
 import moment from 'moment';
+import './Create.css';
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {

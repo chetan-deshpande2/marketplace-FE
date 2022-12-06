@@ -991,7 +991,7 @@ const ItemDetails2 = function (props) {
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
-      console.log(nftDetails._id);
+      console.log(nftDetails.nHash, nftDetails.nNftImage);
       if (nftDetails && nftDetails._id) {
         let data = await getAllBidsByNftId(nftDetails._id);
         let _highestBid = {};
@@ -1626,7 +1626,7 @@ const ItemDetails2 = function (props) {
         <div className="row mt-md-5 pt-md-4">
           <div className="col-md-6 text-center nft_image_box">
             <img
-              src={`http://${nftDetails.sHash}.ipfs.w3s.link/${nftDetails.nNftImage}`}
+              src={`http://${nftDetails.nHash}.ipfs.w3s.link/${nftDetails.nNftImage}`}
               className="img-fluid img-rounded explore_item_img_col nft_image mb-sm-30"
               alt=""
             />

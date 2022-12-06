@@ -1,13 +1,13 @@
-import React, { Component, useEffect, useState } from "react";
-import Slider from "./slick-loader/slider";
+import React, { Component, useEffect, useState } from 'react';
+import Slider from './slick-loader/slider';
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
 
-import { GetHotCollections } from "../../apiServices";
-import { connect } from "react-redux";
-import Loader from "./loader";
-import Avatar from "./../../assets/images/avatar5.jpg";
-import styled from "styled-components";
+import { GetHotCollections } from '../../apiServices';
+import { connect } from 'react-redux';
+import Loader from './loader';
+import Avatar from './../../assets/images/avatar5.jpg';
+import styled from 'styled-components';
 
 class CustomSlide extends Component {
   render() {
@@ -128,31 +128,21 @@ const CollectionList = (props) => {
                   <div className="nft_coll">
                     <div
                       className="nft_wrap"
-                      onClick={() =>
-                        (window.location.href = `/collection/${collection.sContractAddress}`)
-                      }
+                      onClick={() => (window.location.href = `/collection/${collection.sContractAddress}`)}
                     >
                       <span>
-                        <img
-                          src={collection.collectionImage}
-                          className="lazy img-fluid collection-slider-img"
-                          alt=""
-                        />
+                        <img src={collection.collectionImage} className="lazy img-fluid collection-slider-img" alt="" />
                       </span>
                     </div>
                     <div className="nft_coll_pp">
-                      <span
-                        onClick={() =>
-                          (window.location.href = `/author/${collection.oCreatedBy}`)
-                        }
-                      >
+                      <span onClick={() => (window.location.href = `/author/${collection.oCreatedBy}`)}>
                         <img
                           title={
                             collection.oUser.length > 0
                               ? collection.oUser[0].sWalletAddress.slice(0, 3) +
-                                "..." +
+                                '...' +
                                 collection.oUser[0].sWalletAddress.slice(39, 42)
-                              : ""
+                              : ''
                           }
                           className="lazy"
                           src={
@@ -162,23 +152,19 @@ const CollectionList = (props) => {
                                 : Avatar
                               : Avatar
                           }
-                          alt={""}
+                          alt={''}
                         />
                       </span>
                       <i className="fa fa-check"></i>
                     </div>
                     <div className="nft_coll_info">
-                      <span
-                        onClick={() =>
-                          (window.location.href = `/collection/${collection.sContractAddress}`)
-                        }
-                      >
+                      <span onClick={() => (window.location.href = `/collection/${collection.sContractAddress}`)}>
                         <h4 className="nft_title_class">
                           {collection.sName
                             ? collection.sName.length > 15
-                              ? collection.sName.slice(0, 15) + "..."
+                              ? collection.sName.slice(0, 15) + '...'
                               : collection.sName
-                            : ""}
+                            : ''}
                         </h4>
                       </span>
                       {/* <span>{collection.erc721 ? "ERC721" : "ERC1155"}</span> */}
@@ -187,7 +173,7 @@ const CollectionList = (props) => {
                 </CustomSlide>
               );
             })
-          : ""}
+          : ''}
         {collections.length > 0 ? (
           <CustomSlide className="itm hot_collection">
             <div className="d-item" href="/exploreCollections">
@@ -204,10 +190,7 @@ const CollectionList = (props) => {
                       <a href="/exploreCollections">View All</a>
                     </Outer>
                   </div>
-                  <div
-                    className="nft__item_info"
-                    style={{ visibility: "hidden" }}
-                  >
+                  <div className="nft__item_info" style={{ visibility: 'hidden' }}>
                     <span>
                       <h4>3</h4>
                     </span>
@@ -215,14 +198,14 @@ const CollectionList = (props) => {
                     <div className="nft__item_action">
                       <span>3</span>
                     </div>
-                    <div className={"nft__item_like"}></div>
+                    <div className={'nft__item_like'}></div>
                   </div>
                 </div>
               </a>
             </div>
           </CustomSlide>
         ) : (
-          ""
+          ''
         )}
       </Slider>
     </div>

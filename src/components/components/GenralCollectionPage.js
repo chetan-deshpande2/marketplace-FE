@@ -112,7 +112,7 @@ const CollectionsList = (props) => {
                 <div className="nft__item_info col_info">
                   <span onClick={() => (window.location.href = '/collection/' + collection.collectionAddress)}>
                     <h4 className="nft_title_class">
-                      {collection.collectionName
+                      {collection.results.collectionName
                         ? collection.collectionName.length > 15
                           ? collection.collectionName.slice(0, 15) + '...'
                           : collection.collectionName
