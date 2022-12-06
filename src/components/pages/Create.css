@@ -85,7 +85,7 @@
   max-height: 125px;
   max-width: 185px;
   object-fit: cover;
-  object-position: top;
+  object-position: center;
 }
 .padding_span {
   max-width: 250px;
@@ -100,6 +100,10 @@ footer {
 .de-flex > .de-flex-col {
   justify-content: space-between;
   width: 650px;
+}
+#upload_file_Upload_collection ,
+#upload_file_Upload{
+  display: none;
 }
 @media (max-width: 1024px) {
   .subfooter .de-flex,

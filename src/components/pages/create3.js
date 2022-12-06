@@ -1134,9 +1134,9 @@ const Create3 = (props) => {
                                   <div id="form-create-item" className="form-border" action="#">
                                     <div className="collection-field-set">
                                       <span className="sub-heading">Upload Collection Cover</span>
-                                      <div className="fileUploader">
+                                      <div className="fileUploader mt-3">
                                         <div className="row align-items-center justify-content-center">
-                                          <span className="col-sm-3  uploadImg-container">
+                                          <span className="col-md-5 col-sm-12 padding_span uploadImg-container">
                                             {!image ? (
                                               <img
                                                 alt="upload image"
@@ -1148,13 +1148,13 @@ const Create3 = (props) => {
                                               <img
                                                 src={URL.createObjectURL(image)}
                                                 id="get_file_2"
-                                                className="collection_cover_preview"
+                                                className="collection_cover_preview img-fluid" 
                                                 alt=""
                                                 onClick={() => fileRefCollection.current.click()}
                                               />
                                             )}
                                           </span>
-                                          <div className="d-create-file col uploadImg-right">
+                                          <div className="d-create-file col-md-7 uploadImg-right">
                                             <p id="collection_file_name">
                                               We recommend an image of at least 450x450. PNG, JPG, GIF, WEBP or MP4. Max
                                               {MAX_FILE_SIZE}mb.
@@ -1756,7 +1756,7 @@ const Create3 = (props) => {
 
           <div className="col-lg-3 col-sm-6 col-xs-12">
             <h5>Preview item</h5>
-            <div className="preview_section nft__item m-0">
+            <div className="preview_section nft__item m-0 position-relative c-items">
               {isTimedAuction ? (
                 <div className="de_countdown">
                   <Clock deadline={timeLeft} />
@@ -1765,7 +1765,7 @@ const Create3 = (props) => {
                 ''
               )}
 
-              <div className="author_list_pp_explore_page">
+              <div className="author_list_pp_explore_page author_list_pp">
                 <span>
                   <img
                     className="lazy author_image"

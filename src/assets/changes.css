@@ -44,7 +44,9 @@ iframe {
   width: 100%;
   border-radius: 0px;
 }
-
+.custom-popup-box .close-icon{
+  background-color: rgb(131, 100, 226);
+}
 @media (max-width: 991px) {
   .offset-lg-1 {
     margin-left: 0;
