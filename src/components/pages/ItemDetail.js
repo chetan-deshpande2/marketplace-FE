@@ -978,6 +978,7 @@ const ItemDetails = function (props) {
   useEffect(() => {
     const checkIfOpenForSale = async () => {
       for (let i = 0; i < orders.length; i++) {
+        console.log(orders[i]);
         if (orders[i].oStatus >= 1) {
           return;
         }
@@ -1658,6 +1659,7 @@ const ItemDetails = function (props) {
                     >
                       <i className={isUnlocked ? 'fa fa-unlock' : 'fa fa-lock'} aria-hidden="true"></i>
                     </div>
+                    Home1
                     <p className="hidden-content-label">Hidden Content</p>
                   </div>
                 ) : (

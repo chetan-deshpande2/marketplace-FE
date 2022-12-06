@@ -37,7 +37,7 @@ import Tabs from './pages/tabs';
 import PersonalProfile from './pages/PersonalProfile';
 import UpdateProfile from './pages/updateProfile';
 import ItemNotFound from './pages/ItemNotFound';
-import ItemDetails2 from './pages/ItemDetail2';
+// import ItemDetails2 from './pages/ItemDetail2';
 
 import { createGlobalStyle } from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
@@ -84,7 +84,7 @@ const app = () => (
         <Helpcenter path="/helpcenter" />
         <ItemDetail path="/itemDetail/:id" />
 
-        <ItemDetails2 path="/itemDetail2/:id" />
+        {/* <ItemDetails2 path="/itemDetail2/:id" /> */}
 
         <UpdateProfile path="/updateProfile" />
         <PersonalProfile path="/personalProfile" />
