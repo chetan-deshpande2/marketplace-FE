@@ -1679,23 +1679,23 @@ const ItemDetails = function (props) {
                   <div className="item_author col-md-6">
                     <h6>Creator</h6>
                     <div className="author_list_pp">
-                      <a href={`/author/${nftDetails?.nCreater?._id}`}>
-                        <span>
-                          <img
-                            title={
-                              nftDetails.nCreater
-                                ? nftDetails.nCreater.sWalletAddress.slice(0, 3) +
-                                  '...' +
-                                  nftDetails.nCreater.sWalletAddress.slice(39, 42)
-                                : ''
-                            }
-                            className="lazy"
-                            v
-                            src={authorDetails && authorDetails.sProfilePicUrl ? authorDetails.sProfilePicUrl : Avatar}
-                            alt=""
-                          />
-                        </span>
-                      </a>
+                      {/* <a href={`/author/${nftDetails?.nCreater?._id}`}> */}
+                      <span>
+                        <img
+                          title={
+                            nftDetails.nCreater
+                              ? nftDetails.nCreater.sWalletAddress.slice(0, 3) +
+                                '...' +
+                                nftDetails.nCreater.sWalletAddress.slice(39, 42)
+                              : ''
+                          }
+                          className="lazy"
+                          v
+                          src={authorDetails && authorDetails.sProfilePicUrl ? authorDetails.sProfilePicUrl : Avatar}
+                          alt=""
+                        />
+                      </span>
+                      {/* </a> */}
                     </div>
                     <div className="author_list_info">
                       <span>
@@ -1714,17 +1714,15 @@ const ItemDetails = function (props) {
                     <h6>Collection</h6>
                     <div>
                       <div className="author_list_pp">
-                        <a href={`/collection/${nftDetails.nCollection}`}>
-                          <span>
-                            <img
-                              className="lazy"
-                              src={
-                                nftDetails && nftDetails.nCollectionsProfile ? nftDetails.nCollectionsProfile : Avatar
-                              }
-                              alt=""
-                            />
-                          </span>
-                        </a>
+                        {/* <a href={`/collection/${nftDetails.nCollection}`}> */}
+                        <span>
+                          <img
+                            className="lazy"
+                            src={nftDetails && nftDetails.nCollectionsProfile ? nftDetails.nCollectionsProfile : Avatar}
+                            alt=""
+                          />
+                        </span>
+                        {/* </a> */}
                       </div>
                       <div className="author_list_info">
                         <span>
