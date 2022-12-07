@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Clock from '../components/Clock';
 import Footer from '../components/footer';
 import { createGlobalStyle } from 'styled-components';
 import $ from 'jquery';
 import Loader from '../components/loader';
 
-import './styles.css';
-
 //*==========
-
+import { useCookies } from 'react-cookie';
+import Avatar from './../../assets/images/avatar5.jpg';
+import ItemNotFound from './ItemNotFound';
 import {
   createNft,
   createOrder,
@@ -19,20 +18,33 @@ import {
   SetNFTOrder,
   exportInstance,
 } from '../../apiServices';
+import UploadImg from '../../assets/images/upload-image.jpg';
 import { handleCollectionCreation, handleBuyNft } from '../../helpers/sendFunctions';
-import { getSignature, getMaxAllowedDate } from '../../helpers/getterFunctions';
+import { UpdateTokenCount } from '../../apiServices';
+import { getSignature, checkIfCollectionNameAlreadyTaken } from '../../helpers/getterFunctions';
 import { options } from '../../helpers/constants';
-import { CURRENCY, GENERAL_DATE, GENERAL_TIMESTAMP } from '../../helpers/constants';
-import simplerERC721ABI from '../../Config/abis/simpleERC721.json';
+import { CURRENCY, GENERAL_DATE, GENERAL_TIMESTAMP, MAX_FILE_SIZE } from '../../helpers/constants';
+
+import extendedERC721Abi from '../../Config/abis/extendedERC721Abi.json';
 import contracts from './../../Config/contracts';
 import { ethers } from 'ethers';
 import { connect } from 'react-redux';
 import { parseEther } from 'ethers/lib/utils.js';
 import NotificationManager from 'react-notifications/lib/NotificationManager';
 import { Row, Col } from 'react-bootstrap';
+import { convertToEth } from '../../helpers/numberFormatter';
+import {
+  checkIfValidAddress,
+  checkIfValidFileExtension,
+  getMaxAllowedDate,
+  getTokenSymbolByAddress,
+  handleNetworkSwitch,
+} from '../../helpers/utils';
+import previewImage from './../../assets/images/preview.jpeg';
+import { showProcessingModal } from '../../utils';
+import moment from 'moment';
 import './Create.css';
-import { useCookies } from 'react-cookie';
-// import "./App.css";
+import './styles.css';
 
 //!=============
 
@@ -71,34 +83,17 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const Create2 = (props) => {
-  const [open, setOpen] = React.useState(false);
-
-  const [file, setFile] = useState();
-  const [show3, setShow3] = useState(false);
-  const [mint, setMint] = useState(true);
-  const [toggle, setToggle] = useState(false);
-  const [count, setCount] = useState(0);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [show1, setShow1] = useState(false);
-
-  const [auction, setAuction] = useState(false);
-  const [bids, setBids] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
-
-  //* ============================================================
-
   const [nftFiles, setNftFiles] = useState([]);
   const [isActive, setIsActive] = useState(false);
-  const [isUnlock, setIsUnlock] = useState(false);
+  const [isUnlock, setIsUnlock] = useState(true);
   const [files, setFiles] = useState([]);
   const [image, setImage] = useState();
   const [title, setTitle] = useState('');
   const [symbol, setSymbol] = useState('');
   const [description, setDescription] = useState('');
-  const [royalty, setRoyalty] = useState(0);
+  const [royalty, setRoyalty] = useState('');
   const [loading, setLoading] = useState(false);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState('');
   const [collections, setCollections] = useState([]);
   const [nftContractAddress, setNftContractAddress] = useState('');
   const [nftImage, setNftImage] = useState('');
@@ -124,11 +119,11 @@ const Create2 = (props) => {
   const [quantity, setQuantity] = useState(1);
   const [salt, setSalt] = useState();
   const [isPopup, setIsPopup] = useState(false);
-  const [isPutOnMarketplace, setIsPutOnMarketPlace] = useState(false);
+  const [isPutOnMarketplace, setIsPutOnMarketPlace] = useState(true);
   const [chosenType, setChosenType] = useState(0);
-  const [minimumBid, setMinimumBid] = useState(0);
+  const [minimumBid, setMinimumBid] = useState();
   const [endTime, setEndTime] = useState();
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState();
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState(contracts.USDT);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
 
   /************ Create NFT Popup Checks ********** */
@@ -137,22 +132,50 @@ const Create2 = (props) => {
   const [hideRedirectPopup, sethideRedirectPopup] = useState(false);
   const [ClosePopupDisabled, setClosePopupDisabled] = useState(true);
   const [RedirectPopupDisabled, setRedirectPopupDisabled] = useState(true);
-
+  const [createdItemId, setCreatedItemId] = useState();
   const [isUploadPopupClass, setisUploadPopupClass] = useState('checkiconDefault');
   const [isApprovePopupClass, setisApprovePopupClass] = useState('checkiconDefault');
   const [isMintPopupClass, setisMintPopupClass] = useState('checkiconDefault');
   const [isRoyaltyPopupClass, setisRoyaltyPopupClass] = useState('checkiconDefault');
   const [isPutOnSalePopupClass, setisPutOnSalePopupClass] = useState('checkiconDefault');
   const [lockedContent, setLockedContent] = useState('');
+  const [currentUser, setCurrentUser] = useState('');
+  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState(CURRENCY);
+  const [profile, setProfile] = useState();
+  const [cookies, setCookie] = useCookies(['selected_account', 'Authorization']);
+  const [collectionCreation, setCollectionCreation] = useState(false);
+  const [isLazyMinting, setIsLazyMinting] = useState(false);
+  const [onTimedAuction, setOnTimedAuction] = useState(false);
+
   const myRef = React.createRef();
 
-  //*=============================================
+  const fileRef = useRef();
+  const fileRefCollection = useRef();
 
-  function redirectCreateNFTPopup() {
-    window.location.href = '/profile';
+  const togglePopup = () => {
+    console.log(currentUser);
+    if (!currentUser) {
+      NotificationManager.error('Please Connect Your Wallet', '', 800);
+      return;
+    }
+    setIsPopup(!isPopup);
+  };
+
+  function onClickRefresh() {
+    window.location.reload();
   }
+
   function closePopup() {
-    onClickRefresh();
+    setisShowPopup(false);
+    sethideClosePopup(true);
+    sethideRedirectPopup(false);
+    setClosePopupDisabled(true);
+    setRedirectPopupDisabled(true);
+    setisUploadPopupClass('checkiconDefault');
+    setisApprovePopupClass('checkiconDefault');
+    setisMintPopupClass('checkiconDefault');
+    setisRoyaltyPopupClass('checkiconDefault');
+    setisPutOnSalePopupClass('checkiconDefault');
   }
 
   function stopCreateNFTPopup() {
@@ -160,6 +183,88 @@ const Create2 = (props) => {
     setClosePopupDisabled(false);
     sethideClosePopup(true);
   }
+
+  function redirectCreateNFTPopup() {
+    if (createdItemId) window.location.href = `/itemDetail/${createdItemId}`;
+    else window.location.href = `/profile`;
+  }
+
+  function inputPrice(event) {
+    const re = /[+-]?[0-9]+\.?[0-9]*/;
+    let val = event.target.value;
+    if (event.target.value === '' || re.test(event.target.value)) {
+      const numStr = String(val);
+      if (numStr.includes('.')) {
+        if (numStr.split('.')[1].length > 8) {
+        } else {
+          if (val.split('.').length > 2) {
+            val = val.replace(/\.+$/, '');
+          }
+          if (val.length === 2 && val !== '0.') {
+            val = Number(val);
+          }
+          setPrice(val);
+        }
+      } else {
+        if (val.split('.').length > 2) {
+          val = val.replace(/\.+$/, '');
+        }
+        if (val.length === 2 && val !== '0.') {
+          val = Number(val);
+        }
+        setPrice(val);
+      }
+    }
+  }
+
+  function inputPriceAuction(event) {
+    const re = /[+-]?[0-9]+\.?[0-9]*/;
+    let val = event.target.value;
+    if (event.target.value === '' || re.test(event.target.value)) {
+      const numStr = String(val);
+      if (numStr.includes('.')) {
+        if (numStr.split('.')[1].length > 8) {
+        } else {
+          if (val.split('.').length > 2) {
+            val = val.replace(/\.+$/, '');
+          }
+          if (val.length === 2 && val !== '0.') {
+            val = Number(val);
+          }
+          setMinimumBid(val);
+        }
+      } else {
+        if (val.split('.').length > 2) {
+          val = val.replace(/\.+$/, '');
+        }
+        if (val.length === 2 && val !== '0.') {
+          val = Number(val);
+        }
+        setMinimumBid(val);
+      }
+    }
+  }
+
+  const onChange = (e) => {
+    var nftFiles = e.target.files;
+    var filesArr = Array.prototype.slice.call(nftFiles);
+    var file = e.target.files[0];
+    if (!checkIfValidFileExtension(file, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
+      NotificationManager.error('This file type not supported', '', 800);
+      return;
+    }
+    if (file.size / 1000000 > MAX_FILE_SIZE)
+      NotificationManager.warning(`File size should be less than ${MAX_FILE_SIZE} MB`);
+
+    document.getElementById('file_name').style.display = 'none';
+    setNftFiles([...nftFiles, ...filesArr]);
+    if (e.target.files && e.target.files[0]) {
+      let img = e.target.files[0];
+      setNftImage(img);
+    }
+  };
+
+  //*============
 
   function closeCreateNFTPopup() {
     sethideClosePopup(false);
@@ -175,60 +280,96 @@ const Create2 = (props) => {
     setIsPutOnMarketPlace(true);
   };
 
-  //*======================
+  const onCollectionImgChange = (e) => {
+    var files = e.target.files;
+    var filesArr = Array.prototype.slice.call(files);
+    var file = e.target.files[0];
+    if (!checkIfValidFileExtension(file, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
+      NotificationManager.error('This file type not supported', '', 800);
+      return;
+    }
+    if (file.size / 1000000 > MAX_FILE_SIZE)
+      NotificationManager.warning(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
+    document.getElementById('collection_file_name').style.display = 'none';
+
+    setFiles([...files, ...filesArr]);
+    if (e.target.files && e.target.files[0]) {
+      let img = e.target.files[0];
+      setImage(img);
+    }
+  };
 
   const handleShow = () => {
+    setOnTimedAuction(false);
     document.getElementById('tab_opt_1').classList.add('show');
     document.getElementById('tab_opt_1').classList.remove('hide');
+    document.getElementById('tab_opt_2').classList.add('hide');
     document.getElementById('tab_opt_2').classList.remove('show');
+    document.getElementById('tab_opt_3').classList.remove('show');
+    document.getElementById('tab_opt_3').classList.add('hide');
+
     document.getElementById('btn1').classList.add('active');
     document.getElementById('btn2').classList.remove('active');
     document.getElementById('btn3').classList.remove('active');
     setSaleType(0);
     setChosenType(0);
+    setPrice('');
+    setMinimumBid('');
+    setSelectedTokenSymbol('MATIC');
   };
+
   const handleShow1 = () => {
+    setOnTimedAuction(true);
     document.getElementById('tab_opt_1').classList.add('hide');
     document.getElementById('tab_opt_1').classList.remove('show');
+    document.getElementById('tab_opt_2').classList.remove('hide');
     document.getElementById('tab_opt_2').classList.add('show');
+    document.getElementById('tab_opt_3').classList.add('hide');
+    document.getElementById('tab_opt_3').classList.remove('show');
     document.getElementById('btn1').classList.remove('active');
     document.getElementById('btn2').classList.add('active');
     document.getElementById('btn3').classList.remove('active');
     setSaleType(1);
     setChosenType(1);
+    setPrice('');
+    setMinimumBid('');
+    setSelectedTokenSymbol(options[0].title);
   };
+
   const handleShow2 = () => {
-    document.getElementById('tab_opt_1').classList.add('show');
+    setOnTimedAuction(false);
+    document.getElementById('tab_opt_1').classList.add('hide');
+    document.getElementById('tab_opt_1').classList.remove('show');
+    document.getElementById('tab_opt_2').classList.add('hide');
+    document.getElementById('tab_opt_2').classList.remove('show');
+    document.getElementById('tab_opt_3').classList.remove('hide');
+    document.getElementById('tab_opt_3').classList.add('show');
     document.getElementById('btn1').classList.remove('active');
     document.getElementById('btn2').classList.remove('active');
     document.getElementById('btn3').classList.add('active');
     setSaleType(1);
     setChosenType(2);
+    setPrice('');
+    setMinimumBid('');
+    setSelectedTokenSymbol(options[0].title);
   };
+
   const handleShow3 = () => {
     document.getElementById('btn4').classList.add('active');
   };
+
   const handleShow4 = (address, i) => {
     setNftContractAddress(address);
     $('.active').removeClass('clicked');
     $('#my_cus_btn' + i).addClass('clicked');
   };
 
-  const onChange = (e) => {
-    var nftFiles = e.target.files;
-    var filesArr = Array.prototype.slice.call(nftFiles);
-    document.getElementById('file_name').style.display = 'none';
-    setNftFiles([...nftFiles, ...filesArr]);
-    if (e.target.files && e.target.files[0]) {
-      let img = e.target.files[0];
-
-      console.log('nft files is--------->', nftFiles);
-      setNftImage(img);
-      console.log('nft image is---->', nftImage);
+  const clickToLazyMint = () => {
+    if (isLazyMinting) {
+      setIsLazyMinting(false);
+    } else {
+      setIsLazyMinting(true);
     }
-  };
-  const togglePopup = () => {
-    setIsPopup(!isPopup);
   };
 
   const unlockClick = () => {
@@ -239,17 +380,6 @@ const Create2 = (props) => {
     setIsActive(false);
   };
 
-  const onCollectionImgChange = (e) => {
-    var files = e.target.files;
-    var filesArr = Array.prototype.slice.call(files);
-    document.getElementById('collection_file_name').style.display = 'none';
-    setFiles([...files, ...filesArr]);
-    console.log('...files, ...filesArr', e.target.files[0]);
-    if (e.target.files && e.target.files[0]) {
-      let imgC = e.target.files[0];
-      setImage(imgC);
-    }
-  };
   const handleAddCollaborator = async () => {
     console.log('currCollaborator,currCollaboratorPercent', currCollaborator, currCollaboratorPercent);
     if (currCollaborator === '' || currCollaboratorPercent === '') {
@@ -324,71 +454,158 @@ const Create2 = (props) => {
     setPropertyValues(tempArr2);
   };
 
-  const handleCollectionCreate = async () => {
-    try {
-      console.log(props);
-      if (title === '' || description === '' || image === '' || symbol === '') {
-        //console.log("Fill All details");
-        console.log('Fill Details');
-        return;
-      }
-      setLoading(true);
-      let collectionData = {
-        sName: title,
-        sDescription: description,
-        nftFile: image,
-        erc721: JSON.stringify(true),
-        sRoyaltyPercentage: Number(royalty) * 100,
-        quantity: 1,
-        symbol: symbol,
-      };
-      console.log('collection Data in create Single', collectionData);
-
-      let collectionsList = '';
-      try {
-        await handleCollectionCreation(true, collectionData, props.account?.account);
-        collectionsList = await getUsersCollections();
-        console.log(collectionsList);
-      } catch (e) {
-        setLoading(false);
-        return;
-      }
-      if (collectionsList) {
-        collectionsList = collectionsList?.filter((collection) => {
-          return collection.erc721 === true;
-        });
-      }
-      console.log('single collectionsList', collectionsList);
-      setCollections(collectionsList);
-      setLoading(false);
-      togglePopup();
-    } catch (e) {
-      setLoading(false);
-      togglePopup();
-      console.log(e);
-    }
-  };
-
   const validateInputs = () => {
     let sum = 0;
     for (let i = 0; i < collaboratorPercents.length; i++) {
       sum = sum + Number(collaboratorPercents[i]);
     }
-    if (sum > 90) {
-      console.error('Total percentage should be less than 90');
-
+    if (sum > 100) {
+      NotificationManager.error('Total percentage should be less than 100', '', 800);
+      setLoading(false);
       return false;
     }
     if (!nftContractAddress) {
-      console.error('Please choose valid collection');
+      NotificationManager.error('Please Choose Valid Collection', '', 800);
       return false;
     }
-    console.log(title);
-    if (title == '') {
-      console.error('Please choose valid title');
-      return false;
-    }
+
+    // if(!title){
+    //   NotificationManager.error("Please choose valid title");
+    //   return false;
+    // }
     return true;
+  };
+  //*=============================================
+
+  // const handleCollectionCreate = async () => {
+  //   try {
+  //     console.log(props);
+  //     if (title === '' || description === '' || image === '' || symbol === '') {
+  //       //console.log("Fill All details");
+  //       console.log('Fill Details');
+  //       return;
+  //     }
+  //     setLoading(true);
+  //     let collectionData = {
+  //       sName: title,
+  //       sDescription: description,
+  //       nftFile: image,
+  //       erc721: JSON.stringify(true),
+  //       sRoyaltyPercentage: Number(royalty) * 100,
+  //       quantity: 1,
+  //       symbol: symbol,
+  //     };
+  //     console.log('collection Data in create Single', collectionData);
+
+  //     let collectionsList = '';
+  //     try {
+  //       await handleCollectionCreation(true, collectionData, props.account?.account);
+  //       collectionsList = await getUsersCollections();
+  //       console.log(collectionsList);
+  //     } catch (e) {
+  //       setLoading(false);
+  //       return;
+  //     }
+  //     if (collectionsList) {
+  //       collectionsList = collectionsList?.filter((collection) => {
+  //         return collection.erc721 === true;
+  //       });
+  //     }
+  //     console.log('single collectionsList', collectionsList);
+  //     setCollections(collectionsList);
+  //     setLoading(false);
+  //     togglePopup();
+  //   } catch (e) {
+  //     setLoading(false);
+  //     togglePopup();
+  //     console.log(e);
+  //   }
+  // };
+
+  const handleCollectionCreate = async () => {
+    console.log(props);
+    let res = await handleNetworkSwitch(currentUser);
+    setCookie('balance', res, { path: '/' });
+    if (res === false) return;
+    setIsPopup(false);
+    setCollectionCreation(true);
+    if (!currentUser && profile) {
+      NotificationManager.error('Please Connect Your Wallet', '', 800);
+      return;
+    }
+
+    try {
+      let _title = title.replace(/^\s+|\s+$/g, '');
+      if (_title === '' || _title === undefined) {
+        NotificationManager.error('Please Enter Title', '', 800);
+        setCollectionCreation(false);
+        return;
+      }
+      if (image === undefined) {
+        NotificationManager.error('Please Upload Image', '', 800);
+        setCollectionCreation(false);
+        return;
+      }
+      if (symbol === '') {
+        NotificationManager.error('Please Enter symbol', '', 800);
+        setCollectionCreation(false);
+        return;
+      }
+      let res = await checkIfCollectionNameAlreadyTaken(_title);
+      if (res === true) {
+        NotificationManager.error('Collection Name Already Taken', '', 800);
+        setCollectionCreation(false);
+        return;
+      }
+      if (files && files.length > 0) {
+        if (files[0].size / 1000000 > MAX_FILE_SIZE) {
+          NotificationManager.error(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
+          return;
+        }
+      }
+      setCollectionCreation(true);
+      let collectionData = {
+        sName: _title,
+        sDescription: description,
+        nftFile: image,
+        erc721: JSON.stringify(false),
+        sRoyaltyPercentage: Number(royalty) * 100,
+
+        symbol: symbol,
+      };
+      let collectionsList = '';
+      try {
+        let ress = await handleCollectionCreation(false, collectionData, currentUser);
+        collectionsList = await getUsersCollections({
+          page: 1,
+          limit: 100,
+          userId: profile._id,
+        });
+        if (collectionsList && collectionsList?.results?.length > 0) {
+          collectionsList.results = collectionsList?.results?.filter((collection) => {
+            return collection.erc721 === false;
+          });
+          setCollections(collectionsList?.results);
+
+          window.location.reload();
+        }
+        if (ress === false) {
+          setCollectionCreation(false);
+          // window.location.reload();
+        }
+      } catch (e) {
+        setCollectionCreation(false);
+        return;
+      }
+
+      setCollectionCreation(false);
+      togglePopup();
+      window.location.reload();
+    } catch (e) {
+      setCollectionCreation(false);
+      togglePopup();
+      console.log(e);
+    }
   };
 
   const handleNftCreation = async () => {
@@ -454,7 +671,7 @@ const Create2 = (props) => {
 
         console.log('nft Address', nftContractAddress);
 
-        const NFTcontract = await exportInstance(nftContractAddress, simplerERC721ABI.abi);
+        const NFTcontract = await exportInstance(nftContractAddress, extendedERC721Abi.abi);
         console.log('NFT Contract', NFTcontract);
 
         let approval = await NFTcontract.isApprovedForAll(props.account.account, contracts.MARKETPLACE);
@@ -667,6 +884,16 @@ const Create2 = (props) => {
   };
 
   useEffect(() => {
+    console.log(cookies);
+    setCurrentUser(cookies.selected_account);
+  }, []);
+
+  useEffect(() => {
+    if (cookies.selected_account) setCurrentUser(cookies.selected_account);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookies.selected_account]);
+
+  useEffect(() => {
     setIsOpenForBid(false);
     setIsTimedAuction(false);
     setSaleType(0);
@@ -676,25 +903,32 @@ const Create2 = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(props.token);
     async function fetchData() {
-      if ((props.token && props.token.token) || localStorage.getItem('Authorization')) {
-        let collectionsList = await getUsersCollections();
-        console.log('single ', collectionsList);
-        if (collectionsList)
-          collectionsList = collectionsList?.results.filter((results) => {
-            return results.erc721 === true;
-          });
-        console.log('single collectionsList', collectionsList);
-        setCollections(collectionsList);
-        let profile = await getProfile();
-        console.log(profile.sProfilePicUrl);
+      setLoading(true);
+      let profile = await getProfile();
+      setProfile(profile);
+      let collectionsList = await getUsersCollections({
+        page: 1,
+        limit: 100,
+        userId: profile?._id,
+      });
+      if (collectionsList && collectionsList?.results?.length >= 1) {
+        collectionsList.results = collectionsList.results.filter((collection) => {
+          return collection.erc721 === true;
+        });
+        setCollections(collectionsList?.results);
       }
+
+      if (profile && profile.sProfilePicUrl) {
+        setProfilePic(profile.sProfilePicUrl);
+      } else {
+        setProfilePic(Avatar);
+      }
+      setLoading(false);
     }
-    if ((props.token && props.token.token) || localStorage.getItem('Authorization')) {
-      fetchData();
-    }
-  }, [props.token]);
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookies.Authorization, cookies.selected_account, isPopup, currentUser]);
 
   const PropertiesSection = () => {
     return (
@@ -723,9 +957,17 @@ const Create2 = (props) => {
     );
   };
 
-  return (
+  return !currentUser ? (
+    <ItemNotFound />
+  ) : (
     <div>
       <GlobalStyles />
+      {collectionCreation ? (
+        showProcessingModal('Collection creation is under process. Please do not refresh the page')
+      ) : (
+        <></>
+      )}
+      {loading ? showProcessingModal('Loading...') : ''}
       <section
         className="jumbotron breadcumb no-bg"
         style={{
@@ -742,15 +984,16 @@ const Create2 = (props) => {
           </div>
         </div>
       </section>
+
       <section className="container">
         <div className="row">
-          <div className="col-lg-9 mb-5">
+          <div className="col-lg-7 offset-lg-1 mb-5">
             <div id="form-create-item" className="form-border" action="#">
               <div className="field-set">
-                <h5>Choose Collection</h5>
+                <h5 className="required">Choose Collection</h5>
                 <div className="de_tab tab_methods">
-                  <div className="scrollable mb-5 c-collections">
-                    <ul className="de_nav" id="custom-create">
+                  <div className="scrollable">
+                    <ul className="de_nav">
                       <li id="btn4" className="active" onClick={handleShow3}>
                         <span onClick={togglePopup}>
                           <i className="fa fa-plus"></i>Create New
@@ -758,124 +1001,144 @@ const Create2 = (props) => {
                       </li>
 
                       {isPopup && (
-                        <div className="collection-popup-box custom-popup-box">
-                          {/* {loading ? <Loader /> : <></>} */}
-                          <span className="close-icon" onClick={togglePopup}>
+                        <div className="collection-popup-box">
+                          <span
+                            className="close-icon"
+                            onClick={() => {
+                              togglePopup();
+                              window.location.reload();
+                            }}
+                          >
                             x
                           </span>
                           <div className="add-collection-box">
                             <div className="add-collection-popup-content text-center">
-                              <div className="">
-                                <div className="col mb-5">
+                              <div className="CollectionPopupBox">
+                                <div className="row">
                                   <h3>Collections</h3>
                                   <div id="form-create-item" className="form-border" action="#">
                                     <div className="collection-field-set">
-                                      <h5 className="mb-3">Upload Collection Cover</h5>
-                                      <div className="row align-items-center justify-content-center">
-                                        <span className="col-md-5 col-sm-12 padding_span text-center">
-                                          <img
-                                            src={image ? URL.createObjectURL(image) : null}
-                                            id="get_file_2"
-                                            className=" img-fluid lazy collection_cover_preview"
-                                            alt=""
-                                          />
-                                        </span>
+                                      <span className="sub-heading">Upload Collection Cover</span>
+                                      <div className="fileUploader">
+                                        <div className="row align-items-center justify-content-center">
+                                          <span className="col-sm-3  uploadImg-container">
+                                            {!image ? (
+                                              <img
+                                                alt="upload image"
+                                                src={UploadImg}
+                                                className=""
+                                                onClick={() => fileRefCollection.current.click()}
+                                              />
+                                            ) : (
+                                              <img
+                                                src={URL.createObjectURL(image)}
+                                                id="get_file_2"
+                                                className="collection_cover_preview"
+                                                alt=""
+                                                onClick={() => fileRefCollection.current.click()}
+                                              />
+                                            )}
+                                          </span>
 
-                                        <div className="d-create-file col-md-7">
-                                          <p id="collection_file_name">
-                                            We recommend an image of at least 300x300. PNG, JPG, GIF, WEBP or MP4. Max
-                                            200mb.
-                                          </p>
-                                          {files
-                                            ? files.map((x, index) => (
-                                                <>
-                                                  <p key={index}>{x.name}</p>
-                                                </>
-                                              ))
-                                            : ''}
-                                          <div className="browse">
-                                            <input type="button" id="get_file" className="btn-main" value="Browse" />
-                                            <input
-                                              id="upload_file"
-                                              type="file"
-                                              required
-                                              multiple
-                                              onChange={(e) => onCollectionImgChange(e)}
-                                            />
+                                          <div className="d-create-file col uploadImg-right">
+                                            <p id="collection_file_name">
+                                              We recommend an image of at least 450x450. PNG, JPG, GIF or WEBP. Max
+                                              {MAX_FILE_SIZE}mb.
+                                            </p>
+                                            {files && files.length > 0 ? <p>{files[0].name}</p> : ''}
+                                            <div className="browse m-0 pl-0">
+                                              <input
+                                                type="button"
+                                                id="get_file"
+                                                className="btn-main browse-btn"
+                                                value="Browse"
+                                                onClick={() => fileRefCollection.current.click()}
+                                              />
+                                              <input
+                                                id="upload_file_Upload_collection"
+                                                type="file"
+                                                ref={fileRefCollection}
+                                                required
+                                                onChange={(e) => onCollectionImgChange(e)}
+                                              />
+                                              <div className="img-size">
+                                                {files && files.length > 0 ? files[0].size / 1000000 + 'MB' : ''}
+                                              </div>
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
 
                                       <div className="spacer-20"></div>
 
-                                      <h5 className="m-0">Title</h5>
+                                      <h5 className="createColTitle m-0 required">Title</h5>
                                       <input
                                         type="text"
                                         name="item_title"
                                         value={title}
                                         required
                                         id="item_title"
-                                        className="form-control collection-input-fields"
+                                        className="form-control createColInput"
                                         placeholder="e.g. 'Crypto Funk"
                                         onChange={(e) => {
                                           setTitle(e.target.value);
                                         }}
                                       />
 
-                                      <div className="spacer-20"></div>
-
-                                      <h5 className="m-0">Symbol</h5>
+                                      <h5 className="createColTitle m-0 required">Symbol</h5>
 
                                       <input
                                         type="text"
                                         name="item_title"
                                         value={symbol}
-                                        required
                                         id="item_title"
-                                        className="form-control collection-input-fields"
+                                        className="form-control createColInput"
                                         placeholder="e.g. 'Crypto Funk"
                                         onChange={(e) => {
                                           setSymbol(e.target.value);
                                         }}
                                       />
 
-                                      <div className="spacer-10"></div>
-
-                                      <h5 className="m-0">Description</h5>
-                                      <textarea
-                                        data-autoresize
+                                      <h5 className="createColTitle m-0">
+                                        Description <span className="optional_text">(optional)</span>
+                                      </h5>
+                                      <input
+                                        type="text"
                                         name="item_desc"
                                         required
                                         id="item_desc"
                                         value={description}
-                                        className="form-control collection-input-fields"
+                                        className="form-control createColInput"
                                         placeholder="e.g. 'This is very limited item'"
                                         onChange={(e) => {
                                           setDescription(e.target.value);
                                         }}
-                                      ></textarea>
+                                      ></input>
 
-                                      <div className="spacer-10"></div>
-
-                                      <h5 className="m-0">Royalties</h5>
+                                      <h5 className="createColTitle m-0">Royalties</h5>
                                       <input
                                         type="Number"
                                         name="item_royalties"
+                                        min="0"
                                         value={royalty}
                                         required
                                         id="item_royalties"
-                                        className="form-control collection-input-fields"
-                                        placeholder="suggested: 0, 10%, 20%, 30%. Maximum is 70%"
+                                        className="form-control createColInput"
+                                        placeholder="suggested: 0, 10%, 20%, 30%. Maximum is 50%"
                                         onChange={(e) => {
-                                          if (Number(e.target.value) > 100) {
-                                            console.error('Percentage should be less than 100%');
+                                          if (Number(e.target.value) > 50) {
+                                            NotificationManager.error('Percentage should be less than 50%', '', 800);
+
                                             return;
                                           }
+                                          var t = e.target.value;
+                                          e.target.value =
+                                            t.indexOf('.') >= 0
+                                              ? t.substr(0, t.indexOf('.')) + t.substr(t.indexOf('.'), 3)
+                                              : t;
                                           setRoyalty(Number(e.target.value));
                                         }}
                                       />
-
-                                      <div className="spacer-10"></div>
 
                                       <button
                                         id="submit"
@@ -894,7 +1157,6 @@ const Create2 = (props) => {
                           </div>
                         </div>
                       )}
-
                       {collections && collections.length >= 1
                         ? collections.map((collection, index) => {
                             return (
@@ -912,15 +1174,11 @@ const Create2 = (props) => {
                                   <img
                                     className="choose-collection-img image"
                                     alt=""
-                                    height="30px"
-                                    width="30px"
-                                    // src={`https://ipfs.io/ipfs/${collection.sHash}`}
-                                    src={`http://${collection.sHash}.ipfs.w3s.link/${collection.sImageName}`}
+                                    height="10px"
+                                    width="10px"
+                                    src={collection.collectionImage}
                                   ></img>
-                                  <p className="mt-2 mb-0" style={{ position: 'relative', bottom: '-6px' }}>
-                                    {' '}
-                                    {collection.sName}
-                                  </p>
+                                  <p>{collection.sName}</p>
                                 </span>
                               </li>
                             );
@@ -929,26 +1187,51 @@ const Create2 = (props) => {
                     </ul>
                   </div>
                 </div>
-                <h5 className="mt-5">Upload file</h5>
+                <h5>Upload file</h5>
 
                 <div className="d-create-file">
-                  <p id="file_name">PNG, JPG, GIF, WEBP or MP4. Max 200mb.</p>
-                  {nftFiles ? nftFiles.map((x, key) => <p key={key}>{x.name}</p>) : ''}
+                  <div className="uploadFile">
+                    {' '}
+                    <p id="file_name">
+                      We recommend an image of at least 450x450.&nbsp; PNG, JPG, GIF or WEBP.&nbsp; Max &nbsp;
+                      {MAX_FILE_SIZE}
+                      mb.
+                    </p>
+                  </div>
+
+                  <p>
+                    {/* {nftFiles && nftFiles.length > 0 ? nftFiles[0].name : ""} */}
+
+                    {nftFiles && nftFiles.length > 0 ? (
+                      <>
+                        {nftFiles[0].name.length > 50
+                          ? nftFiles[0].name.slice(0, 10) +
+                            nftFiles[0].name.slice(nftFiles[0].name.length - 4, nftFiles[0].name.length)
+                          : nftFiles[0].name}
+                      </>
+                    ) : (
+                      ''
+                    )}
+                  </p>
                   <div className="browse">
-                    <input type="button" id="get_file" className="btn-main" value="Browse" />
-                    <input id="upload_file" type="file" multiple onChange={(e) => onChange(e)} />
+                    <input
+                      type="button"
+                      id="get_file"
+                      className="btn-main"
+                      value="Browse"
+                      onClick={() => fileRef.current.click()}
+                    />
+                    <input id="upload_file_Upload" type="file" ref={fileRef} onChange={(e) => onChange(e)} />
                   </div>
                 </div>
-
-                <div className="spacer-single"></div>
                 <div className="spacer-20"></div>
+
                 <div className="switch-with-title">
                   <h5>
                     <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
-                    Unlock once purchased
+                    Unlock Once Purchased
                   </h5>
                   <div className="de-switch">
-                    {' '}
                     <input type="checkbox" id="switch-unlock" className="checkbox" />
                     {isActive ? (
                       <label htmlFor="switch-unlock" onClick={unlockHide}></label>
@@ -973,22 +1256,24 @@ const Create2 = (props) => {
                     </div>
                   ) : null}
                 </div>
-
+                <div className="spacer-20"></div>
                 <div className="switch-with-title">
                   <h5>
                     <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
-                    Put on Marketplace
+                    Put On Marketplace
                   </h5>
+
                   <div className="de-switch">
-                    <input type="checkbox" id="switch-unlock1" className="checkbox" />
+                    <input type="checkbox" id="switch-unlock1" className="checkbox" checked={isUnlock} />
 
                     <label htmlFor="switch-unlock1" onClick={clickToUnlock}></label>
                   </div>
                 </div>
-                <div className="spacer-single"></div>
+
+                {/* <div className="spacer-single"></div> */}
                 {isUnlock ? (
                   <>
-                    {' '}
+                    <div className="spacer-20"></div>
                     <h5>Select method</h5>
                     <div className="de_tab tab_methods">
                       <ul className="de_nav">
@@ -1008,49 +1293,86 @@ const Create2 = (props) => {
                           </span>
                         </li>
                       </ul>
+
                       <div className="de_tab_content pt-3">
                         <div id="tab_opt_1">
-                          <h5>Price</h5>
+                          <h5 className="required">Price</h5>
                           <input
                             type="text"
                             name="item_price"
                             id="item_price"
                             value={price}
+                            max="18"
+                            min="0"
                             onChange={(e) => {
-                              setPrice(e.target.value);
+                              if (Number(e.target.value) > 100000000000000) {
+                                return;
+                              }
+
+                              inputPrice(e);
+                            }}
+                            onKeyPress={(e) => {
+                              if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
                             }}
                             className="form-control"
-                            placeholder={`enter price for one item (${CURRENCY})`}
+                            placeholder={`0 (${CURRENCY})`}
                           />
                         </div>
                       </div>
                     </div>
                   </>
                 ) : null}
-                <div className="spacer-single"></div>
+
+                <div className="switch-with-title">
+                  <h5>
+                    <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
+                    Lazy Minting
+                  </h5>
+
+                  <div className="de-switch">
+                    <input type="checkbox" id="switch-unlock1" className="checkbox" checked={isLazyMinting} />
+
+                    <label htmlFor="switch-unlock1" onClick={clickToLazyMint}></label>
+                  </div>
+                </div>
+
+                <div className="spacer-20"></div>
+
+                {/* <div className="spacer-single"></div> */}
                 <div className="de_tab_content pt-3">
-                  {' '}
                   <div id="tab_opt_2" className="hide">
-                    <h5>Minimum bid</h5>
+                    <h5 className="required">Minimum bid</h5>
                     <input
                       type="text"
                       name="item_price_bid"
                       id="item_price_bid"
                       value={minimumBid}
+                      min="0"
+                      max="18"
+                      onKeyPress={(e) => {
+                        if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
+                      }}
                       onChange={(e) => {
-                        setMinimumBid(e.target.value);
+                        if (Number(e.target.value) > 100000000000000) {
+                          return;
+                        }
+                        inputPriceAuction(e);
                       }}
                       className="form-control"
-                      placeholder="enter minimum bid"
+                      placeholder="0"
                     />
 
                     <div className="spacer-20"></div>
+
                     <div className="row">
                       <div className="col-md-6">
-                        <h5>Payment Token</h5>
+                        <h5 className="required">Payment Token</h5>
                         <select
+                          className="form-control selectOpt"
                           onChange={(e) => {
                             setSelectedTokenAddress(e.target.value);
+                            let symbol = getTokenSymbolByAddress(e.target.value);
+                            setSelectedTokenSymbol(symbol);
                           }}
                         >
                           {options
@@ -1061,40 +1383,52 @@ const Create2 = (props) => {
                         </select>
                       </div>
                       <div className="col-md-6">
-                        {' '}
-                        <h5>Expiration date</h5>
+                        <h5 className="required">Expiration date</h5>
                         <input
-                          type="date"
-                          name="bid_expiration_date"
+                          type="datetime-local"
+                          id="meeting-time"
+                          name="meeting-time"
                           min={getMaxAllowedDate()}
-                          onChange={(e) => {
-                            setEndTime(e.target.value);
-                          }}
-                          id="bid_expiration_date"
                           className="form-control"
-                        />{' '}
+                          onChange={(e) => {
+                            setEndTime(new Date(e.target.value));
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
+
                   <div id="tab_opt_3" className="hide">
-                    <h5>Minimum bid</h5>
+                    <h5 className="required">Minimum bid</h5>
                     <input
-                      type="Number"
+                      type="text"
                       name="item_price_bid"
                       id="item_price_bid"
+                      min="0"
+                      max="18"
                       value={minimumBid}
+                      onKeyPress={(e) => {
+                        if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
+                      }}
                       onChange={(e) => {
-                        setMinimumBid(e.target.value);
+                        if (Number(e.target.value) > 100000000000000) {
+                          return;
+                        }
+                        inputPriceAuction(e);
                       }}
                       className="form-control"
-                      placeholder="enter minimum bid"
+                      placeholder="0"
                     />
+
                     <div className="spacer-20"></div>
-                    <div className="col-md-6">
-                      <h5>Payment Token</h5>
+                    <div className="col-md-12">
+                      <h5 className="required">Payment Token</h5>
                       <select
+                        className="form-control selectOpt"
                         onChange={(e) => {
                           setSelectedTokenAddress(e.target.value);
+                          let symbol = getTokenSymbolByAddress(e.target.value);
+                          setSelectedTokenSymbol(symbol);
                         }}
                       >
                         {options
@@ -1106,70 +1440,84 @@ const Create2 = (props) => {
                     </div>
                   </div>
                 </div>
-
-                <div className="spacer-20"></div>
-
-                <h5>Title</h5>
+                {/* <div className="spacer-20"></div> */}
+                <h5 className="required">Title</h5>
                 <input
                   type="text"
                   name="item_title"
                   id="item_title"
-                  className="form-control"
-                  placeholder="e.g. 'Crypto Funk"
-                  value={title}
                   onChange={(e) => {
-                    setTitle(e.target.value);
+                    if (e.target.value.length > 50) {
+                      return;
+                    }
+                    setNftTitle(e.target.value);
                   }}
+                  value={nftTitle}
+                  className="form-control"
+                  placeholder="Crypto"
                 />
-
                 <div className="spacer-10"></div>
-
                 <h5>Description</h5>
                 <textarea
+                  onChange={(e) => {
+                    if (e.target.value.length > 250) {
+                      return;
+                    }
+                    setNftDesc(e.target.value);
+                  }}
+                  value={nftDesc}
                   data-autoresize
                   name="item_desc"
                   id="item_desc"
                   className="form-control"
-                  placeholder="e.g. 'This is very limited item'"
+                  placeholder="My NFT description"
                 ></textarea>
 
                 <div className="spacer-10"></div>
-                <h5>Collaborator (Optional)</h5>
-                <input
-                  type="text"
-                  name="item_collaborator"
-                  id="item_collaborator"
-                  onChange={(e) => {
-                    if (Number(currCollaboratorPercent) > 90) {
-                      console.error('Invalid Percent');
-                    }
-                    setCurrCollaborator(e.target.value);
-                  }}
-                  value={currCollaborator}
-                  className="form-control"
-                  placeholder="Collaborators"
-                  maxLength={42}
-                />
-                <input
-                  type="Number"
-                  name="item_collaborator_percent"
-                  id="item_collaborator_percent"
-                  onChange={(e) => {
-                    setCurrCollaboratorPercent(e.target.value);
-                  }}
-                  value={currCollaboratorPercent}
-                  className="form-control"
-                  placeholder="Percent"
-                />
-                <button
-                  id="submit"
-                  className="btn-main"
-                  onClick={() => {
-                    handleAddCollaborator();
-                  }}
-                >
-                  Add Collaborator
-                </button>
+                <div className={isLazyMinting ? 'hideCollaborator' : 'showCollaborator'}>
+                  <h5>Collaborator (Optional)</h5>
+                  <input
+                    type="text"
+                    name="item_collaborator"
+                    id="item_collaborator"
+                    onChange={(e) => {
+                      setCurrCollaborator(e.target.value);
+                    }}
+                    value={currCollaborator}
+                    className="form-control"
+                    placeholder="Please Enter Collaborator's Wallet Address"
+                    maxLength={42}
+                  />
+                  <input
+                    type="Number"
+                    name="item_collaborator_percent"
+                    id="item_collaborator_percent"
+                    onChange={(e) => {
+                      if (Number(e.target.value) > 100) {
+                        NotificationManager.error('Invalid Percent', '', 800);
+                      }
+
+                      var t = e.target.value;
+                      e.target.value =
+                        t.indexOf('.') >= 0 ? t.substr(0, t.indexOf('.')) + t.substr(t.indexOf('.'), 3) : t;
+                      setCurrCollaboratorPercent(e.target.value);
+                    }}
+                    min="0"
+                    value={currCollaboratorPercent}
+                    className="form-control"
+                    placeholder="Percent"
+                  />
+                  <button
+                    id="submit"
+                    className="btn-main"
+                    onClick={() => {
+                      handleAddCollaborator();
+                    }}
+                  >
+                    Add Collaborator
+                  </button>
+                </div>
+
                 <ul>
                   {collaborators && collaboratorPercents
                     ? collaborators.map((collaborator, key) => {
@@ -1196,53 +1544,59 @@ const Create2 = (props) => {
                       })
                     : ''}
                 </ul>
+
                 <button className="btn-main showHideBtn" onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}>
-                  {isAdvancedSetting ? 'Hide Advanced Setting' : 'Show Advanced Setting'}
+                  {isAdvancedSetting ? 'Hide Advanced Settings' : 'Show Advanced Settings'}
                 </button>
                 {isAdvancedSetting ? PropertiesSection() : ''}
-                <button
-                  id="submit"
-                  className="btn-main"
-                  onClick={() => {
-                    handleAddProperty();
-                  }}
-                >
-                  Add Property
-                </button>
-                <ul>
-                  {propertyKeys && propertyValues
-                    ? propertyKeys.map((propertyKey, key) => {
-                        return propertyKey !== '' ? (
-                          <li className="added_collaborator_list">
-                            <div className="d-flex justify-content-around align-items-baseline">
-                              <h5>
-                                {propertyKey}: <span>{propertyValues[key]}</span>
-                              </h5>
-                              <button
-                                className="remove-btn btn-main"
-                                onClick={() => {
-                                  handleRemoveProperty(key);
-                                }}
-                              >
-                                Remove
-                              </button>
+                {isAdvancedSetting ? (
+                  <button
+                    id="submit"
+                    className="btn-main"
+                    onClick={() => {
+                      handleAddProperty();
+                    }}
+                  >
+                    Add Property
+                  </button>
+                ) : (
+                  ''
+                )}
+                <div className="spacer-40"></div>
+                <div className="nft_attr_section">
+                  <div className="row gx-2">
+                    {propertyKeys && propertyValues
+                      ? propertyKeys.map((propertyKey, key) => {
+                          return propertyKey !== '' ? (
+                            <div className="col-lg-4 col-md-6 col-sm-6">
+                              <div className="createProperty">
+                                <div className="nft_attr">
+                                  <h5>{propertyKey}</h5>
+                                  <h4>{propertyValues[key]}</h4>
+                                </div>
+                                <button
+                                  className="remove-btn btn-main removeBTN"
+                                  onClick={() => {
+                                    handleRemoveProperty(key);
+                                  }}
+                                >
+                                  <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                              </div>
                             </div>
-                          </li>
-                        ) : (
-                          ''
-                        );
-                      })
-                    : ''}
-                </ul>
+                          ) : (
+                            ''
+                          );
+                        })
+                      : ''}
+                  </div>
+                </div>
                 <div className="spacer-10"></div>
-
-                <div className="spacer-10"></div>
-
                 <button
                   id="submit"
                   className="btn-main"
-                  onClick={() => {
-                    handleNftCreation();
+                  onClick={async () => {
+                    await handleNftCreation();
                   }}
                 >
                   Create NFT
@@ -1253,67 +1607,72 @@ const Create2 = (props) => {
 
           <div className="col-lg-3 col-sm-6 col-xs-12">
             <h5>Preview item</h5>
-            <div className="nft__item m-0 position-relative c-items">
-              {/* <div className="de_countdown"></div> */}
-              <div className="author_list_pp">
-                <span className="c-author-img">
-                  <img className="lazy" src="./img/author/author-1.jpg" alt="" />
-                  <i className="fa fa-check"></i>
+            <div className="preview_section nft__item m-0">
+              {isTimedAuction ? (
+                <div className="de_countdown">
+                  <Clock deadline={timeLeft} />
+                </div>
+              ) : (
+                ''
+              )}
+
+              <div className="author_list_pp_explore_page">
+                <span>
+                  {profilePic !== undefined ? (
+                    <img className="lazy author_image" src={profilePic ? profilePic : Avatar} alt="" />
+                  ) : (
+                    <img className="lazy author_list_pp1_img" src={Avatar} alt="" />
+                  )}
+
+                  <i className="fa fa-check profile_img_check"></i>
                 </span>
               </div>
               <div className="nft__item_wrap">
                 <span>
-                  <span className="c-previous-items">
-                    <img
-                      src={nftImage ? URL.createObjectURL(nftImage) : ''}
-                      id="get_file_2"
-                      className="lazy nft__item_preview"
-                      alt=""
-                    />
-                  </span>
+                  <img
+                    src={nftImage ? URL.createObjectURL(nftImage) : previewImage}
+                    id="get_file_2"
+                    className="lazy nft__item_preview slider-img-preview"
+                    alt=""
+                  />
                 </span>
               </div>
               <div className="nft__item_info">
                 <span>
-                  <span>
-                    <h4>{nftTitle}</h4>
-                  </span>
+                  <h4>{nftTitle ? (nftTitle.length > 15 ? nftTitle.slice(0, 15) + '...' : nftTitle) : 'NFT NAME'}</h4>
                 </span>
-                <div className="nft__item_price">{isUnlock && price ? price + ' ' + CURRENCY : ''}</div>
-                <div className="nft__item_action">{/* <span>{isOpenForBid ? 'Place a bid' : ''}</span> */}</div>
-                <div className="nft__item_like"></div>
+                <div className="nft__item_price">
+                  {isUnlock && price > 0
+                    ? price + ' ' + CURRENCY
+                    : minimumBid > 0
+                    ? minimumBid + ' ' + selectedTokenSymbol
+                    : `0 ${selectedTokenSymbol}`}
+                </div>
+                {/* <div className="nft__item_action">
+                  <span>{isOpenForBid ? "Place a bid" : "Buy Now"}</span>
+                </div> */}
+                {/* <div className="nft__item_like">
+                  <i className="fa fa-heart"></i>
+                  <span>0</span>
+                </div> */}
               </div>
             </div>
           </div>
         </div>
-        {/* {isShowPopup ? (
+        {isShowPopup ? (
           <div className="popup-bg" id="CreateNftLoader">
             <div className="loader_popup-box">
               <div className="row">
-                <h2 className="col-12 d-flex justify-content-center mt-2 mb-3">
-                  Follow Steps
-                </h2>
+                <h2 className="col-12 d-flex justify-content-center mt-2 mb-3">Follow Steps</h2>
               </div>
-              <div className="row customDisplayPopup">
-                <div className="col-3 icontxtDisplayPopup">
-                  <div className={isUploadPopupClass}></div>
-                </div>
-                <div className="col-8 icontxtDisplayPopup">
-                  <h5 className="popupHeading">Upload</h5>
-                  <span className="popupText">
-                    Uploading of all media assets and metadata to IPFS
-                  </span>
-                </div>
-              </div>
+
               <div className="row customDisplayPopup">
                 <div className="col-3 icontxtDisplayPopup">
                   <div className={isApprovePopupClass}></div>
                 </div>
                 <div className="col-8 icontxtDisplayPopup">
                   <h5 className="popupHeading">Approve</h5>
-                  <span className="popupText">
-                    This transaction is conducted only once per collection
-                  </span>
+                  <span className="popupText">This transaction is conducted only once per collection</span>
                 </div>
               </div>
               <div className="row customDisplayPopup">
@@ -1322,9 +1681,7 @@ const Create2 = (props) => {
                 </div>
                 <div className="col-8 icontxtDisplayPopup">
                   <h5 className="popupHeading">Mint</h5>
-                  <span className="popupText">
-                    Send transaction to create your NFT
-                  </span>
+                  <span className="popupText">Send transaction to create your NFT</span>
                 </div>
               </div>
               <div className="row customDisplayPopup">
@@ -1333,9 +1690,16 @@ const Create2 = (props) => {
                 </div>
                 <div className="col-8 icontxtDisplayPopup">
                   <h5 className="popupHeading">Royalty</h5>
-                  <span className="popupText">
-                    Setting Royalty % for your NFT
-                  </span>
+                  <span className="popupText">Setting Royalty % for your NFT</span>
+                </div>
+              </div>
+              <div className="row customDisplayPopup">
+                <div className="col-3 icontxtDisplayPopup">
+                  <div className={isUploadPopupClass}></div>
+                </div>
+                <div className="col-8 icontxtDisplayPopup">
+                  <h5 className="popupHeading">Upload</h5>
+                  <span className="popupText">Uploading of all media assets and metadata to IPFS</span>
                 </div>
               </div>
               {isPutOnMarketplace ? (
@@ -1345,25 +1709,19 @@ const Create2 = (props) => {
                   </div>
                   <div className="col-8 icontxtDisplayPopup">
                     <h5 className="popupHeading">Put on sale</h5>
-                    <span className="popupText">
-                      Sign message to set fixed price
-                    </span>
+                    <span className="popupText">Sign message to set fixed price</span>
                   </div>
                 </div>
               ) : (
-                ""
+                ''
               )}
               <div className="row customDisplayPopup">
                 {hideClosePopup ? (
-                  <button
-                    className="closeBtn btn-main"
-                    disabled={ClosePopupDisabled}
-                    onClick={closePopup}
-                  >
+                  <button className="closeBtn btn-main" disabled={ClosePopupDisabled} onClick={closePopup}>
                     Close
                   </button>
                 ) : (
-                  ""
+                  ''
                 )}
                 {hideRedirectPopup ? (
                   <button
@@ -1374,14 +1732,14 @@ const Create2 = (props) => {
                     Close
                   </button>
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
             </div>
           </div>
         ) : (
-          ""
-        )} */}
+          ''
+        )}
       </section>
 
       <Footer />
