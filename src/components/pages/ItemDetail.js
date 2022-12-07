@@ -2067,9 +2067,9 @@ const ItemDetails = function (props) {
                   {openMenu1 && (
                     <div className="tab-2 onStep fadeIn">
                       {loading
-                        ? // ? showProcessingModal('Loading..')
-                          // : isOwned && haveOrder === false
-                          PutOnMarketPlace(ownedQuantity)
+                        ? showProcessingModal('Loading..')
+                        : isOwned && haveOrder === false
+                        ? PutOnMarketPlace(ownedQuantity)
                         : orders != 'null' && orders?.length >= 1 && !isEmpty(orders[0])
                         ? orders.map((order, key) => {
                             if (order.oStatus === 1) {
