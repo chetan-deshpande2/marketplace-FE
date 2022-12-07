@@ -71,9 +71,9 @@
 }
 .scrollable {
   float: left;
-  width: 800px;
+  width: 100%;
   overflow-y: auto;
-  height: 300px;
+  height: 380px;
   scrollbar-width: thin;
 }
 .author_list_pp .c-author-img {

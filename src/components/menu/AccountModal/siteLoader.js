@@ -4,16 +4,13 @@ import './site.css';
 const Siteloader = (props) => {
   return (
     <div className="popup-box">
-      <div className="box siteloaderBox">
-        <div className="row">
-          <div className="col-md-12">{props.content}</div>
+
+      <div className="c-siteloader siteloaderBox">
+        <div className='loader'>
         </div>
-        <div className="row">
-          <div className="col-md-12">
-            <div className="dots-bars-loader"></div>
-          </div>
-        </div>
+        <div className="mt-5 c-loader-text loading">{props.content}</div>
       </div>
+
     </div>
   );
 };
