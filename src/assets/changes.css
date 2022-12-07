@@ -1,3 +1,10 @@
+.feature-box .wm.collection_icon img {
+  opacity: 0.1;
+  top: 4px;
+  position: absolute;
+  left: 2px;
+}
+
 .custom-collection-card .opt-create {
   display: flex;
   flex-direction: column;
@@ -56,7 +63,6 @@ iframe {
   justify-content: space-between;
   height: 245px;
   overflow: hidden;
-
 }
 .items-cards .d-item .nft__item img {
   height: 115px !important;
@@ -74,6 +80,11 @@ iframe {
   min-width: 170px;
   width: 170px;
 }
+.nft_image_box .c-nft-img-box {
+  overflow: auto;
+  max-height: 500px;
+  scrollbar-width: thin;
+}
 @media (max-width: 991px) {
   .offset-lg-1 {
     margin-left: 0;
@@ -82,6 +93,15 @@ iframe {
 @media (max-width: 768px) {
   .collection-field-set {
     width: 100%;
+  }
+  #c-footer-icon .de-flex-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .f-logo {
+    margin-right: 0px !important;
   }
   .add-collection-box {
     width: 75%;
@@ -93,7 +113,17 @@ iframe {
   .navbar.navbar .logo img {
     width: auto;
   }
-  .mt-30{
+  .mt-30 {
     margin-top: 30px;
+  }
+  .c-de_nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .de_tab.tab_methods .c-collections .de_nav li span {
+    
+    min-width: 100%;
+    width: 100%;
   }
 }

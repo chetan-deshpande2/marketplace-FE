@@ -1208,7 +1208,8 @@ const Create3 = (props) => {
                                     width="10px"
                                     src={`http://${collection.sHash}.ipfs.w3s.link/${collection.sImageName}`}
                                   ></img>
-                                  {collection.sName}
+                                  <p className='mt-2 mb-0'>{collection.sName}</p>
+                                  
                                 </span>
                               </li>
                             );

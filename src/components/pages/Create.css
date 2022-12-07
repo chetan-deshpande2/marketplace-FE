@@ -49,14 +49,15 @@
   border-radius: 0px;
   max-height: 55px;
   height: 35px;
-  width: 125px;
+  width: 100%;
   border-radius: 5px;
 }
 
 .de_nav li span img {
   min-height: 125px;
-  max-width: 185px;
-  object-fit: cover;
+  /* max-width: 185px; */
+  /* object-fit: cover; */
+  object-fit: fill;
   object-position: center;
   height: 200px;
 }
@@ -73,6 +74,7 @@
   width: 800px;
   overflow-y: auto;
   height: 300px;
+  scrollbar-width: thin;
 }
 .author_list_pp .c-author-img {
   top: -5px;
@@ -83,18 +85,19 @@
   position: absolute;
 }
 .c-items {
-  height: 200px;
-  max-height: 200px;
+  height: 100%;
+  max-height: 250px;
   overflow: hidden;
 }
 .nft__item_wrap .c-previous-items {
   max-height: 200px;
 }
 .nft__item_wrap .c-previous-items img {
-  max-height: 125px;
-  max-width: 185px;
+  max-height: 150px;
+  /* max-width: 185px; */
   object-fit: cover;
-  object-position: center;
+  object-position: top;
+  width: 100%;
 }
 .padding_span {
   max-width: 250px;
@@ -167,6 +170,7 @@ footer {
   }
   #form-create-item .de_nav {
     grid-template-columns: auto auto;
+    gap: 15px 5px;
   }
   .de-flex > .de-flex-col {
     width: 100%;

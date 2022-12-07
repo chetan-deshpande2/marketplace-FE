@@ -70,7 +70,7 @@ const Home1 = () => {
       </section> */}
       <section className="container no-bottom">
         <div className="row">
-          <div className="col-lg-12 d-flex align-items-baseline">
+          <div className="col-lg-12 ">
             <div className="text-center newItemsHeader">
               <h2>New Items</h2>
               <div className="small-border"></div>

@@ -1,8 +1,8 @@
 import React from "react";
 import Reveal from "react-awesome-reveal";
 import { keyframes } from "@emotion/react";
-import CollectionImage from "../../assets/react.svg";
-import CollectionBottomImg from "../../assets/react.svg";
+import CollectionImage from "../../assets/images/react-1.svg";
+import CollectionBottomImg from "../../assets/images/react-bg.svg";
 
 const fadeInUp = keyframes`
   0% {
@@ -79,8 +79,8 @@ const FeatureBox = () => (
           duration={600}
           triggerOnce
         >
-          <i className="bg-color-2 i-boxed collection_icon">
-            <img src={CollectionImage} className="collection_img"></img>
+          <i className="bg-color-2 i-boxed collection_icon position-relative">
+            <img src={CollectionImage} className="collection_img position-absolute" style={{top:'10px', left:'3px'}}></img>
           </i>
         </Reveal>
         <div className="text">

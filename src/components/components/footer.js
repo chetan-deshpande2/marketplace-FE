@@ -116,7 +116,7 @@ const footer = () => (
     <div className="subfooter">
       <div className="container">
         <div className="row">
-          <div className="col-md-12">
+          <div className="col-md-12" id="c-footer-icon">
             <div className="de-flex">
               <div className="de-flex-col">
                 <span onClick={() => window.open("", "_self")}>
