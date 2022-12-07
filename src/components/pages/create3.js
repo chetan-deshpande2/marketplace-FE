@@ -999,7 +999,7 @@ const Create3 = (props) => {
   ) : (
     <div>
       <GlobalStyles />
-      {loading ? showProcessingModal('Loading...') : ''}
+      {loading ? showProcessingModal('Loading') : ''}
       {collectionCreation ? (
         showProcessingModal('Collection creation is under process. Please do not refresh the page')
       ) : (
@@ -1207,8 +1207,7 @@ const Create3 = (props) => {
                                     width="10px"
                                     src={`http://${collection.sHash}.ipfs.w3s.link/${collection.sImageName}`}
                                   ></img>
-                                  <p className='mt-2 mb-0'>{collection.sName}</p>
-                                  
+                                  <p className="mt-2 mb-0">{collection.sName}</p>
                                 </span>
                               </li>
                             );

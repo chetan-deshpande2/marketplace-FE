@@ -1620,7 +1620,7 @@ const ItemDetails = function (props) {
       {placeBidLoader ? showProcessingModal('Placing bid. Please do not refresh...') : ''}
 
       {removeFromSaleLoader ? showProcessingModal('Removing NFT from sale. Please do not refresh...') : ''}
-      {loading ? showProcessingModal('Loading...') : ''}
+      {loading ? showProcessingModal('Loading') : ''}
       {isTransferPopup ? transferModal : ''}
       {isPlaceABidPopup ? placeBidModal : ''}
       {isUnlocked ? hiddenContentModal : ''}
@@ -2071,7 +2071,7 @@ const ItemDetails = function (props) {
                   {openMenu1 && (
                     <div className="tab-2 onStep fadeIn">
                       {loading
-                        ? showProcessingModal('Loading..')
+                        ? showProcessingModal('Loading')
                         : isOwned && haveOrder === false && orders !== 'null'
                         ? PutOnMarketPlace(ownedQuantity)
                         : orders != 'null' && orders?.length >= 1 && !isEmpty(orders[0])

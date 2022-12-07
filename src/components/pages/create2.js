@@ -967,7 +967,7 @@ const Create2 = (props) => {
       ) : (
         <></>
       )}
-      {loading ? showProcessingModal('Loading...') : ''}
+      {loading ? showProcessingModal('Loading') : ''}
       <section
         className="jumbotron breadcumb no-bg"
         style={{
