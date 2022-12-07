@@ -645,14 +645,14 @@ const Create3 = (props) => {
             gasLimit: 9000000,
             value: 0,
           };
-          let approval = await NFTcontract.isApprovedForAll(currentUser, contracts.MARKETPLACE, options);
+          let approval = await NFTcontract.isApprovedForAll(currentUser, contracts.MARKETPLACE);
           let approvalRes;
 
           if (approval) {
             setisApprovePopupClass('checkiconCompleted');
           }
           if (!approval) {
-            approvalRes = await NFTcontract.setApprovalForAll(contracts.MARKETPLACE, true, options);
+            approvalRes = await NFTcontract.setApprovalForAll(contracts.MARKETPLACE, true);
             approvalRes = await approvalRes.wait();
             if (approvalRes.status === 0) {
               NotificationManager.error('Transaction failed', '', 800);
@@ -689,7 +689,7 @@ const Create3 = (props) => {
               gasLimit: 9000000,
               value: 0,
             };
-            let mintRes = await NFTcontract.mint(currentUser, nextId, quantity, options);
+            let mintRes = await NFTcontract.mint(currentUser, nextId, quantity);
 
             res1 = await mintRes.wait();
             if (res1.status === 0) {
@@ -724,12 +724,7 @@ const Create3 = (props) => {
               gasLimit: 9000000,
               value: 0,
             };
-            let collaborator = await NFTcontract.setTokenRoyaltyDistribution(
-              collaborators,
-              localCollabPercent,
-              nextId,
-              options,
-            );
+            let collaborator = await NFTcontract.setTokenRoyaltyDistribution(collaborators, localCollabPercent, nextId);
             await collaborator.wait();
           } catch (Collerr) {
             setisRoyaltyPopupClass('errorIcon');
@@ -854,6 +849,7 @@ const Create3 = (props) => {
           //   stopCreateNFTPopup();
           //   return;
           // }
+          console.log(currentUser);
           let signature = await getSignature(currentUser, ...sellerOrder);
           if (signature === false) {
             setisPutOnSalePopupClass('errorIcon');
