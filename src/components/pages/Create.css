@@ -50,6 +50,7 @@
   max-height: 55px;
   height: 35px;
   width: 125px;
+  border-radius: 5px;
 }
 
 .de_nav li span img {

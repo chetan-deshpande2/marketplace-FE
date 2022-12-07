@@ -1695,7 +1695,7 @@ const ItemDetails = function (props) {
                     </div>
                   </div>
 
-                  <div className="item_collection item_author col-md-6">
+                  <div className="item_collection item_author col-md-6 mt-30">
                     <h6>Collection</h6>
                     <div>
                       <div className="author_list_pp">
