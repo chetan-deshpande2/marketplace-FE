@@ -22,7 +22,7 @@ const Outer = styled.div`
 `;
 
 var NftPreview = {
-  background: 'blue',
+  background: 'grey',
   // backgroundImage: "",
 };
 
@@ -159,6 +159,7 @@ const CarouselNew = (props) => {
     <Loader />
   ) : (
     <div className="row items-cards">
+      {/* <Slider {...settings}> */}
       {items
         ? items.map((nft, index) => {
             return (
@@ -202,7 +203,7 @@ const CarouselNew = (props) => {
                     </Outer>
                   </div> */}
                   <div className="nft__item_info mt-3">
-                    <span className='text-center' onClick={() => navigate(`/itemDetail/${nft._id}`)}>
+                    <span className="text-center" onClick={() => navigate(`/itemDetail/${nft._id}`)}>
                       <h4>{nft.nTitle}</h4>
                     </span>
 
@@ -215,6 +216,7 @@ const CarouselNew = (props) => {
             );
           })
         : ''}
+      {/* </Slider> */}
     </div>
   );
 };
