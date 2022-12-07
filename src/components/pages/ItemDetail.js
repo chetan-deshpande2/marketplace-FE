@@ -865,8 +865,10 @@ const ItemDetails = function (props) {
                 return d?.address?.toLowerCase() === currentUser?.toLowerCase();
               }
             });
+            console.log(datas.length);
             if (datas.length >= 1) {
               setIsOwned(true);
+              console.log(datas[0].quantity);
               setOwnedQuantity(datas[0].quantity);
             }
           }
@@ -888,6 +890,7 @@ const ItemDetails = function (props) {
           } else {
             let _orderState = [];
             for (let i = 0; i < d?.length; i++) {
+              console.log(_orderState[i]);
               _orderState[i] = false;
 
               let searchParams = {
@@ -898,6 +901,7 @@ const ItemDetails = function (props) {
               };
 
               let _data = await fetchBidNft(searchParams);
+              console.log(_data);
               if (data && currentUser) {
                 if (d[i].oPaymentToken !== ZERO_ADDRESS) {
                   let paymentData = await getPaymentTokenInfo(currentUser, d.results[i].oPaymentToken);
@@ -926,10 +930,14 @@ const ItemDetails = function (props) {
                 let paymentData = await getPaymentTokenInfo('', d[i].oPaymentToken);
                 paymentData.paymentToken = d[i].oPaymentToken;
                 d[i].paymentTokenData = paymentData;
+                console.log(d[i].paymentTokenData);
               }
             }
+            console.log(_orderState);
             setOrderState(_orderState);
+            console.log(d);
             let _orders = d;
+            console.log(_orders.length, _orders[0], currentUser);
             if (_orders.length >= 1 && !isEmpty(_orders[0]) && currentUser) {
               let datas = _orders.filter((data, key) => {
                 return data.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase();
@@ -991,25 +999,26 @@ const ItemDetails = function (props) {
     checkIfOpenForSale();
   }, [orders]);
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     setLoading(true);
-  //     console.log(nftDetails.nHash, nftDetails.nNftImage);
-  //     if (nftDetails && nftDetails._id) {
-  //       let data = await getAllBidsByNftId(nftDetails._id);
-  //       console.log(data);
-  //       let _highestBid = {};
-  //       _highestBid = data?.highestBid;
-  //       data = data?.data;
+  useEffect(() => {
+    const fetch = async () => {
+      setLoading(true);
+      console.log(nftDetails.nHash, nftDetails.nNftImage);
+      if (nftDetails && nftDetails._id) {
+        let data = await getAllBidsByNftId(nftDetails._id);
+        console.log(data);
+        let _highestBid = {};
+        _highestBid = data?.highestBid;
+        console.log(data);
+        // data = data?.data;
 
-  //       if (data.length > 0 && isEmpty(data[0])) data = [];
-  //       setBids(data);
-  //       setHighestBid(_highestBid);
-  //     }
-  //     setLoading(false);
-  //   };
-  //   fetch();
-  // }, [nftDetails]);
+        if (data.length > 0 && isEmpty(data[0])) data = [];
+        setBids(data);
+        setHighestBid(_highestBid);
+      }
+      setLoading(false);
+    };
+    fetch();
+  }, [nftDetails]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -1046,6 +1055,12 @@ const ItemDetails = function (props) {
     };
     fetch();
   }, [nftDetails, currPage]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log(isOwned);
+  //   });
+  // });
 
   const RemoveFromSale = (seller, price, orderId, oCreated, deadline, key, qty, qtySold) => (
     <div className="de_tab">
@@ -2052,9 +2067,9 @@ const ItemDetails = function (props) {
                   {openMenu1 && (
                     <div className="tab-2 onStep fadeIn">
                       {loading
-                        ? showProcessingModal('Loading..')
-                        : isOwned && haveOrder === false && orders !== 'null'
-                        ? PutOnMarketPlace(ownedQuantity)
+                        ? // ? showProcessingModal('Loading..')
+                          // : isOwned && haveOrder === false
+                          PutOnMarketPlace(ownedQuantity)
                         : orders != 'null' && orders?.length >= 1 && !isEmpty(orders[0])
                         ? orders.map((order, key) => {
                             if (order.oStatus === 1) {

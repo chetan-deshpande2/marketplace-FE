@@ -170,8 +170,9 @@ const AccountModal = (props) => {
         await ConnectWallet();
       }
       const chainId = await web3.eth.getChainId();
+      console.log(chainId.toString(), '80001');
       window.sessionStorage.setItem('chain_id', chainId.toString());
-      console.log('111', chainId.toString() !== process.env.REACT_APP_CHAIN_ID);
+      console.log('111', chainId.toString() !== '80001');
       // if (chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
       //   setWrongNetwork(true);
       //   setIsPopup(true);
@@ -198,7 +199,7 @@ const AccountModal = (props) => {
     try {
       const chainId = await web3.eth.getChainId();
       console.log('chain id', chainId);
-      console.log('222', chainId.toString() !== process.env.REACT_APP_CHAIN_ID);
+      console.log('222', chainId.toString() !== '80001');
       window.sessionStorage.setItem('chain_id', chainId.toString());
       // if (chainId.toString() !== process.env.REACT_APP_CHAIN_ID) {
       //   console.log("Wrong network");
@@ -218,8 +219,10 @@ const AccountModal = (props) => {
 
         setCurrentAccount(accounts[0]);
         let response = await checkuseraddress(accounts[0]);
-        if (response === 'User not found') {
+        console.log(response.message);
+        if (response.message === 'User Not Found') {
           try {
+            console.log('inside register');
             await Register(accounts[0]);
             NotificationManager.success('User Registered Successfully', '', 800);
           } catch (e) {
@@ -227,6 +230,7 @@ const AccountModal = (props) => {
             return;
           }
           try {
+            console.log('inside Login');
             console.log('cookies.selected_account', accounts[0]);
             let token = await Login(accounts[0]);
             setCookie('Authorization', token);

@@ -121,9 +121,11 @@ export const getSignature = async (signer, ...args) => {
     const order = toTypedOrder(...args);
     console.log('order is---->', order);
     let provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send('eth_requestAccounts', []);
+
     console.log('222');
-    console.log(provider.getSigner());
-    const signer1 = provider.getSigner();
+    console.log(provider.getSigner(signer));
+    const signer1 = provider.getSigner(signer);
     console.log('signer1=========>', signer1.address);
     console.log('333');
     console.log(args);
@@ -144,6 +146,7 @@ export const getSignature = async (signer, ...args) => {
 };
 
 export const isEmpty = (obj) => {
+  console.log(Object.keys(obj).length === 0);
   return Object.keys(obj).length === 0;
 };
 export const getAllBidsByNftId = async (nftId) => {

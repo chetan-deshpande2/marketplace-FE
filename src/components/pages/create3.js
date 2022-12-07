@@ -791,7 +791,6 @@ const Create3 = (props) => {
           };
 
           await InsertHistory(historyMetaData);
-          console.log(await InsertHistory(historyMetaData));
         } catch (e) {
           console.log('error in history api', e);
           return;
