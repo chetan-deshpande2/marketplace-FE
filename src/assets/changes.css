@@ -78,7 +78,7 @@ iframe {
   height: 100%;
   min-height: 170px;
   min-width: 170px;
-  width: 100%;
+  width: 170px;
 }
 .nft_image_box .c-nft-img-box {
   overflow: auto;
@@ -91,6 +91,12 @@ iframe {
   }
 }
 @media (max-width: 768px) {
+  section {
+    padding: 40px 0;
+  }
+  h1 {
+    font-size: 32px;
+  }
   .collection-field-set {
     width: 100%;
   }
@@ -125,5 +131,8 @@ iframe {
     
     min-width: 100%;
     width: 100%;
+  }
+  .c-tabs-nft .feature-box.howitwork {
+    min-height: 100%;
   }
 }

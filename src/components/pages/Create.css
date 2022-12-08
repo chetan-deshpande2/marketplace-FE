@@ -88,12 +88,12 @@
   height: auto;
   min-height: 250px;
   overflow: hidden;
-
+  justify-content: space-between;
 }
-#form-create-item .de_nav{
+#form-create-item .de_nav {
   display: grid;
-    grid-template-columns: auto auto auto auto;
-      gap: 15px;
+  grid-template-columns: auto auto auto auto;
+  gap: 15px;
 }
 .nft__item_wrap .c-previous-items {
   max-height: 200px;
@@ -101,7 +101,7 @@
 .nft__item_wrap .c-previous-items img {
   max-height: 150px;
   /* max-width: 185px; */
-  object-fit: cover;
+  object-fit: contain;
   object-position: top;
   width: 100%;
 }

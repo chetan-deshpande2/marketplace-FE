@@ -1001,7 +1001,7 @@ const Create2 = (props) => {
                       </li>
 
                       {isPopup && (
-                        <div className="collection-popup-box">
+                        <div className="collection-popup-box custom-popup-box">
                           <span
                             className="close-icon"
                             onClick={() => {
@@ -1021,7 +1021,7 @@ const Create2 = (props) => {
                                       <span className="sub-heading">Upload Collection Cover</span>
                                       <div className="fileUploader">
                                         <div className="row align-items-center justify-content-center">
-                                          <span className="col-sm-3  uploadImg-container">
+                                          <div className="col-md-5 col-sm-12 padding_span uploadImg-container">
                                             {!image ? (
                                               <img
                                                 alt="upload image"
@@ -1033,14 +1033,14 @@ const Create2 = (props) => {
                                               <img
                                                 src={URL.createObjectURL(image)}
                                                 id="get_file_2"
-                                                className="collection_cover_preview"
+                                                className="collection_cover_preview img-fluid"
                                                 alt=""
                                                 onClick={() => fileRefCollection.current.click()}
                                               />
                                             )}
-                                          </span>
+                                          </div>
 
-                                          <div className="d-create-file col uploadImg-right">
+                                          <div className="d-create-file col-md-7 uploadImg-right">
                                             <p id="collection_file_name">
                                               We recommend an image of at least 450x450. PNG, JPG, GIF or WEBP. Max
                                               {MAX_FILE_SIZE}mb.
@@ -1617,7 +1617,7 @@ const Create2 = (props) => {
               )}
 
               <div className="author_list_pp_explore_page author_list_pp">
-                <span>
+                <span >
                   {profilePic !== undefined ? (
                     <img className="lazy author_image" src={profilePic ? profilePic : Avatar} alt="" />
                   ) : (
@@ -1628,7 +1628,7 @@ const Create2 = (props) => {
                 </span>
               </div>
               <div className="nft__item_wrap">
-                <span>
+                <span className='c-previous-items'>
                   <img
                     src={nftImage ? URL.createObjectURL(nftImage) : previewImage}
                     id="get_file_2"
