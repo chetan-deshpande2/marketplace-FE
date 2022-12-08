@@ -1,19 +1,17 @@
-/* eslint-disable react/jsx-no-comment-textnodes */
-
-import React, { useEffect, useState } from "react";
-import ColumnZero from "../components/ColumnZero";
-import Footer from "../components/footer";
-import { createGlobalStyle } from "styled-components";
-import { getProfile } from "../../apiServices";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import Avatar from "./../../assets/images/avatar5.jpg";
-import { NotificationManager } from "react-notifications";
-import "../components-css/profile-page.css";
-import { BsPencilSquare } from "react-icons/bs";
-import GeneralCollectionsPage from "../components/GeneralCollectionsPage";
-import Loader from "../components/loader";
-import ItemNotFound from "./ItemNotFound";
-import { useCookies } from "react-cookie";
+import React, { useState, useEffect, useRef } from 'react';
+import ColumnZero from '../components/ColumnZero';
+import Footer from '../components/footer';
+import { createGlobalStyle } from 'styled-components';
+import { getProfile } from '../../apiServices';
+import Avatar from '../../assets/images/avatar5.jpg';
+import { BsPencilSquare } from 'react-icons/bs';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { NotificationManager } from 'react-notifications';
+import { useCookies } from 'react-cookie';
+import ItemNotFound from './ItemNotFound';
+import { useNavigate } from '@reach/router';
+import '../component-css/profile-page.css';
+import Loader from '../components/loader';
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -49,21 +47,21 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const PersonalProfile = function (props) {
+const PersonalProfile2 = function (props) {
   const [openMenu, setOpenMenu] = useState(true);
   const [openMenu1, setOpenMenu1] = useState(false);
   const [openMenu2, setOpenMenu2] = useState(false);
   const [openMenu3, setOpenMenu3] = useState(false);
   const [openMenu4, setOpenMenu4] = useState(false);
   const [profilePic, setProfilePic] = useState(Avatar);
-  const [fullName, setFullName] = useState("Unnamed");
-  const [userName, setUserName] = useState("@unnamed");
-  const [address, setAddress] = useState("0x0..");
-  const [authorization, setAuthorization] = useState("");
+  const [fullName, setFullName] = useState('Unnamed');
+  const [userName, setUserName] = useState('@unnamed');
+  const [address, setAddress] = useState('0x0..');
+  const [authorization, setAuthorization] = useState('');
   const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({});
-  const [currentUser, setCurrentUser] = useState("");
-  const [cookies] = useCookies(["selected_account", "Authorization"]);
+  const [currentUser, setCurrentUser] = useState('');
+  const [cookies] = useCookies(['selected_account', 'Authorization']);
   const [paramType, setParamType] = useState(0);
 
   useEffect(() => {
@@ -84,22 +82,16 @@ const PersonalProfile = function (props) {
         const profileInfo = await getProfile();
         if (profileInfo) {
           let profileData = profileInfo;
-          if (
-            profileData.oName &&
-            profileData.oName.sFirstname &&
-            profileData.oName.sLastname
-          ) {
-            setFullName(
-              profileData.oName.sFirstname + " " + profileData.oName.sLastname
-            );
+          if (profileData.oName && profileData.oName.sFirstname && profileData.oName.sLastname) {
+            setFullName(profileData.oName.sFirstname + ' ' + profileData.oName.sLastname);
           } else {
-            setFullName("Unnamed");
+            setFullName('Unnamed');
           }
 
           if (profileData.sUserName) {
-            setUserName("@" + profileData.sUserName);
+            setUserName('@' + profileData.sUserName);
           } else {
-            setUserName("@unnamed");
+            setUserName('@unnamed');
           }
 
           if (profileData.sWalletAddress) {
@@ -107,19 +99,16 @@ const PersonalProfile = function (props) {
           } else if (currentUser) {
             setAddress(currentUser);
           } else {
-            setAddress("0x0..");
+            setAddress('0x0..');
           }
 
-          let sProfilePicUrl =
-            profileData.sProfilePicUrl === undefined
-              ? Avatar
-              : profileData.sProfilePicUrl;
+          let sProfilePicUrl = profileData.sProfilePicUrl === undefined ? Avatar : profileData.sProfilePicUrl;
           setProfilePic(sProfilePicUrl);
           setProfileData(profileData);
           setLoading(false);
         }
       } else {
-        setAddress("0x0..");
+        setAddress('0x0..');
       }
     }
     fetchData();
@@ -131,11 +120,11 @@ const PersonalProfile = function (props) {
     setOpenMenu2(false);
     setOpenMenu3(false);
     setOpenMenu4(false);
-    document.getElementById("Mainbtn").classList.add("active");
-    document.getElementById("Mainbtn1").classList.remove("active");
+    document.getElementById('Mainbtn').classList.add('active');
+    document.getElementById('Mainbtn1').classList.remove('active');
     // document.getElementById("Mainbtn2").classList.remove("active");
-    document.getElementById("Mainbtn3").classList.remove("active");
-    document.getElementById("Mainbtn4").classList.remove("active");
+    document.getElementById('Mainbtn3').classList.remove('active');
+    document.getElementById('Mainbtn4').classList.remove('active');
     setParamType(0);
   };
 
@@ -145,31 +134,13 @@ const PersonalProfile = function (props) {
     setOpenMenu(false);
     setOpenMenu3(false);
     setOpenMenu4(false);
-    document.getElementById("Mainbtn").classList.remove("active");
-    document.getElementById("Mainbtn1").classList.add("active");
+    document.getElementById('Mainbtn').classList.remove('active');
+    document.getElementById('Mainbtn1').classList.add('active');
     // document.getElementById("Mainbtn2").classList.remove("active");
-    document.getElementById("Mainbtn3").classList.remove("active");
-    document.getElementById("Mainbtn4").classList.remove("active");
+    document.getElementById('Mainbtn3').classList.remove('active');
+    document.getElementById('Mainbtn4').classList.remove('active');
     setParamType(1);
   };
-
-  // const handleBtnClick2 = () => {
-  //   setOpenMenu2(!openMenu2);
-  //   setOpenMenu(false);
-  //   setOpenMenu1(false);
-  //   setOpenMenu3(false);
-  //   setOpenMenu4(false);
-  //   document.getElementById("Mainbtn").classList.remove("active");
-  //   document.getElementById("Mainbtn1").classList.remove("active");
-  //   document.getElementById("Mainbtn2").classList.add("active");
-  //   document.getElementById("Mainbtn3").classList.remove("active");
-  //   document.getElementById("Mainbtn4").classList.remove("active");
-  //   props.dispatch(
-  //     nftListParamsUpdate({
-  //       paramType: 2,
-  //     })
-  //   );
-  // };
 
   const handleBtnClick3 = () => {
     setOpenMenu(false);
@@ -177,11 +148,11 @@ const PersonalProfile = function (props) {
     setOpenMenu1(false);
     setOpenMenu3(!openMenu3);
     setOpenMenu4(false);
-    document.getElementById("Mainbtn").classList.remove("active");
-    document.getElementById("Mainbtn1").classList.remove("active");
+    document.getElementById('Mainbtn').classList.remove('active');
+    document.getElementById('Mainbtn1').classList.remove('active');
     // document.getElementById("Mainbtn2").classList.remove("active");
-    document.getElementById("Mainbtn3").classList.add("active");
-    document.getElementById("Mainbtn4").classList.remove("active");
+    document.getElementById('Mainbtn3').classList.add('active');
+    document.getElementById('Mainbtn4').classList.remove('active');
     setParamType(3);
   };
 
@@ -191,11 +162,11 @@ const PersonalProfile = function (props) {
     setOpenMenu1(false);
     setOpenMenu3(false);
     setOpenMenu4(!openMenu4);
-    document.getElementById("Mainbtn").classList.remove("active");
-    document.getElementById("Mainbtn1").classList.remove("active");
+    document.getElementById('Mainbtn').classList.remove('active');
+    document.getElementById('Mainbtn1').classList.remove('active');
     // document.getElementById("Mainbtn2").classList.remove("active");
-    document.getElementById("Mainbtn3").classList.remove("active");
-    document.getElementById("Mainbtn4").classList.add("active");
+    document.getElementById('Mainbtn3').classList.remove('active');
+    document.getElementById('Mainbtn4').classList.add('active');
     setParamType(4);
   };
 
@@ -203,13 +174,13 @@ const PersonalProfile = function (props) {
     <ItemNotFound />
   ) : (
     <div>
-      {loading ? <Loader /> : ""}
+      {loading ? <Loader /> : ''}
       <GlobalStyles />
       <section
-        // id="profile_banner"
+        id="profile_banner"
         className="jumbotron breadcumb no-bg"
         style={{
-          backgroundImage: `url(${"/img/background/Rectangle11.png"})`,
+          backgroundImage: `url(${'./img/background/subheader.jpg'})`,
         }}
       >
         <div className="mainbreadcumb"></div>
@@ -220,7 +191,7 @@ const PersonalProfile = function (props) {
             <div className="d_profile de-flex">
               <div className="de-flex-col">
                 <div className="profile_avatar">
-                  <img src={profilePic ? profilePic : ""} alt="" />
+                  <img src={profilePic ? profilePic : ''} alt="" />
                   <i className="fa fa-check"></i>
                   <div className="profile_name">
                     <h4>
@@ -229,21 +200,19 @@ const PersonalProfile = function (props) {
                         <BsPencilSquare
                           className="BsPencilSquare"
                           onClick={() => {
-                            window.location.href = "/updateProfile";
+                            window.location.href = '/updateProfile';
                           }}
                         />
                       </div>
-                      <span className="profile_username">
-                        {userName ? userName : "@unnamed"}
-                      </span>
+                      <span className="profile_username">{userName ? userName : '@unnamed'}</span>
                       <CopyToClipboard
                         text={address}
                         onCopy={() => {
-                          NotificationManager.success("Copied!!");
+                          NotificationManager.success('Copied!!');
                         }}
                       >
                         <span id="wallet" className="profile_wallet">
-                          {currentUser ? currentUser : "0x0.."}
+                          {currentUser ? currentUser : '0x0..'}
                         </span>
                       </CopyToClipboard>
                       {/* <CopyToClipboard
@@ -310,48 +279,29 @@ const PersonalProfile = function (props) {
         </div>
         {openMenu && (
           <div id="zero1" className="onStep fadeIn">
-            <ColumnZero
-              isProfile={true}
-              paramType={paramType}
-              profile={profileData}
-            />
+            <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
           </div>
         )}
         {openMenu1 && (
           <div id="zero2" className="onStep fadeIn">
-            <ColumnZero
-              isProfile={true}
-              paramType={paramType}
-              profile={profileData}
-            />
+            <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
           </div>
         )}
         {openMenu2 && (
           <div id="zero3" className="onStep fadeIn">
-            <ColumnZero
-              isProfile={true}
-              paramType={paramType}
-              profile={profileData}
-            />
+            <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
           </div>
         )}
         {openMenu3 && (
           <div id="zero4" className="onStep fadeIn">
-            <ColumnZero
-              isProfile={true}
-              paramType={paramType}
-              profile={profileData}
-            />
+            <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
           </div>
         )}
-        {openMenu4 && (
+        {/* {openMenu4 && (
           <div id="zero5" className="onStep fadeIn">
-            <GeneralCollectionsPage
-              userId={profileData?._id}
-              isAllCollections={false}
-            />
+            <GeneralCollectionsPage userId={profileData?._id} isAllCollections={false} />
           </div>
-        )}
+        )} */}
       </section>
       )
       <Footer />
@@ -359,4 +309,4 @@ const PersonalProfile = function (props) {
   );
 };
 
-export default PersonalProfile;
+export default PersonalProfile2;

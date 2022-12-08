@@ -20,6 +20,7 @@ import Createoption from './pages/createOptions';
 import PersonalProfile from './pages/PersonalProfile';
 import UpdateProfile from './pages/updateProfile';
 import ItemNotFound from './pages/ItemNotFound';
+import PersonalProfile2 from './pages/personalProfile2';
 import { createGlobalStyle } from 'styled-components';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer } from 'react-notifications';
@@ -63,6 +64,7 @@ const app = () => (
 
         <UpdateProfile path="/updateProfile" />
         <PersonalProfile path="/personalProfile" />
+        <PersonalProfile2 path="personalProfile2" />
         {/* <Author path="/Author" /> */}
         <Createoption path="/createOptions" />
         <Create2 path="/create2" />
