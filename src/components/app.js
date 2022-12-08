@@ -54,19 +54,13 @@ const app = () => (
     <Header />
     <PosedRouter>
       <ScrollTop path="/">
-        {/* <Home exact path="/">
-          <Redirect to="/home1" />
-        </Home> */}
         <Home1 path="/" />
-
         <Explore path="/explore" />
         <Explore2 path="/explore2" />
 
         <Auction path="/Auction" />
 
         <ItemDetail path="/itemDetail/:id" />
-
-        {/* <ItemDetails2 path="/itemDetail2/:id" /> */}
 
         <UpdateProfile path="/updateProfile" />
         <PersonalProfile path="/personalProfile" />
