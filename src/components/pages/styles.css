@@ -56,8 +56,3 @@
 .collection-field-set {
   width: 30vw;
 }
-#form-create-item .de_nav{
-  display: grid;
-    grid-template-columns: auto auto auto auto;
-      gap: 15px;
-}

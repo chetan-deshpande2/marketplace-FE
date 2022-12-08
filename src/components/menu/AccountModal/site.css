@@ -26,12 +26,16 @@
   text-align: center;
     min-height: 100vh;
 }
-.loader {
-  width: 100px;
-  height: 100px;
-  border-top: 2px solid #fff;
+.nb-spinner {
+  width: 75px;
+  height: 75px;
+  margin: 0;
+  background: transparent;
+  border-top: 4px solid #fff;
+  border-right: 4px solid transparent;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  -webkit-animation: 1s spin linear infinite;
+  animation: 1s spin linear infinite;
 }
 .c-loader-text{
   font-size: 18px;

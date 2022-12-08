@@ -6,8 +6,7 @@ const Siteloader = (props) => {
     <div className="popup-box">
 
       <div className="c-siteloader siteloaderBox">
-        <div className='loader'>
-        </div>
+        <div class="nb-spinner"></div>
         <div className="mt-5 c-loader-text loading">{props.content}</div>
       </div>
 

@@ -987,12 +987,12 @@ const Create2 = (props) => {
 
       <section className="container">
         <div className="row">
-          <div className="col-lg-7 offset-lg-1 mb-5">
+          <div className="col-lg-9 mb-5">
             <div id="form-create-item" className="form-border" action="#">
               <div className="field-set">
                 <h5 className="required">Choose Collection</h5>
                 <div className="de_tab tab_methods">
-                  <div className="scrollable">
+                  <div className="scrollable mb-5 c-collections">
                     <ul className="de_nav">
                       <li id="btn4" className="active" onClick={handleShow3}>
                         <span onClick={togglePopup}>
@@ -1178,7 +1178,7 @@ const Create2 = (props) => {
                                     width="10px"
                                     src={collection.collectionImage}
                                   ></img>
-                                  <p>{collection.sName}</p>
+                                  <p className='mt-2 mb-0'>{collection.sName}</p>
                                 </span>
                               </li>
                             );
@@ -1607,7 +1607,7 @@ const Create2 = (props) => {
 
           <div className="col-lg-3 col-sm-6 col-xs-12">
             <h5>Preview item</h5>
-            <div className="preview_section nft__item m-0">
+            <div className="preview_section nft__item m-0 position-relative c-items">
               {isTimedAuction ? (
                 <div className="de_countdown">
                   <Clock deadline={timeLeft} />
@@ -1616,7 +1616,7 @@ const Create2 = (props) => {
                 ''
               )}
 
-              <div className="author_list_pp_explore_page">
+              <div className="author_list_pp_explore_page author_list_pp">
                 <span>
                   {profilePic !== undefined ? (
                     <img className="lazy author_image" src={profilePic ? profilePic : Avatar} alt="" />
