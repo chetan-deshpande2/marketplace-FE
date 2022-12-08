@@ -78,7 +78,7 @@ iframe {
   height: 100%;
   min-height: 170px;
   min-width: 170px;
-  width: 100%;
+  width: 170px;
 }
 .nft_image_box .c-nft-img-box {
   overflow: auto;
@@ -90,7 +90,23 @@ iframe {
     margin-left: 0;
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  section {
+    padding: 40px 0;
+  }
+  h1 {
+    font-size: 32px;
+  }
+  h2 {
+    font-size: 26px;
+    line-height: 46px;
+  }
+  .spacer-double {
+    height: 0px;
+  }
+  section .small-border {
+    margin: 10px auto 15px;
+  }
   .collection-field-set {
     width: 100%;
   }
@@ -122,8 +138,14 @@ iframe {
     gap: 15px;
   }
   .de_tab.tab_methods .c-collections .de_nav li span {
-    
-    min-width: 100%;
     width: 100%;
+    max-width: 25px;
+    min-width: 100%;
+  }
+  .c-tabs-nft .feature-box.howitwork {
+    min-height: 100%;
+  }
+  .padding_span img {
+    max-height: 250px;
   }
 }
