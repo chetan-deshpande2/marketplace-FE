@@ -75,6 +75,7 @@ const OnSaleItems = (props) => {
             props.profile.user._id,
             false,
           );
+          console.log(data);
         }
       }
 

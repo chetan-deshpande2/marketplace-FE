@@ -543,7 +543,7 @@ export const GetMyLikedNft = async (data) => {
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
-    return datas.data;
+    return datas.results;
   } catch (err) {
     return err;
   }
@@ -917,7 +917,7 @@ export const GetOwnedNftList = async (data) => {
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
-    return datas;
+    return datas.results;
   } catch (err) {
     return err;
   }
