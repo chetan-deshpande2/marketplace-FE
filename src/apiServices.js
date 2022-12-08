@@ -1,5 +1,4 @@
 import { ethers } from 'ethers';
-import { data } from 'jquery';
 
 // const REACT_APP_API_BASE_URL = 'http://192.168.1.11:3000/api/v1';
 const REACT_APP_API_BASE_URL = 'http://192.168.1.11:3000/api/v1';
@@ -17,33 +16,6 @@ export const exportInstance = async (SCAddress, ABI) => {
   }
 };
 
-// export const Register = async (account) => {
-//   const requestOptions = {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({
-//       sWalletAddress: account,
-//     }),
-//   };
-//   try {
-//     let response = await fetch(REACT_APP_API_BASE_URL + '/auth/register', requestOptions);
-
-//     const isJson = response.headers.get('content-type')?.includes('application/json');
-//     const data = isJson && (await response.json());
-
-//     // check for error response
-//     if (!response.ok) {
-//       // get error message from body or default to response status
-//       const error = (data && data.message) || response.status;
-//       return Promise.reject(error);
-//     }
-//   } catch (error) {
-//     //   this.setState({ postId: data.id });
-
-//     // this.setState({ errorMessage: error.toString() });
-//     console.error('There was an error!', error);
-//   }
-// };
 export const Register = async (account) => {
   const requestOptions = {
     method: 'POST',
@@ -72,35 +44,6 @@ export const Register = async (account) => {
     console.error('There was an error!', error);
   }
 };
-
-// export const Login = async (account) => {
-//   const requestOptions = {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({
-//       sWalletAddress: account,
-//     }),
-//   };
-//   try {
-//     let response = await fetch(REACT_APP_API_BASE_URL + '/auth/login', requestOptions);
-
-//     const isJson = response.headers.get('content-type')?.includes('application/json');
-//     const data = isJson && (await response.json());
-//     // check for error response
-//     if (!response.ok) {
-//       // get error message from body or default to response status
-//       const error = (data && data.message) || response.status;
-//       return Promise.reject(error);
-//     }
-//     console.log('token', data.token);
-//     localStorage.setItem('Authorization', data.token);
-//     return data.token;
-//     //   this.setState({ postId: data.id });
-//   } catch (error) {
-//     // this.setState({ errorMessage: error.toString() });
-//     console.error('There was an error!', error);
-//   }
-// };
 
 export const Login = async (account) => {
   const requestOptions = {
@@ -323,6 +266,7 @@ export const getNFTList = async () => {
     let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getAllNfts', requestOptions);
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
+    console.log(datas);
     return datas.data;
   } catch (err) {
     return err;
