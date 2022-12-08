@@ -253,7 +253,7 @@ export const getNextId = async (collection) => {
   }
 };
 
-export const getUsersNFTs = async (paramType, walletAddress, userId, isAuthor) => {
+export const getUsersNFTs = async (currPage, perPageCount, paramType, walletAddress, userId, isAuthor) => {
   console.log('here', 'paramType', paramType, 'walletAddress', walletAddress, 'userId', userId, 'isAuthor', isAuthor);
   let formattedData = [];
   let details = [];
@@ -275,11 +275,12 @@ export const getUsersNFTs = async (paramType, walletAddress, userId, isAuthor) =
       console.log(details);
     } else if (paramType === 1) {
       searchParams = {
-        conditions: {
-          nCreater: userId,
-        },
+        page: currPage,
+        limit: perPageCount,
+        userId: userId,
+        searchType: 'createdBy',
       };
-      details = await GetMyNftList(searchParams);
+      details = await GetOwnedNftList(searchParams);
       console.log(details);
     } else if (paramType === 2) {
       searchParams = {
@@ -423,4 +424,12 @@ export const getCollections = async (
   } catch (e) {
     console.log('error in api', e);
   }
+};
+
+export const checkIfLiked = async (nftId, authorId) => {
+  let nftDetails = await GetNftDetails(nftId);
+  let data = nftDetails?.nUser_likes?.filter((d) => {
+    return d === authorId;
+  });
+  return data?.length > 0;
 };
