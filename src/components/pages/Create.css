@@ -173,6 +173,8 @@ footer {
   }
   .padding_span {
     margin-bottom: 10px;
+    max-width: 100%;
+    text-align: center;
   }
   #form-create-item .de_nav {
     grid-template-columns: auto auto;

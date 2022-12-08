@@ -1021,7 +1021,7 @@ const Create2 = (props) => {
                                       <span className="sub-heading">Upload Collection Cover</span>
                                       <div className="fileUploader">
                                         <div className="row align-items-center justify-content-center">
-                                          <div className="col-md-5 col-sm-12 padding_span uploadImg-container">
+                                          <div className="col-md-5 col-sm-12 uploadImg-container d-flex justify-content-center align-items-center">
                                             {!image ? (
                                               <img
                                                 alt="upload image"
