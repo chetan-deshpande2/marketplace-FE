@@ -20,9 +20,8 @@ import Createoption from './pages/createOptions';
 import PersonalProfile from './pages/PersonalProfile';
 import UpdateProfile from './pages/updateProfile';
 import ItemNotFound from './pages/ItemNotFound';
-// import ItemDetails2 from './pages/ItemDetail2';
-
 import { createGlobalStyle } from 'styled-components';
+import 'react-notifications/lib/notifications.css';
 import { NotificationContainer } from 'react-notifications';
 
 const GlobalStyles = createGlobalStyle`
