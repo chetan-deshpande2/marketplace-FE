@@ -583,7 +583,7 @@ const Create2 = (props) => {
         });
         if (collectionsList && collectionsList?.results?.length > 0) {
           collectionsList.results = collectionsList?.results?.filter((collection) => {
-            return collection.erc721 === false;
+            return collection.erc721 === true;
           });
           setCollections(collectionsList?.results);
 
@@ -1178,7 +1178,7 @@ const Create2 = (props) => {
                                     width="10px"
                                     src={collection.collectionImage}
                                   ></img>
-                                  <p className='mt-2 mb-0'>{collection.sName}</p>
+                                  <p className="mt-2 mb-0">{collection.sName}</p>
                                 </span>
                               </li>
                             );
@@ -1617,7 +1617,7 @@ const Create2 = (props) => {
               )}
 
               <div className="author_list_pp_explore_page author_list_pp">
-                <span >
+                <span>
                   {profilePic !== undefined ? (
                     <img className="lazy author_image" src={profilePic ? profilePic : Avatar} alt="" />
                   ) : (
@@ -1628,7 +1628,7 @@ const Create2 = (props) => {
                 </span>
               </div>
               <div className="nft__item_wrap">
-                <span className='c-previous-items'>
+                <span className="c-previous-items">
                   <img
                     src={nftImage ? URL.createObjectURL(nftImage) : previewImage}
                     id="get_file_2"
