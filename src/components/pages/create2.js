@@ -1024,6 +1024,7 @@ const Create2 = (props) => {
                                         <div className="row align-items-center justify-content-center">
                                           <div className="col-md-5 col-sm-12 uploadImg-container d-flex justify-content-center align-items-center">
                                             {!image ? (
+                                              // eslint-disable-next-line jsx-a11y/img-redundant-alt
                                               <img
                                                 alt="upload image"
                                                 src={UploadImg}

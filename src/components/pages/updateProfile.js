@@ -6,6 +6,7 @@ import { NotificationManager } from 'react-notifications';
 import Loader from '../components/loader';
 import ItemNotFound from './ItemNotFound';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from '@reach/router';
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -55,6 +56,7 @@ const UpdateProfile = (props) => {
   const [cookies] = useCookies(['selected_account']);
   const [profile, setProfile] = useState();
   const [restrictSpace] = useState([' ']);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (cookies.selected_account) setCurrentUser(cookies.selected_account);
@@ -159,7 +161,7 @@ const UpdateProfile = (props) => {
         if (res === 'User Details Updated successfully') {
           NotificationManager.success(res);
           setTimeout(() => {
-            window.location.href = '/profile';
+            navigate('/personalProfile');
           }, 200);
         } else {
           NotificationManager.error(res);
@@ -187,19 +189,13 @@ const UpdateProfile = (props) => {
       <GlobalStyles />
       {loading ? <Loader /> : ''}
       <section
+        id="profile_banner"
         className="jumbotron breadcumb no-bg"
-        style={{ backgroundImage: `url(${'/img/background/Rectangle11.png'})` }}
+        style={{
+          backgroundImage: `url(${'./img/background/subheader.jpg'})`,
+        }}
       >
-        <div className="mainbreadcumb">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12 text-center">
-                <h1 className="explore-heading">Update Profile</h1>
-                {/* <p>Anim pariatur cliche reprehenderit</p> */}
-              </div>
-            </div>
-          </div>
-        </div>
+        <div className="mainbreadcumb"></div>
       </section>
 
       <section className="container">
