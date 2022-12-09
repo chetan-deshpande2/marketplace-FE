@@ -1042,30 +1042,33 @@ const Create2 = (props) => {
                                             )}
                                           </div>
 
-                                          <div className="d-create-file col-md-7 uploadImg-right">
+                                          <div className="d-create-file col-md-7 uploadImg-right modal-file-upload">
                                             <p id="collection_file_name">
                                               We recommend an image of at least 450x450. PNG, JPG, GIF or WEBP. Max
                                               {MAX_FILE_SIZE}mb.
                                             </p>
                                             {files && files.length > 0 ? <p>{files[0].name}</p> : ''}
                                             <div className="browse m-0 pl-0">
-                                              <input
+                                              {/* <input
                                                 type="button"
                                                 id="get_file"
                                                 className="btn-main browse-btn"
                                                 value="Browse"
                                                 onClick={() => fileRefCollection.current.click()}
-                                              />
-                                              <input
-                                                id="upload_file_Upload_collection"
-                                                type="file"
-                                                ref={fileRefCollection}
-                                                required
-                                                onChange={(e) => onCollectionImgChange(e)}
-                                              />
-                                              <div className="img-size">
-                                                {files && files.length > 0 ? files[0].size / 1000000 + 'MB' : ''}
-                                              </div>
+                                              /> */}
+                                              <label className='c-button btn-main'>
+                                                Browse
+                                                <input
+                                                  id="upload_file_Upload_collection"
+                                                  type="file"
+                                                  ref={fileRefCollection}
+                                                  required
+                                                  onChange={(e) => onCollectionImgChange(e)}
+                                                />
+                                                </label>
+                                                <div className="img-size">
+                                                  {files && files.length > 0 ? files[0].size / 1000000 + 'MB' : ''}
+                                                </div>
                                             </div>
                                           </div>
                                         </div>
@@ -1161,30 +1164,30 @@ const Create2 = (props) => {
                       )}
                       {collections && collections.length >= 1
                         ? collections.map((collection, index) => {
-                            return (
-                              <li
-                                key={index}
-                                id={`my_cus_btn${index}`}
-                                className="active"
-                                ref={myRef}
-                                onClick={(e) => {
-                                  handleShow4(collection.sContractAddress, index);
-                                  setNextId(collection.nextId);
-                                }}
-                              >
-                                <span className="span-border radio-img">
-                                  <img
-                                    className="choose-collection-img image"
-                                    alt=""
-                                    height="10px"
-                                    width="10px"
-                                    src={collection.collectionImage}
-                                  ></img>
-                                  <p className="mt-2 mb-0">{collection.sName}</p>
-                                </span>
-                              </li>
-                            );
-                          })
+                          return (
+                            <li
+                              key={index}
+                              id={`my_cus_btn${index}`}
+                              className="active"
+                              ref={myRef}
+                              onClick={(e) => {
+                                handleShow4(collection.sContractAddress, index);
+                                setNextId(collection.nextId);
+                              }}
+                            >
+                              <span className="span-border radio-img">
+                                <img
+                                  className="choose-collection-img image"
+                                  alt=""
+                                  height="10px"
+                                  width="10px"
+                                  src={collection.collectionImage}
+                                ></img>
+                                <p className="mt-2 mb-0">{collection.sName}</p>
+                              </span>
+                            </li>
+                          );
+                        })
                         : ''}
                     </ul>
                   </div>
@@ -1208,22 +1211,27 @@ const Create2 = (props) => {
                       <>
                         {nftFiles[0].name.length > 50
                           ? nftFiles[0].name.slice(0, 10) +
-                            nftFiles[0].name.slice(nftFiles[0].name.length - 4, nftFiles[0].name.length)
+                          nftFiles[0].name.slice(nftFiles[0].name.length - 4, nftFiles[0].name.length)
                           : nftFiles[0].name}
                       </>
                     ) : (
                       ''
                     )}
                   </p>
-                  <div className="browse">
-                    <input
+                  <div className="browse ">
+                    {/* <input
                       type="button"
                       id="get_file"
                       className="btn-main"
                       value="Browse"
                       onClick={() => fileRef.current.click()}
-                    />
-                    <input id="upload_file_Upload" type="file" ref={fileRef} onChange={(e) => onChange(e)} />
+                    /> */}
+                    <label className='c-button btn-main'>
+                      Browse
+                      <input id="upload_file_Upload" placeholder="Browse" type="file" ref={fileRef} onChange={(e) =>
+                        onChange(e)} />
+                    </label>
+
                   </div>
                 </div>
                 <div className="spacer-20"></div>
@@ -1379,8 +1387,8 @@ const Create2 = (props) => {
                         >
                           {options
                             ? options.map((option, key) => {
-                                return <option value={option.value}>{option.title}</option>;
-                              })
+                              return <option value={option.value}>{option.title}</option>;
+                            })
                             : ''}
                         </select>
                       </div>
@@ -1435,8 +1443,8 @@ const Create2 = (props) => {
                       >
                         {options
                           ? options.map((option, key) => {
-                              return <option value={option.value}>{option.title}</option>;
-                            })
+                            return <option value={option.value}>{option.title}</option>;
+                          })
                           : ''}
                       </select>
                     </div>
@@ -1523,27 +1531,27 @@ const Create2 = (props) => {
                 <ul>
                   {collaborators && collaboratorPercents
                     ? collaborators.map((collaborator, key) => {
-                        return collaborator !== '' ? (
-                          <li className="added_collaborator_list">
-                            <div className="d-flex justify-content-around align-items-baseline">
-                              <h5>
-                                {collaborator.slice(0, 5) + '...' + collaborator.slice(38, 42)} :{' '}
-                                <span>{Number(collaboratorPercents[key]) + '%'}</span>
-                              </h5>
-                              <button
-                                className="remove-btn btn-main"
-                                onClick={() => {
-                                  handleRemoveCollaborator(key);
-                                }}
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          </li>
-                        ) : (
-                          ''
-                        );
-                      })
+                      return collaborator !== '' ? (
+                        <li className="added_collaborator_list">
+                          <div className="d-flex justify-content-around align-items-baseline">
+                            <h5>
+                              {collaborator.slice(0, 5) + '...' + collaborator.slice(38, 42)} :{' '}
+                              <span>{Number(collaboratorPercents[key]) + '%'}</span>
+                            </h5>
+                            <button
+                              className="remove-btn btn-main"
+                              onClick={() => {
+                                handleRemoveCollaborator(key);
+                              }}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </li>
+                      ) : (
+                        ''
+                      );
+                    })
                     : ''}
                 </ul>
 
@@ -1569,27 +1577,27 @@ const Create2 = (props) => {
                   <div className="row gx-2">
                     {propertyKeys && propertyValues
                       ? propertyKeys.map((propertyKey, key) => {
-                          return propertyKey !== '' ? (
-                            <div className="col-lg-4 col-md-6 col-sm-6">
-                              <div className="createProperty">
-                                <div className="nft_attr">
-                                  <h5>{propertyKey}</h5>
-                                  <h4>{propertyValues[key]}</h4>
-                                </div>
-                                <button
-                                  className="remove-btn btn-main removeBTN"
-                                  onClick={() => {
-                                    handleRemoveProperty(key);
-                                  }}
-                                >
-                                  <i class="fa fa-trash" aria-hidden="true"></i>
-                                </button>
+                        return propertyKey !== '' ? (
+                          <div className="col-lg-4 col-md-6 col-sm-6">
+                            <div className="createProperty">
+                              <div className="nft_attr">
+                                <h5>{propertyKey}</h5>
+                                <h4>{propertyValues[key]}</h4>
                               </div>
+                              <button
+                                className="remove-btn btn-main removeBTN"
+                                onClick={() => {
+                                  handleRemoveProperty(key);
+                                }}
+                              >
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                              </button>
                             </div>
-                          ) : (
-                            ''
-                          );
-                        })
+                          </div>
+                        ) : (
+                          ''
+                        );
+                      })
                       : ''}
                   </div>
                 </div>
@@ -1647,8 +1655,8 @@ const Create2 = (props) => {
                   {isUnlock && price > 0
                     ? price + ' ' + CURRENCY
                     : minimumBid > 0
-                    ? minimumBid + ' ' + selectedTokenSymbol
-                    : `0 ${selectedTokenSymbol}`}
+                      ? minimumBid + ' ' + selectedTokenSymbol
+                      : `0 ${selectedTokenSymbol}`}
                 </div>
                 {/* <div className="nft__item_action">
                   <span>{isOpenForBid ? "Place a bid" : "Buy Now"}</span>

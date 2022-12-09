@@ -85,9 +85,45 @@ iframe {
   max-height: 500px;
   scrollbar-width: thin;
 }
+.c-upload-img {
+  color: transparent !important;
+}
+.c-button {
+  display: block;
+  width: max-content;
+  text-align: center;
+  color: #fff !important;
+  background: #8364e2;
+  border-radius: 6px;
+  letter-spacing: normal;
+  outline: 0;
+  font-weight: 800;
+  text-decoration: none;
+  padding: 8px 40px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 2px 2px 20px 0px rgba(131, 100, 226, 0);
+  transition: all 0.3s ease;
+}
+.c-button input[type="file"] {
+  display: none;
+}
+.modal-file-upload{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 @media (max-width: 991px) {
   .offset-lg-1 {
     margin-left: 0;
+  }
+  .c-de_nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 500px;
   }
 }
 @media (max-width: 767px) {
@@ -136,6 +172,7 @@ iframe {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
+    width: 500px;
   }
   .de_tab.tab_methods .c-collections .de_nav li span {
     width: 100%;
