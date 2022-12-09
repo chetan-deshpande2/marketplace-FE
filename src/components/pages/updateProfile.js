@@ -73,23 +73,23 @@ const UpdateProfile = (props) => {
     fetch();
   }, [currentUser]);
 
-  useEffect(() => {
-    if (profile) {
-      let firstname = profile?.oName?.sFirstname;
-      let username = profile?.sUserName;
-      let lastname = profile?.oName?.sLastname;
-      setFname(firstname === '' || firstname === undefined || firstname === 'undefined' ? '' : firstname.trim());
-      setUname(username.trim());
-      setLname(lastname === '' || lastname === undefined || lastname === 'undefined' ? '' : lastname.trim());
+  // useEffect(() => {
+  //   if (profile) {
+  //     let firstname = profile?.oName?.sFirstname;
+  //     let username = profile?.sUserName;
+  //     let lastname = profile?.oName?.sLastname;
+  //     setFname(firstname === '' || firstname === undefined || firstname === 'undefined' ? '' : firstname.trim());
+  //     setUname(username.trim());
+  //     setLname(lastname === '' || lastname === undefined || lastname === 'undefined' ? '' : lastname.trim());
 
-      setWebsite(
-        profile.sWebsite && profile.sWebsite !== undefined && profile.sWebsite !== 'undefined' ? profile.sWebsite : '',
-      );
-      setBio(profile.sBio && profile.sBio !== undefined && profile.sBio !== 'undefined' ? profile.sBio : '');
-      setPhone(profile.sPhone && profile.sPhone !== undefined && profile.sPhone !== 'undefined' ? profile.sPhone : '');
-      setEmail(profile.sEmail && profile.sEmail !== undefined && profile.sEmail !== 'undefined' ? profile.sEmail : '');
-    }
-  }, [profile]);
+  //     setWebsite(
+  //       profile.sWebsite && profile.sWebsite !== undefined && profile.sWebsite !== 'undefined' ? profile.sWebsite : '',
+  //     );
+  //     setBio(profile.sBio && profile.sBio !== undefined && profile.sBio !== 'undefined' ? profile.sBio : '');
+  //     setPhone(profile.sPhone && profile.sPhone !== undefined && profile.sPhone !== 'undefined' ? profile.sPhone : '');
+  //     setEmail(profile.sEmail && profile.sEmail !== undefined && profile.sEmail !== 'undefined' ? profile.sEmail : '');
+  //   }
+  // }, [profile]);
 
   const isValidEmail = async (email) => {
     var atposition = email.indexOf('@');

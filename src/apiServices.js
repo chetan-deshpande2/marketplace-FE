@@ -139,6 +139,8 @@ export const updateProfile = async (account, data) => {
   formData.append('sWalletAddress', account);
   formData.append('userProfile', data.profilePic ? data.profilePic : '');
 
+  console.log(formData);
+
   const requestOptions = {
     method: 'PUT',
     headers: {
