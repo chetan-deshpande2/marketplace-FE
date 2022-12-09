@@ -593,6 +593,7 @@ const Create2 = (props) => {
           setCollectionCreation(false);
           // window.location.reload();
         }
+        setCollectionCreation(false);
       } catch (e) {
         setCollectionCreation(false);
         return;

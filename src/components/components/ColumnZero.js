@@ -180,7 +180,7 @@ const OnSaleItems = (props) => {
                         nft.authorAddress ? nft.authorAddress.slice(0, 3) + '...' + nft.authorAddress.slice(39, 42) : ''
                       }
                       className="lazy author_image"
-                      // src={`http://${nft.nHash}.ipfs.w3s.link/${nft.nNftImage}`}
+                      src={nft.nTitle}
                       alt=""
                     />
                     <i className="fa fa-check profile_img_check"></i>
