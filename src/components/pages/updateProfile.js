@@ -332,11 +332,14 @@ const UpdateProfile = (props) => {
                 <div className="col-md-6">
                   <div className="field-set">
                     <label>Upload Profile Pic:</label>
-                    {profilePic ? (
-                      <img className="upload-profile " src={URL.createObjectURL(profilePic)} alt="profile-pic" />
-                    ) : (
-                      ''
-                    )}
+                    <div className='mb-3 d-flex justify-content-center align-items-center' style={{height:'200px', padding:'10px',border: '2px dashed #403f83',borderRadius:'8px'}}>
+                      {profilePic ? (
+                        <img className="upload-profile img-fluid" style={{width:"100%",height:"100%"}} src={URL.createObjectURL(profilePic)} alt="profile-pic" />
+                      ) : (
+                        ''
+                      )}
+                    </div>
+
                     <input
                       type="file"
                       accept=".png,.jpg,.jpeg,.gif"

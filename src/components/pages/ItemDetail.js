@@ -60,19 +60,35 @@ import moment from 'moment';
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
-    background: #fff;
+    background: #403f83;
     border-bottom: solid 1px #dddddd;
   }                      <span>{authorDetails ? authorDetails.sUserName : nftDetails.nCollection}</span>
+  header#myHeader.navbar.sticky.white {
+    background: #403f83;
+    border-bottom: solid 1px #403f83;
+  }
+  header#myHeader.navbar .search #quick_search{
+    color: #fff;
+    background: rgba(255, 255, 255, .1);
+  }
+  header#myHeader.navbar.white .btn, .navbar.white a, .navbar.sticky.white a{
+    color: #fff;
+  }
+  header#myHeader .dropdown-toggle::after{
+    color: #fff;
+  }
+
 
   @media only screen and (max-width: 1199px) {
     .navbar{
       background: #403f83;
+      color: #fff;
     }
     .navbar .menu-line, .navbar .menu-line1, .navbar .menu-line2{
-      background: #111;
+      background: #fff;
     }
     .item-dropdown .dropdown a{
-      color: #111 !important;
+      color: #fff !important;
     }
   }
 `;
@@ -336,8 +352,8 @@ const ItemDetails = function (props) {
                 ? authorDetails.sUserName
                   ? authorDetails.sUserName
                   : authorDetails.sWalletAddress
-                  ? authorDetails.sWalletAddress.slice(0, 11) + '...' + authorDetails.sWalletAddress.slice(38, 42)
-                  : ''
+                    ? authorDetails.sWalletAddress.slice(0, 11) + '...' + authorDetails.sWalletAddress.slice(38, 42)
+                    : ''
                 : ''}
             </strong>
           </p>
@@ -458,9 +474,8 @@ const ItemDetails = function (props) {
                     userId: nftDetails.nCreater._id,
                     action: 'Purchase',
                     actionMeta: 'Default',
-                    message: `${buyQuantity} Quantity For ${currentOrderMinBid} ${CURRENCY} by ${
-                      currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
-                    }`,
+                    message: `${buyQuantity} Quantity For ${currentOrderMinBid} ${CURRENCY} by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                      }`,
                     created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                   };
 
@@ -585,9 +600,8 @@ const ItemDetails = function (props) {
                     userId: nftDetails.nCreater._id,
                     action: 'Transfer',
                     actionMeta: 'Default',
-                    message: `${transferQuantity} Quantity to ${
-                      beneficiary.slice(0, 3) + '...' + beneficiary.slice(39, 42)
-                    } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)}`,
+                    message: `${transferQuantity} Quantity to ${beneficiary.slice(0, 3) + '...' + beneficiary.slice(39, 42)
+                      } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)}`,
                     created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                   };
 
@@ -657,8 +671,8 @@ const ItemDetails = function (props) {
                 ? authorDetails.sUserName
                   ? authorDetails.sUserName
                   : authorDetails.sWalletAddress
-                  ? authorDetails.sWalletAddress.slice(0, 11) + '...' + authorDetails.sWalletAddress.slice(38, 42)
-                  : ''
+                    ? authorDetails.sWalletAddress.slice(0, 11) + '...' + authorDetails.sWalletAddress.slice(38, 42)
+                    : ''
                 : ''}
             </strong>
           </p>
@@ -853,8 +867,8 @@ const ItemDetails = function (props) {
 
           let is_user_like = profile
             ? data.nUser_likes.filter((d) => {
-                return d === profile?._id;
-              }).length > 0
+              return d === profile?._id;
+            }).length > 0
             : false;
           console.log(data.nOwnedBy, currentUser);
 
@@ -1121,9 +1135,8 @@ const ItemDetails = function (props) {
                             userId: nftDetails.nCreater._id,
                             action: 'Marketplace',
                             actionMeta: 'Unlisted',
-                            message: `${qty} editions by ${
-                              currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
-                            }`,
+                            message: `${qty} editions by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                              }`,
                             created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                           };
 
@@ -1258,9 +1271,8 @@ const ItemDetails = function (props) {
                             userId: nftDetails.nCreater._id,
                             action: 'Marketplace',
                             actionMeta: 'Unlisted',
-                            message: `${qty} editions by ${
-                              currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
-                            }`,
+                            message: `${qty} editions by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                              }`,
                             created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                           };
 
@@ -1524,11 +1536,11 @@ const ItemDetails = function (props) {
                   Created by{' '}
                   {authorDetails?.sWalletAddress?.length > 20
                     ? authorDetails?.sWalletAddress?.slice(0, 6) +
-                      '....' +
-                      authorDetails?.sWalletAddress.slice(
-                        authorDetails?.sWalletAddress?.length - 6,
-                        authorDetails?.sWalletAddress?.length,
-                      )
+                    '....' +
+                    authorDetails?.sWalletAddress.slice(
+                      authorDetails?.sWalletAddress?.length - 6,
+                      authorDetails?.sWalletAddress?.length,
+                    )
                     : authorDetails?.sWalletAddress}
                 </b>
                 <br></br> at {qty}/{nftDetails ? nftDetails.nQuantity : 0}{' '}
@@ -1612,10 +1624,9 @@ const ItemDetails = function (props) {
       {putOnMarketplaceLoader ? showProcessingModal(`Placing on marketplace. Please do not refresh...`) : ''}
       {transferLoader
         ? showProcessingModal(
-            `Transferring ${transferQuantity} qty to ${
-              beneficiary.slice(0, 3) + '...' + beneficiary.slice(39, 42)
-            }. Please do not refresh...`,
-          )
+          `Transferring ${transferQuantity} qty to ${beneficiary.slice(0, 3) + '...' + beneficiary.slice(39, 42)
+          }. Please do not refresh...`,
+        )
         : ''}
       {placeBidLoader ? showProcessingModal('Placing bid. Please do not refresh...') : ''}
 
@@ -1691,8 +1702,8 @@ const ItemDetails = function (props) {
                           title={
                             nftDetails.nCreater
                               ? nftDetails.nCreater.sWalletAddress.slice(0, 3) +
-                                '...' +
-                                nftDetails.nCreater.sWalletAddress.slice(39, 42)
+                              '...' +
+                              nftDetails.nCreater.sWalletAddress.slice(39, 42)
                               : ''
                           }
                           className="lazy"
@@ -1709,8 +1720,8 @@ const ItemDetails = function (props) {
                           ? authorDetails.sUserName
                             ? authorDetails.sUserName
                             : authorDetails.sWalletAddress.slice(0, 3) +
-                              '...' +
-                              authorDetails.sWalletAddress.slice(39, 42)
+                            '...' +
+                            authorDetails.sWalletAddress.slice(39, 42)
                           : ''}
                       </span>
                     </div>
@@ -1744,20 +1755,23 @@ const ItemDetails = function (props) {
               <div className="spacer-40"></div>
               <div className="spacer-10"></div>
               <div className="de_tab">
-                <ul className="de_nav c-de_nav">
-                  <li id="Mainbtn1" className="active">
-                    <span onClick={handleBtnClick1}>Action</span>
-                  </li>
-                  <li id="Mainbtn" className="">
-                    <span onClick={handleBtnClick}>History</span>
-                  </li>
-                  <li id="Mainbtn2" className="">
-                    <span onClick={handleBtnClick2}>Active Bids</span>
-                  </li>
-                  <li id="Mainbtn3" className="">
-                    <span onClick={handleBtnClick3}>Details</span>
-                  </li>
-                </ul>
+                <div className='c-tabs overflow-auto'>
+                  <ul className="de_nav c-de_nav">
+                    <li id="Mainbtn1" className="active">
+                      <span onClick={handleBtnClick1}>Action</span>
+                    </li>
+                    <li id="Mainbtn" className="">
+                      <span onClick={handleBtnClick}>History</span>
+                    </li>
+                    <li id="Mainbtn2" className="">
+                      <span onClick={handleBtnClick2}>Active Bids</span>
+                    </li>
+                    <li id="Mainbtn3" className="">
+                      <span onClick={handleBtnClick3}>Details</span>
+                    </li>
+                  </ul>
+                </div>
+
 
                 {isMarketplacePopup ? (
                   <>
@@ -1867,8 +1881,8 @@ const ItemDetails = function (props) {
                                   >
                                     {options
                                       ? options.map((option, key) => {
-                                          return <option value={option.value}>{option.title}</option>;
-                                        })
+                                        return <option value={option.value}>{option.title}</option>;
+                                      })
                                       : ''}
                                   </select>
                                 </div>
@@ -1884,7 +1898,7 @@ const ItemDetails = function (props) {
                                       setEndTime(new Date(e.target.value));
                                     }}
 
-                                    // max="2018-06-14T00:00"
+                                  // max="2018-06-14T00:00"
                                   ></input>
                                 </div>
                               </div>
@@ -1924,8 +1938,8 @@ const ItemDetails = function (props) {
                                   >
                                     {options
                                       ? options.map((option, key) => {
-                                          return <option value={option.value}>{option.title}</option>;
-                                        })
+                                        return <option value={option.value}>{option.title}</option>;
+                                      })
                                       : ''}
                                   </select>
                                 </div>
@@ -1997,11 +2011,9 @@ const ItemDetails = function (props) {
                                   userId: nftDetails.nCreater._id,
                                   action: 'Marketplace',
                                   actionMeta: 'Listed',
-                                  message: `${marketplaceQuantity} Quantity For ${
-                                    marketplacePrice ? marketplacePrice : minimumBid ? minimumBid : 0
-                                  } ${
-                                    marketplaceSaleType === 0 ? CURRENCY : getTokenSymbolByAddress(selectedTokenAddress)
-                                  } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)}`,
+                                  message: `${marketplaceQuantity} Quantity For ${marketplacePrice ? marketplacePrice : minimumBid ? minimumBid : 0
+                                    } ${marketplaceSaleType === 0 ? CURRENCY : getTokenSymbolByAddress(selectedTokenAddress)
+                                    } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)}`,
                                   created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                                 };
 
@@ -2031,36 +2043,36 @@ const ItemDetails = function (props) {
                     <div className="tab-1 onStep fadeIn historyTab">
                       {history && history?.length > 0
                         ? history.map((h, i) => {
-                            console.log(
-                              'history time',
-                              moment(h.sCreated, 'YYYY-MM-DD HH:mm:ss').add(5, 'hours').add(30, 'minutes').fromNow(),
-                            );
+                          console.log(
+                            'history time',
+                            moment(h.sCreated, 'YYYY-MM-DD HH:mm:ss').add(5, 'hours').add(30, 'minutes').fromNow(),
+                          );
 
-                            return (
-                              <div className="row customRow">
-                                <div className="col-lg-12">
-                                  <div className="p_list">
-                                    <div className="p_list_pp">
-                                      <span>
-                                        <img
-                                          className="lazy"
-                                          src={h && h.sProfilePicUrl ? h.sProfilePicUrl : Avatar}
-                                          alt=""
-                                        />
-                                      </span>
-                                    </div>
-                                    <div className="p_list_info">
-                                      <b>
-                                        {getAction(h.action, h.actionMeta).toString().toUpperCase()} {'  '}
-                                      </b>
-                                      {h.message}
-                                      <span>{moment(h.sCreated, 'YYYY-MM-DD HH:mm:ss').fromNow()}</span>
-                                    </div>
+                          return (
+                            <div className="row customRow">
+                              <div className="col-lg-12">
+                                <div className="p_list">
+                                  <div className="p_list_pp">
+                                    <span>
+                                      <img
+                                        className="lazy"
+                                        src={h && h.sProfilePicUrl ? h.sProfilePicUrl : Avatar}
+                                        alt=""
+                                      />
+                                    </span>
+                                  </div>
+                                  <div className="p_list_info">
+                                    <b>
+                                      {getAction(h.action, h.actionMeta).toString().toUpperCase()} {'  '}
+                                    </b>
+                                    {h.message}
+                                    <span>{moment(h.sCreated, 'YYYY-MM-DD HH:mm:ss').fromNow()}</span>
                                   </div>
                                 </div>
                               </div>
-                            );
-                          })
+                            </div>
+                          );
+                        })
                         : ''}
                       <div className="row customRow">
                         <div className="col-lg-12">{totalPages > 1 ? 'null' : ''}</div>
@@ -2073,222 +2085,222 @@ const ItemDetails = function (props) {
                       {loading
                         ? showProcessingModal('Loading')
                         : isOwned && haveOrder === false && orders !== 'null'
-                        ? PutOnMarketPlace(ownedQuantity)
-                        : orders != 'null' && orders?.length >= 1 && !isEmpty(orders[0])
-                        ? orders.map((order, key) => {
-                            if (order.oStatus === 1) {
-                              if (order.oType === 0) {
-                                if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
-                                  return RemoveFromSale(
-                                    order?.oSellerWalletAddress,
-                                    convertToEth(order?.oPrice?.$numberDecimal),
-                                    order._id,
-                                    order.oCreated,
-                                    order.validUpto,
-                                    key,
-                                    order.oQuantity,
-                                    order.quantity_sold,
-                                  );
-                                } else {
-                                  return buyNow(
-                                    order.oSellerWalletAddress,
-                                    convertToEth(order.oPrice.$numberDecimal),
-                                    order._id,
-                                    order.oCreated,
-                                    key,
-                                    order.oQuantity - order.quantity_sold,
-                                    order.oQuantity,
-                                    order.oType,
-                                  );
-                                }
-                              } else if (order.oType === 1) {
-                                if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
-                                  return RemoveFromAuction(
-                                    order.oSellerWalletAddress,
-                                    convertToEth(order.oPrice.$numberDecimal),
-                                    order._id,
-                                    order.oCreated,
-                                    key,
-                                    order.oQuantity,
-                                    order.auction_end_date,
-                                    order.quantity_sold,
-                                    order.paymentTokenData,
-                                    order.oValidUpto,
-                                  );
-                                } else {
-                                  return placeABid(
-                                    order.oSellerWalletAddress,
-                                    convertToEth(order.oPrice.$numberDecimal),
-                                    order._id,
-                                    order.oCreated,
-                                    order.oValidUpto,
-                                    key,
-                                    order.auction_end_date,
-                                    order.oQuantity,
-                                    order.paymentTokenData,
-                                    order.oSeller,
-                                    order.quantity_sold,
-                                    order.isUserHaveActiveBid,
-                                  );
+                          ? PutOnMarketPlace(ownedQuantity)
+                          : orders != 'null' && orders?.length >= 1 && !isEmpty(orders[0])
+                            ? orders.map((order, key) => {
+                              if (order.oStatus === 1) {
+                                if (order.oType === 0) {
+                                  if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
+                                    return RemoveFromSale(
+                                      order?.oSellerWalletAddress,
+                                      convertToEth(order?.oPrice?.$numberDecimal),
+                                      order._id,
+                                      order.oCreated,
+                                      order.validUpto,
+                                      key,
+                                      order.oQuantity,
+                                      order.quantity_sold,
+                                    );
+                                  } else {
+                                    return buyNow(
+                                      order.oSellerWalletAddress,
+                                      convertToEth(order.oPrice.$numberDecimal),
+                                      order._id,
+                                      order.oCreated,
+                                      key,
+                                      order.oQuantity - order.quantity_sold,
+                                      order.oQuantity,
+                                      order.oType,
+                                    );
+                                  }
+                                } else if (order.oType === 1) {
+                                  if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
+                                    return RemoveFromAuction(
+                                      order.oSellerWalletAddress,
+                                      convertToEth(order.oPrice.$numberDecimal),
+                                      order._id,
+                                      order.oCreated,
+                                      key,
+                                      order.oQuantity,
+                                      order.auction_end_date,
+                                      order.quantity_sold,
+                                      order.paymentTokenData,
+                                      order.oValidUpto,
+                                    );
+                                  } else {
+                                    return placeABid(
+                                      order.oSellerWalletAddress,
+                                      convertToEth(order.oPrice.$numberDecimal),
+                                      order._id,
+                                      order.oCreated,
+                                      order.oValidUpto,
+                                      key,
+                                      order.auction_end_date,
+                                      order.oQuantity,
+                                      order.paymentTokenData,
+                                      order.oSeller,
+                                      order.quantity_sold,
+                                      order.isUserHaveActiveBid,
+                                    );
+                                  }
                                 }
                               }
-                            }
-                            return '';
-                          })
-                        : !isOwned && orders !== 'null'
-                        ? NotForSale(0)
-                        : ''}
+                              return '';
+                            })
+                            : !isOwned && orders !== 'null'
+                              ? NotForSale(0)
+                              : ''}
                     </div>
                   )}
 
                   {openMenu2 && (
-                    <div className="tab-1 onStep fadeIn scrollable">
+                    <div className="tab-1 onStep fadeIn">
                       {bids && bids.length >= 1 && nftDetails
                         ? bids.map((bid, key) => {
-                            return (
-                              <div className="row">
-                                <div className="col item_author">
-                                  <div className="p_list">
-                                    <div className="p_list_pp bidsList">
-                                      <span>
-                                        <img
-                                          className="lazy"
-                                          src={bid.bidderProfile ? bid.bidderProfile : Avatar}
-                                          alt=""
-                                        />
-                                      </span>
-                                    </div>
-                                    <div className="p_list_info bidsList">
-                                      <div className="row">
-                                        <div className="col vCenter bidsText">
-                                          Bid by{' '}
-                                          <b>
-                                            {bid.bidder.length > 20
-                                              ? bid.bidder.slice(0, 6) +
-                                                '....' +
-                                                bid.bidder.slice(bid.bidder.length - 6, bid.bidder.length)
-                                              : bid.bidder}
-                                            &nbsp; at
-                                          </b>
-                                          <br></br> Bid Price &nbsp;
-                                          {convertToEth(bid.bidPrice ? +' ' + bid.bidPrice + ' ' : ' 0 ')}
-                                          &nbsp;
-                                          {bid.paymentSymbol ? bid.paymentSymbol + ' ' : ' '}
-                                          For {bid.bidQuantity}/{nftDetails.nQuantity}
-                                        </div>
-                                        <div className="col vCenter">
-                                          <div className="customCol centerAlign">
-                                            <div className="button_section">
-                                              {currentUser?.toLowerCase() !== bid?.bidder?.toLowerCase() &&
+                          return (
+                            <div className="row">
+                              <div className="col item_author">
+                                <div className="p_list">
+                                  <div className="p_list_pp bidsList">
+                                    <span>
+                                      <img
+                                        className="lazy"
+                                        src={bid.bidderProfile ? bid.bidderProfile : Avatar}
+                                        alt=""
+                                      />
+                                    </span>
+                                  </div>
+                                  <div className="p_list_info bidsList">
+                                    <div className="row">
+                                      <div className="col vCenter bidsText">
+                                        Bid by{' '}
+                                        <b>
+                                          {bid.bidder.length > 20
+                                            ? bid.bidder.slice(0, 6) +
+                                            '....' +
+                                            bid.bidder.slice(bid.bidder.length - 6, bid.bidder.length)
+                                            : bid.bidder}
+                                          &nbsp; at
+                                        </b>
+                                        <br></br> Bid Price &nbsp;
+                                        {convertToEth(bid.bidPrice ? +' ' + bid.bidPrice + ' ' : ' 0 ')}
+                                        &nbsp;
+                                        {bid.paymentSymbol ? bid.paymentSymbol + ' ' : ' '}
+                                        For {bid.bidQuantity}/{nftDetails.nQuantity}
+                                      </div>
+                                      <div className="col vCenter">
+                                        <div className="customCol centerAlign">
+                                          <div className="button_section">
+                                            {currentUser?.toLowerCase() !== bid?.bidder?.toLowerCase() &&
                                               currentUser?.toLowerCase() === bid?.seller?.toLowerCase() ? (
-                                                <>
-                                                  <button
-                                                    className="accept_btn mybtn"
-                                                    onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
-                                                      if (!profile) {
-                                                        return;
-                                                      }
-                                                      if (!currentUser) {
-                                                        setNotConnectedModal(true);
-                                                        NotificationManager.error(
-                                                          'Please connect your wallet',
-                                                          '',
-                                                          800,
-                                                        );
-                                                        setLoading(false);
-                                                        return;
-                                                      }
-                                                      setLoading(true);
-                                                      let res = await handleAcceptBids(
-                                                        bid,
-                                                        nftDetails.nType === 1,
-                                                        currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42),
-                                                        nftDetails.nTitle,
-                                                        nftDetails.nLazyMintingStatus,
+                                              <>
+                                                <button
+                                                  className="accept_btn mybtn"
+                                                  onClick={async () => {
+                                                    let res1 = await handleNetworkSwitch(currentUser);
+                                                    setCookie('balance', res1, { path: '/' });
+                                                    if (res1 === false) return;
+                                                    if (!profile) {
+                                                      return;
+                                                    }
+                                                    if (!currentUser) {
+                                                      setNotConnectedModal(true);
+                                                      NotificationManager.error(
+                                                        'Please connect your wallet',
+                                                        '',
+                                                        800,
                                                       );
-                                                      if (res === false) {
-                                                        setLoading(false);
-                                                        return;
-                                                      }
                                                       setLoading(false);
-                                                    }}
-                                                  >
-                                                    Accept
-                                                  </button>
-                                                  <button
-                                                    className="reject_btn mybtn"
-                                                    onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
-                                                      if (!currentUser) {
-                                                        setNotConnectedModal(true);
-                                                        NotificationManager.error(
-                                                          'Please connect your wallet',
-                                                          '',
-                                                          800,
-                                                        );
-                                                        setLoading(false);
-                                                        return;
-                                                      }
-                                                      setLoading(true);
-                                                      await handleUpdateBidStatus(bid.bidId, 'Rejected');
+                                                      return;
+                                                    }
+                                                    setLoading(true);
+                                                    let res = await handleAcceptBids(
+                                                      bid,
+                                                      nftDetails.nType === 1,
+                                                      currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42),
+                                                      nftDetails.nTitle,
+                                                      nftDetails.nLazyMintingStatus,
+                                                    );
+                                                    if (res === false) {
                                                       setLoading(false);
-                                                    }}
-                                                  >
-                                                    Reject
-                                                  </button>
-                                                </>
-                                              ) : currentUser?.toLowerCase() === bid?.bidder?.toLowerCase() &&
-                                                currentUser?.toLowerCase() !== bid?.seller?.toLowerCase() ? (
-                                                <>
-                                                  <button
-                                                    className="cancel_btn mybtn"
-                                                    onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
-                                                      if (!currentUser) {
-                                                        setNotConnectedModal(true);
-                                                        NotificationManager.error(
-                                                          'Please connect your wallet',
-                                                          '',
-                                                          800,
-                                                        );
-                                                        setLoading(false);
-                                                        return;
-                                                      }
-                                                      setLoading(true);
-                                                      await handleUpdateBidStatus(bid.bidId, 'Cancelled');
+                                                      return;
+                                                    }
+                                                    setLoading(false);
+                                                  }}
+                                                >
+                                                  Accept
+                                                </button>
+                                                <button
+                                                  className="reject_btn mybtn"
+                                                  onClick={async () => {
+                                                    let res1 = await handleNetworkSwitch(currentUser);
+                                                    setCookie('balance', res1, { path: '/' });
+                                                    if (res1 === false) return;
+                                                    if (!currentUser) {
+                                                      setNotConnectedModal(true);
+                                                      NotificationManager.error(
+                                                        'Please connect your wallet',
+                                                        '',
+                                                        800,
+                                                      );
                                                       setLoading(false);
-                                                    }}
-                                                  >
-                                                    Cancel
-                                                  </button>
-                                                </>
-                                              ) : (
-                                                ''
-                                              )}
-                                            </div>
+                                                      return;
+                                                    }
+                                                    setLoading(true);
+                                                    await handleUpdateBidStatus(bid.bidId, 'Rejected');
+                                                    setLoading(false);
+                                                  }}
+                                                >
+                                                  Reject
+                                                </button>
+                                              </>
+                                            ) : currentUser?.toLowerCase() === bid?.bidder?.toLowerCase() &&
+                                              currentUser?.toLowerCase() !== bid?.seller?.toLowerCase() ? (
+                                              <>
+                                                <button
+                                                  className="cancel_btn mybtn"
+                                                  onClick={async () => {
+                                                    let res1 = await handleNetworkSwitch(currentUser);
+                                                    setCookie('balance', res1, { path: '/' });
+                                                    if (res1 === false) return;
+                                                    if (!currentUser) {
+                                                      setNotConnectedModal(true);
+                                                      NotificationManager.error(
+                                                        'Please connect your wallet',
+                                                        '',
+                                                        800,
+                                                      );
+                                                      setLoading(false);
+                                                      return;
+                                                    }
+                                                    setLoading(true);
+                                                    await handleUpdateBidStatus(bid.bidId, 'Cancelled');
+                                                    setLoading(false);
+                                                  }}
+                                                >
+                                                  Cancel
+                                                </button>
+                                              </>
+                                            ) : (
+                                              ''
+                                            )}
                                           </div>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                                <div className="spacer-10"></div>
                               </div>
-                            );
-                          })
+                              <div className="spacer-10"></div>
+                            </div>
+                          );
+                        })
                         : ''}
                     </div>
                   )}
 
                   {openMenu3 && (
-                    <div className="tab-1 onStep fadeIn scrollable">
+                    <div className="tab-1 onStep fadeIn">
                       {loading ? showProcessingModal('Loading') : ''}
                       {/* {nftDetails.nType === 2 ? (
                         <div className="ownedQty">
@@ -2303,15 +2315,15 @@ const ItemDetails = function (props) {
                         <div className="row gx-2">
                           {metaData && metaData.length > 0
                             ? metaData.map((data, key) => {
-                                return (
-                                  <div className="col-lg-4 col-md-6 col-sm-6">
-                                    <div className="nft_attr">
-                                      <h5>{data.trait_type}</h5>
-                                      <h4>{data.value}</h4>
-                                    </div>
+                              return (
+                                <div className="col-lg-4 col-md-6 col-sm-6">
+                                  <div className="nft_attr">
+                                    <h5>{data.trait_type}</h5>
+                                    <h4>{data.value}</h4>
                                   </div>
-                                );
-                              })
+                                </div>
+                              );
+                            })
                             : ''}
                         </div>
                       </div>

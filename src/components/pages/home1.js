@@ -27,12 +27,12 @@ const GlobalStyles = createGlobalStyle`
   header#myHeader .dropdown-toggle::after{
     color: #fff;
   }
-  header#myHeader .logo .d-block{
-    display: none !important;
-  }
-  header#myHeader .logo .d-none{
-    display: block !important;
-  }
+  // header#myHeader .logo .d-block{
+  //   display: none !important;
+  // }
+  // header#myHeader .logo .d-none{
+  //   display: block !important;
+  // }
   @media only screen and (max-width: 1199px) {
     .navbar{
       background: #403f83;
