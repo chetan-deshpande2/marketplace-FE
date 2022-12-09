@@ -128,25 +128,13 @@ export const checkuseraddress = async (account) => {
 };
 
 export const updateProfile = async (account, data) => {
-  let formData = new FormData();
-
-  formData.append('sUserName', data.uname ? data.uname : '');
-  formData.append('sFirstname', data.fname ? data.fname : '');
-  formData.append('sLastname', data.lname ? data.lname : '');
-  formData.append('sBio', data.bio ? data.bio : '');
-  formData.append('sWebsite', data.website ? data.website : '');
-  formData.append('sEmail', data.email ? data.email : '');
-  formData.append('sWalletAddress', account);
-  formData.append('userProfile', data.profilePic ? data.profilePic : '');
-
-  console.log(formData);
-
+  console.log(account, data);
   const requestOptions = {
     method: 'PUT',
     headers: {
       Authorization: localStorage.getItem('Authorization'),
     },
-    body: formData,
+    body: JSON.stringify(data),
   };
   try {
     let response = await fetch(REACT_APP_API_BASE_URL + '/user/updateProfile', requestOptions);

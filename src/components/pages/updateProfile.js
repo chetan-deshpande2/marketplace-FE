@@ -73,23 +73,23 @@ const UpdateProfile = (props) => {
     fetch();
   }, [currentUser]);
 
-  // useEffect(() => {
-  //   if (profile) {
-  //     let firstname = profile?.oName?.sFirstname;
-  //     let username = profile?.sUserName;
-  //     let lastname = profile?.oName?.sLastname;
-  //     setFname(firstname === '' || firstname === undefined || firstname === 'undefined' ? '' : firstname.trim());
-  //     setUname(username.trim());
-  //     setLname(lastname === '' || lastname === undefined || lastname === 'undefined' ? '' : lastname.trim());
+  useEffect(() => {
+    if (profile) {
+      let firstname = profile?.oName?.sFirstname;
+      let username = profile?.sUserName;
+      let lastname = profile?.oName?.sLastname;
+      setFname(firstname === '' || firstname === undefined || firstname === 'undefined' ? '' : firstname);
+      setUname(username);
+      setLname(lastname === '' || lastname === undefined || lastname === 'undefined' ? '' : lastname);
 
-  //     setWebsite(
-  //       profile.sWebsite && profile.sWebsite !== undefined && profile.sWebsite !== 'undefined' ? profile.sWebsite : '',
-  //     );
-  //     setBio(profile.sBio && profile.sBio !== undefined && profile.sBio !== 'undefined' ? profile.sBio : '');
-  //     setPhone(profile.sPhone && profile.sPhone !== undefined && profile.sPhone !== 'undefined' ? profile.sPhone : '');
-  //     setEmail(profile.sEmail && profile.sEmail !== undefined && profile.sEmail !== 'undefined' ? profile.sEmail : '');
-  //   }
-  // }, [profile]);
+      setWebsite(
+        profile.sWebsite && profile.sWebsite !== undefined && profile.sWebsite !== 'undefined' ? profile.sWebsite : '',
+      );
+      setBio(profile.sBio && profile.sBio !== undefined && profile.sBio !== 'undefined' ? profile.sBio : '');
+      setPhone(profile.sPhone && profile.sPhone !== undefined && profile.sPhone !== 'undefined' ? profile.sPhone : '');
+      setEmail(profile.sEmail && profile.sEmail !== undefined && profile.sEmail !== 'undefined' ? profile.sEmail : '');
+    }
+  }, [profile]);
 
   const isValidEmail = async (email) => {
     var atposition = email.indexOf('@');
@@ -112,6 +112,7 @@ const UpdateProfile = (props) => {
       profilePic: profilePic,
       email: email,
     };
+    console.log(data);
     // if (profilePic === "" || profilePic === undefined) {
     //   NotificationManager.error("Please choose profile pic", "", 800);
     //   return;
@@ -121,7 +122,7 @@ const UpdateProfile = (props) => {
       NotificationManager.error('Please Enter a Valid Firstname', '', 800);
       return;
     } else {
-      if (fname.trim().length === 0) {
+      if (fname.length === 0) {
         NotificationManager.error('Space not allowed', '', 800);
         return;
       }
@@ -131,7 +132,7 @@ const UpdateProfile = (props) => {
       NotificationManager.error('Please Enter a Valid Lastname', '', 800);
       return;
     } else {
-      if (lname.trim().length === 0) {
+      if (lname.length === 0) {
         NotificationManager.error('Space not allowed', '', 800);
         return;
       }
@@ -141,7 +142,7 @@ const UpdateProfile = (props) => {
       NotificationManager.error('Please choose valid username', '', 800);
       return;
     } else {
-      if (uname.trim().length === 0) {
+      if (uname.length === 0) {
         NotificationManager.error('Space not allowed', '', 800);
         return;
       }
@@ -153,18 +154,30 @@ const UpdateProfile = (props) => {
     //     return;
     //   }
     // }
+    var formData = new FormData();
 
+    formData.append('sUserName', data.uname ? data.uname : '');
+    formData.append('sFirstname', data.fname ? data.fname : '');
+    formData.append('sLastname', data.lname ? data.lname : '');
+    formData.append('sBio', data.bio ? data.bio : '');
+    formData.append('sWebsite', data.website ? data.website : '');
+    formData.append('sEmail', data.email ? data.email : '');
+    formData.append('sWalletAddress', currentUser);
+    formData.append('userProfile', data.profilePic ? data.profilePic : '');
+
+    console.log(data.uname);
     if (currentUser) {
       setLoading(true);
       try {
         let res = await updateProfile(currentUser, data);
-        if (res === 'User Details Updated successfully') {
-          NotificationManager.success(res);
+        console.log(res);
+        if (res === 'User Details Updated') {
+          NotificationManager.success('user updated ');
           setTimeout(() => {
             navigate('/personalProfile');
           }, 200);
         } else {
-          NotificationManager.error(res);
+          NotificationManager.error('Cannot update user');
         }
       } catch (e) {
         console.log('error', e);
