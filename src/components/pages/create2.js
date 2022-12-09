@@ -568,14 +568,14 @@ const Create2 = (props) => {
         sName: _title,
         sDescription: description,
         nftFile: image,
-        erc721: JSON.stringify(false),
+        erc721: JSON.stringify(true),
         sRoyaltyPercentage: Number(royalty) * 100,
 
         symbol: symbol,
       };
       let collectionsList = '';
       try {
-        let ress = await handleCollectionCreation(false, collectionData, currentUser);
+        let ress = await handleCollectionCreation(true, collectionData, currentUser);
         collectionsList = await getUsersCollections({
           page: 1,
           limit: 100,

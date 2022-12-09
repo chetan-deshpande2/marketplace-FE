@@ -70,6 +70,7 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
     contractAddress = await readReceipt(hash);
     console.log('contract receipt', contractAddress);
     let royalty = await exportInstance(contractAddress, isSingle ? erc721Abi.abi : erc1155Abi.abi);
+    console.log(royalty);
     console.log('account detail', account, collectionData.sRoyaltyPercentage);
 
     let res = await royalty.setDefaultRoyaltyDistribution([account], [collectionData.sRoyaltyPercentage]);
