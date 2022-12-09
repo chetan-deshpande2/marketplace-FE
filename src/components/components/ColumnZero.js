@@ -161,19 +161,19 @@ const OnSaleItems = (props) => {
   };
 
   return (
-    <div className="row">
+    <div className="row items-cards">
       {loading
         ? returnPlaceHolder()
         : nfts?.length >= 1
         ? nfts.map((nft, index) => (
-            <div key={index} className="d-item col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
-              <div className="nft__item nft__item1">
+            <div key={index} className="d-item col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12 mb-4">
+              <div className="nft__item m-0">
                 {/* {nft.deadline && nft.auction_end_date !== GENERAL_DATE && (
                   <div className="de_countdown">
                     <Clock deadline={nft.auction_end_date} />
                   </div>
                 )} */}
-                <div className="author_list_pp_explore_page">
+                {/* <div className="author_list_pp_explore_page">
                   <span onClick={() => (window.location.href = nft.authorLink)}>
                     <img
                       title={
@@ -185,37 +185,37 @@ const OnSaleItems = (props) => {
                     />
                     <i className="fa fa-check profile_img_check"></i>
                   </span>
-                </div>
+                </div> */}
 
-                <div className="nft__item_wrap" style={{ height: `${height}px` }}>
-                  <Outer>
+                <div className="author_list_pp_explore_page">
+                  {/* <Outer> */}
                     <span onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
                       <img
                         onLoad={onImgLoad}
                         src={`http://${nft.nHash}.ipfs.w3s.link/${nft.nNftImage}`}
-                        className="lazy nft__item_preview slider-img-preview"
+                        className="lazy nft__item_preview slider-img-preview img-fluid"
                         alt=""
                       />
                     </span>
-                  </Outer>
+                  {/* </Outer> */}
                 </div>
-                <div className="nft__item_info">
-                  <span onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
+                <div className="nft__item_info mt-3">
+                  <span className='text-center' onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
                     <h4 className="nft_title_class">
                       {nft.title ? (nft.title.length > 15 ? nft.title.slice(0, 15) + '...' : nft.title) : ''}
                     </h4>
                   </span>
-                  <div className="nft__item_price">
+                  {/* <div className="nft__item_price">
                     {nft.price ? nft.price : ''}
                     <span>{nft.bid ? nft.bid : ''}</span>
-                  </div>
+                  </div> */}
                   <div className="nft__item_action">
                     <span onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
                       {props.isProfile ? 'View NFT' : 'Buy Now'}
                     </span>
                   </div>
 
-                  <div className="spacer-20"></div>
+                  {/* <div className="spacer-20"></div> */}
                   {/* LIKE START*/}
 
                   <div className="nft__item_like">
