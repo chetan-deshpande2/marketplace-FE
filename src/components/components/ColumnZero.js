@@ -180,7 +180,7 @@ const OnSaleItems = (props) => {
                         nft.authorAddress ? nft.authorAddress.slice(0, 3) + '...' + nft.authorAddress.slice(39, 42) : ''
                       }
                       className="lazy author_image"
-                      src={nft.authorImg}
+                      // src={`http://${nft.nHash}.ipfs.w3s.link/${nft.nNftImage}`}
                       alt=""
                     />
                     <i className="fa fa-check profile_img_check"></i>
@@ -192,7 +192,7 @@ const OnSaleItems = (props) => {
                     <span onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
                       <img
                         onLoad={onImgLoad}
-                        src={nft.previewImg}
+                        src={`http://${nft.nHash}.ipfs.w3s.link/${nft.nNftImage}`}
                         className="lazy nft__item_preview slider-img-preview"
                         alt=""
                       />
