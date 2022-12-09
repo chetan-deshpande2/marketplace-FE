@@ -315,6 +315,261 @@ const ItemDetails = function (props) {
     setCurrPage(p);
   };
 
+  useEffect(() => {
+    console.log(cookies.selected_account);
+    setCurrentUser(cookies.selected_account);
+    setNotConnectedModal(false);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookies.selected_account]);
+
+  const fetchUserProfile = useCallback(async () => {
+    if (currentUser) {
+      let _profile = await getProfile();
+
+      setProfile(_profile);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, [fetchUserProfile, currentUser]);
+
+  useEffect(
+    () => {
+      async function fetch() {
+        setLoading(true);
+        if (id) {
+          let data = await GetNftDetails(id);
+          let authorData = [];
+          console.log(data?.nCreater?._id);
+          if (data && data.nCreater) {
+            authorData = await GetIndividualAuthorDetail({
+              userId: data?.nCreater?._id,
+              currUserId: profile ? profile.user._id : '',
+            });
+            console.log(authorData);
+          }
+
+          let is_user_like = profile
+            ? data.nUser_likes.filter((d) => {
+                return d === profile?._id;
+              }).length > 0
+            : false;
+          console.log(data.nOwnedBy, currentUser);
+
+          if (data && data.nOwnedBy && currentUser) {
+            // eslint-disable-next-line array-callback-return
+            let datas = data.nOwnedBy.filter((d, key) => {
+              if (d.address) {
+                return d?.address?.toLowerCase() === currentUser?.toLowerCase();
+              }
+            });
+            console.log(datas.length);
+            if (datas.length >= 1) {
+              setIsOwned(true);
+              console.log(datas[0].quantity);
+              setOwnedQuantity(datas[0].quantity);
+            }
+          }
+
+          let searchParams = {
+            nftId: data._id,
+            // sortKey: 'oTokenId',
+            sortType: -1,
+            page: 1,
+            limit: 4,
+          };
+
+          let d = await GetOrdersByNftId(searchParams);
+          console.log(d?.length);
+
+          if (d?.length === 0) {
+            setOrders([]);
+            setHaveOrder(false);
+          } else {
+            let _orderState = [];
+            for (let i = 0; i < d?.length; i++) {
+              console.log(_orderState[i]);
+              _orderState[i] = false;
+
+              let searchParams = {
+                nNFTId: data._id,
+                orderID: d[i]._id,
+                buyerID: 'All',
+                bidStatus: 'All',
+              };
+
+              let _data = await fetchBidNft(searchParams);
+              console.log(_data);
+              if (data && currentUser) {
+                if (d[i].oPaymentToken !== ZERO_ADDRESS) {
+                  let paymentData = await getPaymentTokenInfo(currentUser, d.results[i].oPaymentToken);
+
+                  if (currOrderType !== 0) {
+                    setUserBalance(Number(convertToEth(paymentData?.balance)).toFixed(4));
+                  }
+                  paymentData.paymentToken = d.results[i].oPaymentToken;
+
+                  d[i].paymentTokenData = paymentData;
+                } else {
+                  if (currOrderType === 0) {
+                    setUserBalance(Number(convertToEth(cookies.balance ? cookies.balance : 0)).toFixed(4));
+                  }
+                }
+
+                for (let j = 0; j < _data.data?.length; j++) {
+                  if (_data.data[j]?.oBidder?.sWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
+                    d[i].isUserHaveActiveBid = true;
+                    break;
+                  } else {
+                    d[i].isUserHaveActiveBid = false;
+                  }
+                }
+              } else {
+                let paymentData = await getPaymentTokenInfo('', d[i].oPaymentToken);
+                paymentData.paymentToken = d[i].oPaymentToken;
+                d[i].paymentTokenData = paymentData;
+                console.log(d[i].paymentTokenData);
+              }
+            }
+            console.log(_orderState);
+            setOrderState(_orderState);
+            console.log(d);
+            let _orders = d;
+            console.log(_orders.length, _orders[0], currentUser);
+            if (_orders.length >= 1 && !isEmpty(_orders[0]) && currentUser) {
+              let datas = _orders.filter((data, key) => {
+                return data.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase();
+              });
+              if (datas.length >= 1) {
+                setConnectedUserOrderId(datas[0]._id);
+                setHaveOrder(true);
+              } else {
+                setHaveOrder(false);
+              }
+            }
+
+            setOrders(d.results ? d.results : []);
+          }
+
+          setIsLiked(is_user_like);
+          setTotalLikes(data?.nUser_likes?.length);
+          setNftDetails(data);
+          console.log(data);
+          console.log(authorData);
+          setAuthorDetails(authorData);
+          if (isEmpty(data)) {
+            window.location.href = '/profile';
+          }
+        }
+        setLoading(false);
+      }
+      fetch();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [profile, id, currentUser, currOrderType],
+  );
+
+  useEffect(() => {
+    console.log(nftDetails);
+    const fetch = async () => {
+      setLoading(true);
+
+      if (nftDetails && nftDetails._id) {
+        let history = await GetHistory({
+          nftId: nftDetails._id,
+          userId: 'All',
+          action: 'All',
+          actionMeta: 'All',
+          page: currPage,
+          limit: perPageCount,
+        });
+        console.log(history.count);
+        setHistory(history.results[0]);
+        setTotalPages(Math.ceil(history.count / perPageCount));
+      }
+      setLoading(false);
+    };
+    fetch();
+  }, [nftDetails, currPage]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log(isOwned);
+    });
+  });
+
+  // useEffect(() => {
+  //   console.log(nftDetails);
+  //   const fetchData = async () => {
+  //     if (nftDetails && nftDetails.nHash) {
+  //       let resp = await fetch(process.env.REACT_APP_IPFS_URL + nftDetails.nHash);
+  //       resp = await resp.json();
+
+  //       setMetaData(eval(resp.attributes));
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [nftDetails]);
+
+  // useEffect(() => {
+  //   const checkIfOpenForSale = async () => {
+  //     for (let i = 0; i < orders.length; i++) {
+  //       console.log(orders[i]);
+  //       if (orders[i].oStatus >= 1) {
+  //         return;
+  //       }
+  //     }
+  //     return;
+  //   };
+
+  //   checkIfOpenForSale();
+  // }, [orders]);
+
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     setLoading(true);
+  //     console.log(nftDetails.nHash, nftDetails.nNftImage);
+  //     if (nftDetails && nftDetails._id) {
+  //       let data = await getAllBidsByNftId(nftDetails._id);
+  //       console.log(data);
+  //       let _highestBid = {};
+  //       _highestBid = data?.highestBid;
+  //       console.log(data);
+  //       // data = data?.data;
+
+  //       if (data.length > 0 && isEmpty(data[0])) data = [];
+  //       setBids(data);
+  //       setHighestBid(_highestBid);
+  //     }
+  //     setLoading(false);
+  //   };
+  //   fetch();
+  // }, [nftDetails]);
+
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
+  //       new BigNumber(bidQty?.toString()),
+  //     );
+  //     let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
+
+  //     setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
+  //   };
+  //   fetch();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log(isOwned);
+  //   });
+  // });
+
+  //*======================= Popups ==========
+
   // Buy NFTs
   const modal = (
     <PopupModal
@@ -815,252 +1070,7 @@ const ItemDetails = function (props) {
     />
   );
 
-  useEffect(() => {
-    console.log(cookies.selected_account);
-    setCurrentUser(cookies.selected_account);
-    setNotConnectedModal(false);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cookies.selected_account]);
-
-  const fetchUserProfile = useCallback(async () => {
-    if (currentUser) {
-      let _profile = await getProfile();
-
-      setProfile(_profile);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, [currentUser]);
-
-  useEffect(
-    () => {
-      async function fetch() {
-        setLoading(true);
-        if (id) {
-          let data = await GetNftDetails(id);
-          let authorData = [];
-          console.log(data?.nCreater?._id);
-          if (data && data.nCreater) {
-            authorData = await GetIndividualAuthorDetail({
-              userId: data?.nCreater?._id,
-              currUserId: profile ? profile.user._id : '',
-            });
-            console.log(authorData);
-          }
-
-          let is_user_like = profile
-            ? data.nUser_likes.filter((d) => {
-                return d === profile?._id;
-              }).length > 0
-            : false;
-          console.log(data.nOwnedBy, currentUser);
-
-          if (data && data.nOwnedBy && currentUser) {
-            // eslint-disable-next-line array-callback-return
-            let datas = data.nOwnedBy.filter((d, key) => {
-              if (d.address) {
-                return d?.address?.toLowerCase() === currentUser?.toLowerCase();
-              }
-            });
-            console.log(datas.length);
-            if (datas.length >= 1) {
-              setIsOwned(true);
-              console.log(datas[0].quantity);
-              setOwnedQuantity(datas[0].quantity);
-            }
-          }
-
-          let searchParams = {
-            nftId: data._id,
-            // sortKey: 'oTokenId',
-            sortType: -1,
-            page: 1,
-            limit: 4,
-          };
-
-          let d = await GetOrdersByNftId(searchParams);
-          console.log(d?.length);
-
-          if (d?.length === 0) {
-            setOrders([]);
-            setHaveOrder(false);
-          } else {
-            let _orderState = [];
-            for (let i = 0; i < d?.length; i++) {
-              console.log(_orderState[i]);
-              _orderState[i] = false;
-
-              let searchParams = {
-                nNFTId: data._id,
-                orderID: d[i]._id,
-                buyerID: 'All',
-                bidStatus: 'All',
-              };
-
-              let _data = await fetchBidNft(searchParams);
-              console.log(_data);
-              if (data && currentUser) {
-                if (d[i].oPaymentToken !== ZERO_ADDRESS) {
-                  let paymentData = await getPaymentTokenInfo(currentUser, d.results[i].oPaymentToken);
-
-                  if (currOrderType !== 0) {
-                    setUserBalance(Number(convertToEth(paymentData?.balance)).toFixed(4));
-                  }
-                  paymentData.paymentToken = d.results[i].oPaymentToken;
-
-                  d[i].paymentTokenData = paymentData;
-                } else {
-                  if (currOrderType === 0) {
-                    setUserBalance(Number(convertToEth(cookies.balance ? cookies.balance : 0)).toFixed(4));
-                  }
-                }
-
-                for (let j = 0; j < _data.data?.length; j++) {
-                  if (_data.data[j]?.oBidder?.sWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
-                    d[i].isUserHaveActiveBid = true;
-                    break;
-                  } else {
-                    d[i].isUserHaveActiveBid = false;
-                  }
-                }
-              } else {
-                let paymentData = await getPaymentTokenInfo('', d[i].oPaymentToken);
-                paymentData.paymentToken = d[i].oPaymentToken;
-                d[i].paymentTokenData = paymentData;
-                console.log(d[i].paymentTokenData);
-              }
-            }
-            console.log(_orderState);
-            setOrderState(_orderState);
-            console.log(d);
-            let _orders = d;
-            console.log(_orders.length, _orders[0], currentUser);
-            if (_orders.length >= 1 && !isEmpty(_orders[0]) && currentUser) {
-              let datas = _orders.filter((data, key) => {
-                return data.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase();
-              });
-              if (datas.length >= 1) {
-                setConnectedUserOrderId(datas[0]._id);
-                setHaveOrder(true);
-              } else {
-                setHaveOrder(false);
-              }
-            }
-
-            setOrders(d.results ? d.results : []);
-          }
-
-          setIsLiked(is_user_like);
-          setTotalLikes(data?.nUser_likes?.length);
-          setNftDetails(data);
-          console.log(data);
-          console.log(authorData);
-          setAuthorDetails(authorData);
-          if (isEmpty(data)) {
-            window.location.href = '/profile';
-          }
-        }
-        setLoading(false);
-      }
-      fetch();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [profile, id, currentUser, currOrderType],
-  );
-
-  useEffect(() => {
-    console.log(nftDetails);
-    const fetchData = async () => {
-      if (nftDetails && nftDetails.nHash) {
-        let resp = await fetch(process.env.REACT_APP_IPFS_URL + nftDetails.nHash);
-        resp = await resp.json();
-
-        setMetaData(eval(resp.attributes));
-      }
-    };
-
-    fetchData();
-  }, [nftDetails]);
-
-  useEffect(() => {
-    const checkIfOpenForSale = async () => {
-      for (let i = 0; i < orders.length; i++) {
-        console.log(orders[i]);
-        if (orders[i].oStatus >= 1) {
-          return;
-        }
-      }
-      return;
-    };
-
-    checkIfOpenForSale();
-  }, [orders]);
-
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      console.log(nftDetails.nHash, nftDetails.nNftImage);
-      if (nftDetails && nftDetails._id) {
-        let data = await getAllBidsByNftId(nftDetails._id);
-        console.log(data);
-        let _highestBid = {};
-        _highestBid = data?.highestBid;
-        console.log(data);
-        // data = data?.data;
-
-        if (data.length > 0 && isEmpty(data[0])) data = [];
-        setBids(data);
-        setHighestBid(_highestBid);
-      }
-      setLoading(false);
-    };
-    fetch();
-  }, [nftDetails]);
-
-  useEffect(() => {
-    const fetch = async () => {
-      let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
-        new BigNumber(bidQty?.toString()),
-      );
-      let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
-
-      setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
-    };
-    fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
-
-  useEffect(() => {
-    console.log(nftDetails);
-    const fetch = async () => {
-      setLoading(true);
-
-      if (nftDetails && nftDetails._id) {
-        let history = await GetHistory({
-          nftId: nftDetails._id,
-          userId: 'All',
-          action: 'All',
-          actionMeta: 'All',
-          page: currPage,
-          limit: perPageCount,
-        });
-        console.log(history.count);
-        setHistory(history.results[0]);
-        setTotalPages(Math.ceil(history.count / perPageCount));
-      }
-      setLoading(false);
-    };
-    fetch();
-  }, [nftDetails, currPage]);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log(isOwned);
-  //   });
-  // });
+  //*======================= Render Functions ==============
 
   const RemoveFromSale = (seller, price, orderId, oCreated, deadline, key, qty, qtySold) => (
     <div className="de_tab">
@@ -1604,10 +1614,15 @@ const ItemDetails = function (props) {
     return '';
   };
 
+  //*======== ========= ========
+
   return (
     <div>
-      <GlobalStyles />
+      {/* <GlobalStyles /> */}
+
+      {loading ? showProcessingModal('Loading') : ''}
       {isPopup ? modal : ''}
+      {/* 
       {checkoutLoader ? showProcessingModal('Transaction is in progress. Please do not refresh...') : ''}
       {putOnMarketplaceLoader ? showProcessingModal(`Placing on marketplace. Please do not refresh...`) : ''}
       {transferLoader
@@ -1620,8 +1635,8 @@ const ItemDetails = function (props) {
       {placeBidLoader ? showProcessingModal('Placing bid. Please do not refresh...') : ''}
 
       {removeFromSaleLoader ? showProcessingModal('Removing NFT from sale. Please do not refresh...') : ''}
-      {loading ? showProcessingModal('Loading') : ''}
-      {isTransferPopup ? transferModal : ''}
+ */}
+      {/* {isTransferPopup ? transferModal : ''}
       {isPlaceABidPopup ? placeBidModal : ''}
       {isUnlocked ? hiddenContentModal : ''}
       {showNotConnectedModal ? (
@@ -1631,7 +1646,7 @@ const ItemDetails = function (props) {
         />
       ) : (
         ''
-      )}
+      )} */}
 
       <section className="container">
         <div className="row mt-md-5 pt-md-4">
@@ -1650,7 +1665,8 @@ const ItemDetails = function (props) {
                 {nftDetails ? nftDetails.nTitle : ''}
                 {/* ({nftDetails?.nType === 1 ? "Single" : "Multiple"}) */}
               </h2>
-              <div className="item_info_counts">
+
+              {/* <div className="item_info_counts">
                 {highestBid !== undefined && !isEmptyObject(highestBid) ? (
                   <div>
                     <div className="item_info_lock" style={{ cursor: 'pointer' }}>
@@ -1662,7 +1678,7 @@ const ItemDetails = function (props) {
                   ''
                 )}
 
-                {/* {nftDetails.hiddenContent ? (
+                {nftDetails.hiddenContent ? (
                   <div>
                     <div
                       className="item_info_lock"
@@ -1676,10 +1692,11 @@ const ItemDetails = function (props) {
                   </div>
                 ) : (
                   ''
-                )} */}
-              </div>
+                )}
+              </div> */}
 
               <p>{nftDetails ? nftDetails.nDescription : ''}</p>
+
               <div className="de_tab">
                 <div className="row">
                   <div className="item_author col-md-6">
@@ -1741,6 +1758,7 @@ const ItemDetails = function (props) {
                   </div>
                 </div>
               </div>
+
               <div className="spacer-40"></div>
               <div className="spacer-10"></div>
               <div className="de_tab">
@@ -2068,7 +2086,7 @@ const ItemDetails = function (props) {
                     </div>
                   )}
 
-                  {openMenu1 && (
+                  {/* {openMenu1 && (
                     <div className="tab-2 onStep fadeIn">
                       {loading
                         ? showProcessingModal('Loading')
@@ -2135,11 +2153,9 @@ const ItemDetails = function (props) {
                             }
                             return '';
                           })
-                        : !isOwned && orders !== 'null'
-                        ? NotForSale(0)
-                        : ''}
+                        : !isOwned && orders !== 'null'}
                     </div>
-                  )}
+                  )} */}
 
                   {openMenu2 && (
                     <div className="tab-1 onStep fadeIn scrollable">

@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Breakpoint, {
-  BreakpointProvider,
-  setDefaultBreakpoints,
-} from "react-socks";
-import { header } from "react-bootstrap";
-import { Link } from "@reach/router";
-import useOnclickOutside from "react-cool-onclickoutside";
-import Accountmodal from "./AccountModal/Accountmodal";
+import React, { useEffect, useState } from 'react';
+import Breakpoint, { BreakpointProvider, setDefaultBreakpoints } from 'react-socks';
+import { header } from 'react-bootstrap';
+import { Link } from '@reach/router';
+import useOnclickOutside from 'react-cool-onclickoutside';
+import Accountmodal from './AccountModal/Accountmodal';
 // import AccountModal from "./AccountModal/Accountmodal";
 
 setDefaultBreakpoints([{ xs: 0 }, { l: 1199 }, { xl: 1200 }]);
@@ -18,7 +15,7 @@ const NavLink = (props) => (
       // the object returned here is passed to the
       // anchor element's props
       return {
-        className: isCurrent ? "active" : "non-active",
+        className: isCurrent ? 'active' : 'non-active',
       };
     }}
   />
@@ -68,24 +65,24 @@ const Header = function () {
 
   const [showmenu, btn_icon] = useState(false);
   useEffect(() => {
-    const header = document.getElementById("myHeader");
-    const totop = document.getElementById("scroll-to-top");
+    const header = document.getElementById('myHeader');
+    const totop = document.getElementById('scroll-to-top');
     const sticky = header.offsetTop;
-    const scrollCallBack = window.addEventListener("scroll", () => {
+    const scrollCallBack = window.addEventListener('scroll', () => {
       btn_icon(false);
       if (window.pageYOffset > sticky) {
-        header.classList.add("sticky");
-        totop.classList.add("show");
+        header.classList.add('sticky');
+        totop.classList.add('show');
       } else {
-        header.classList.remove("sticky");
-        totop.classList.remove("show");
+        header.classList.remove('sticky');
+        totop.classList.remove('show');
       }
       if (window.pageYOffset > sticky) {
         closeMenu();
       }
     });
     return () => {
-      window.removeEventListener("scroll", scrollCallBack);
+      window.removeEventListener('scroll', scrollCallBack);
     };
   }, []);
   return (
@@ -95,17 +92,9 @@ const Header = function () {
           <div className="logo px-0">
             <div className="navbar-title navbar-item">
               <NavLink to="/">
-                <img
-                  src="./img/logo.png"
-                  className="img-fluid d-block"
-                  alt="#"
-                />
+                <img src="./img/logo.png" className="img-fluid d-block" alt="#" />
                 <img src="./img/logo-2.png" className="img-fluid d-3" alt="#" />
-                <img
-                  src="./img/logo-light.png"
-                  className="img-fluid d-none"
-                  alt="#"
-                />
+                <img src="./img/logo-light.png" className="img-fluid d-none" alt="#" />
               </NavLink>
             </div>
           </div>
@@ -116,19 +105,13 @@ const Header = function () {
                 <div className="menu">
                   <div className="navbar-item">
                     <div ref={ref1}>
-                      <div
-                        className="dropdown-custom dropdown-toggle btn"
-                        onClick={handleBtnClick1}
-                      >
+                      <div className="dropdown-custom dropdown-toggle btn" onClick={handleBtnClick1}>
                         Explore
                       </div>
                       {openMenu1 && (
                         <div className="item-dropdown">
                           <div className="dropdown" onClick={closeMenu1}>
-                            <NavLink
-                              to="/explore"
-                              onClick={() => btn_icon(!showmenu)}
-                            >
+                            <NavLink to="/explore" onClick={() => btn_icon(!showmenu)}>
                               Explore
                             </NavLink>
                             {/* <NavLink
@@ -174,10 +157,7 @@ const Header = function () {
                   </div>
                   <div className="navbar-item">
                     <div ref={ref2}>
-                      <div
-                        className="dropdown-custom dropdown-toggle btn"
-                        onClick={handleBtnClick2}
-                      >
+                      <div className="dropdown-custom dropdown-toggle btn" onClick={handleBtnClick2}>
                         Create
                       </div>
                       {openMenu2 && (
@@ -207,10 +187,7 @@ const Header = function () {
                             >
                               Create 2
                             </NavLink> */}
-                            <NavLink
-                              to="/createOptions"
-                              onClick={() => btn_icon(!showmenu)}
-                            >
+                            <NavLink to="/createOptions" onClick={() => btn_icon(!showmenu)}>
                               Create options
                             </NavLink>
                             {/* <NavLink
@@ -255,10 +232,7 @@ const Header = function () {
                     </div>
                   </div>
                   <div className="navbar-item">
-                    <NavLink
-                      to="/personalProfile"
-                      onClick={() => btn_icon(!showmenu)}
-                    >
+                    <NavLink to="/personalProfile" onClick={() => btn_icon(!showmenu)}>
                       Profile
                     </NavLink>
                   </div>
