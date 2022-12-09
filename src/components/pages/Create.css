@@ -56,8 +56,7 @@
 .de_nav li span img {
   min-height: 125px;
   /* max-width: 185px; */
-  /* object-fit: cover; */
-  object-fit: fill;
+  object-fit: cover;
   object-position: center;
   height: 200px;
 }
@@ -101,7 +100,7 @@
 .nft__item_wrap .c-previous-items img {
   max-height: 150px;
   /* max-width: 185px; */
-  object-fit: contain;
+  object-fit: cover;
   object-position: top;
   width: 100%;
 }
