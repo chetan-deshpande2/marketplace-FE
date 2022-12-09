@@ -506,12 +506,12 @@ const Create3 = (props) => {
         setCollectionCreation(false);
         return;
       }
-      let res = await checkIfCollectionNameAlreadyTaken(_title);
-      if (res === true) {
-        NotificationManager.error('Collection Name Already Taken', '', 800);
-        setCollectionCreation(false);
-        return;
-      }
+      // let res = await checkIfCollectionNameAlreadyTaken(_title);
+      // if (res === true) {
+      //   NotificationManager.error('Collection Name Already Taken', '', 800);
+      //   setCollectionCreation(false);
+      //   return;
+      // }
       if (files && files.length > 0) {
         if (files[0].size / 1000000 > MAX_FILE_SIZE) {
           NotificationManager.error(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
