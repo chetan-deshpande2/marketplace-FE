@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Clock from '../components/Clock';
 import Footer from '../components/footer';
 import { ethers } from 'ethers';
@@ -823,16 +823,16 @@ const ItemDetails = function (props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cookies.selected_account]);
 
+  const fetchUserProfile = useCallback(async () => {
+    if (currentUser) {
+      let _profile = await getProfile();
+
+      setProfile(_profile);
+    }
+  }, []);
+
   useEffect(() => {
-    const fetch = async () => {
-      if (currentUser) {
-        let _profile = await getProfile();
-
-        setProfile(_profile);
-      }
-    };
-
-    fetch();
+    fetchUserProfile();
   }, [currentUser]);
 
   useEffect(
@@ -1662,7 +1662,7 @@ const ItemDetails = function (props) {
                   ''
                 )}
 
-                {nftDetails.hiddenContent ? (
+                {/* {nftDetails.hiddenContent ? (
                   <div>
                     <div
                       className="item_info_lock"
@@ -1676,7 +1676,7 @@ const ItemDetails = function (props) {
                   </div>
                 ) : (
                   ''
-                )}
+                )} */}
               </div>
 
               <p>{nftDetails ? nftDetails.nDescription : ''}</p>
