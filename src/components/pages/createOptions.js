@@ -38,7 +38,7 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-export default class Createpage extends Component {
+export default class CreateOption extends Component {
   render() {
     return (
       <div>

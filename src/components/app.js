@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Location, Redirect } from '@reach/router';
+import { Router, Location } from '@reach/router';
 import { createGlobalStyle } from 'styled-components';
 
 import ScrollToTopBtn from './menu/ScrollToTop';
@@ -10,7 +10,7 @@ import Auction from './pages/Auction';
 import ItemDetail from './pages/ItemDetail';
 import Create2 from './pages/create2';
 import Create3 from './pages/create3';
-import Createoption from './pages/createOptions';
+import CreateOption from './pages/createOptions';
 import PersonalProfile from './pages/PersonalProfile';
 import UpdateProfile from './pages/updateProfile';
 import ItemNotFound from './pages/ItemNotFound';
@@ -49,7 +49,7 @@ const app = () => (
       <ScrollTop path="/">
         <Home1 path="/" />
         <Explore path="/explore" />
-        <Createoption path="/createOptions" />
+        <CreateOption path="/createOptions" />
         <Create2 path="/create2" />
         <Create3 path="/create3" />
         <Auction path="/Auction" />
