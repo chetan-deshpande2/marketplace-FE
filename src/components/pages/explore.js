@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import Select from "react-select";
-import ColumnNew from "../components/ColumnNew";
-import Footer from "../components/footer";
-import { createGlobalStyle } from "styled-components";
-import { connect } from "react-redux";
-import { exploreSaleTypeUpdated } from "../../redux/actions";
-import "../../assets/changes.css";
+// eslint-disable array-callback-return
+
+import React, { useState } from 'react';
+import Select from 'react-select';
+import Footer from '../components/footer';
+import { createGlobalStyle } from 'styled-components';
+import { connect } from 'react-redux';
+import GeneralCollectionsPage from '../components/GenralCollectionPage';
+import CarouselNew from '../components/CarouselNew';
+
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
     background: #403f83;
@@ -43,11 +45,11 @@ const GlobalStyles = createGlobalStyle`
 const customStyles = {
   option: (base, state) => ({
     ...base,
-    background: "#fff",
-    color: "#333",
-    borderRadius: state.isFocused ? "0" : 0,
-    "&:hover": {
-      background: "#eee",
+    background: '#fff',
+    color: '#333',
+    borderRadius: state.isFocused ? '0' : 0,
+    '&:hover': {
+      background: '#eee',
     },
   }),
   menu: (base) => ({
@@ -66,80 +68,23 @@ const customStyles = {
 };
 
 const options = [
-  { value: "All categories", label: "All categories" },
-  { value: "Art", label: "Art" },
-  { value: "Music", label: "Music" },
-  { value: "Domain Names", label: "Domain Names" },
-];
-const options1 = [
-  { value: "All Sale Type", label: "All Sale Type" },
-  { value: "Buy Now", label: "Buy Now" },
-  { value: "On Auction", label: "On Auction" },
-  { value: "Floor Price Bid", label: "Floor Price Bid" },
-];
-const options2 = [
-  { value: "All Items", label: "All Items" },
-  { value: "Single Items", label: "Single Items" },
-  { value: "Multiple Items", label: "Multiple Items" },
+  { value: 'All Collections', label: 'All Collections' },
+  { value: 'Single Collections', label: 'Single Collections' },
+  { value: 'Multiple Collections', label: 'Multiple Collections' },
 ];
 
-const Explore = (props) => {
-  const [saleType, setSaleType] = useState(-1);
+const ExploreCollections = (props) => {
   const [nftType, setNftType] = useState(-1);
-  const [searchedData, setSearchedData] = useState("");
-
-  useEffect(() => {
-    props.dispatch(
-      exploreSaleTypeUpdated({
-        exploreSaleType: saleType,
-      })
-    );
-  }, [saleType]);
-
-  const handleSaleTypeChange = (e) => {
-    console.log("ee", e);
-
-    console.log("valuee", e.value);
-    if (e.value === "All Sale Type") {
-      setSaleType(-1);
-      props.dispatch(
-        exploreSaleTypeUpdated({
-          exploreSaleType: -1,
-        })
-      );
-    } else if (e.value === "Buy Now") {
-      setSaleType(0);
-      props.dispatch(
-        exploreSaleTypeUpdated({
-          exploreSaleType: 0,
-        })
-      );
-    } else if (e.value === "On Auction") {
-      setSaleType(1);
-      props.dispatch(
-        exploreSaleTypeUpdated({
-          exploreSaleType: 1,
-        })
-      );
-    } else if (e.value === "Floor Price Bid") {
-      setSaleType(2);
-      props.dispatch(
-        exploreSaleTypeUpdated({
-          exploreSaleType: 2,
-        })
-      );
-    }
-  };
+  const [searchedData, setSearchedData] = useState('');
+  const [searchBtnClick, setSearchBtnClick] = useState(false);
+  const [newItemFilter, setNewItemFilter] = useState('Buy Now');
 
   const handleNftTypeChange = (e) => {
-    console.log("ee", e);
-
-    console.log("valuee", e.value);
-    if (e.value === "All Items") {
+    if (e.value === 'All Collections') {
       setNftType(-1);
-    } else if (e.value === "Single Items") {
+    } else if (e.value === 'Single Collections') {
       setNftType(1);
-    } else if (e.value === "Multiple Items") {
+    } else if (e.value === 'Multiple Collections') {
       setNftType(2);
     }
   };
@@ -147,13 +92,14 @@ const Explore = (props) => {
   const handleSearch = (e) => {
     setSearchedData(e.target.value);
   };
+
   return (
     <div>
       <GlobalStyles />
 
       <section
         className="jumbotron breadcumb no-bg"
-        style={{ backgroundImage: `url(${"./img/background/subheader.jpg"})` }}
+        style={{ backgroundImage: `url(${'./img/background/subheader.jpg'})` }}
       >
         <div className="mainbreadcumb">
           <div className="container">
@@ -170,55 +116,65 @@ const Explore = (props) => {
         <div className="row">
           <div className="col-lg-12">
             <div className="items_filter">
-              <form
-                className="row form-dark"
-                id="form_quick_search"
-                name="form_quick_search"
-              >
+              <div className="row form-dark" id="form_quick_search" name="form_quick_search">
                 <div className="col">
                   <input
                     className="form-control"
                     id="name_1"
                     name="name_1"
-                    placeholder="search item here..."
+                    placeholder="Search Collections Here..."
                     type="text"
-                  />{" "}
-                  <button id="btn-submit">
+                    value={searchedData}
+                    autocomplete="off"
+                    onChange={(e) => {
+                      handleSearch(e);
+                    }}
+                  />{' '}
+                  <button
+                    id="btn-submit"
+                    onClick={() => {
+                      setSearchBtnClick(!searchBtnClick);
+                    }}
+                  >
                     <i className="fa fa-search bg-color-secondary"></i>
                   </button>
                   <div className="clearfix"></div>
                 </div>
-              </form>
-              <div className="dropdownSelect one">
+              </div>
+              {/* <div className="dropdownSelect one">
                 <Select
                   styles={customStyles}
                   menuContainerStyle={{ zIndex: 999 }}
                   defaultValue={options[0]}
                   options={options}
                 />
-              </div>
-              <div className="dropdownSelect two">
-                <Select
-                  styles={customStyles}
-                  defaultValue={options1[0]}
-                  options={options1}
-                />
-              </div>
+              </div> */}
+
               <div className="dropdownSelect three">
                 <Select
                   styles={customStyles}
-                  defaultValue={options2[0]}
-                  options={options2}
+                  defaultValue={options[0]}
+                  options={options}
+                  onChange={(e) => handleNftTypeChange(e)}
                 />
               </div>
             </div>
           </div>
         </div>
-        <ColumnNew
+        {/* <GeneralCollectionsPage
+          isAllCollections={true}
+          isERC721={nftType !== '' ? (nftType === 1 ? true : nftType === 2 ? false : '') : ''}
+          searchedData={searchedData}
+        /> */}
+        <div className="col-lg-12">
+          <CarouselNew newItemFilter={newItemFilter} />
+        </div>
+        {/* <ExploreItems
           saleType={saleType}
           nftType={nftType}
           searchedData={searchedData}
-        />
+          searchBtnClick={searchBtnClick}
+        /> */}
       </section>
 
       <Footer />
@@ -234,4 +190,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(Explore);
+export default connect(mapStateToProps)(ExploreCollections);

@@ -1071,6 +1071,7 @@ export const GetHotCollections = async (data) => {
 };
 
 export const UpdateTokenCount = async (data) => {
+  console.log(data)
   const requestOptions = {
     method: "POST",
     headers: {

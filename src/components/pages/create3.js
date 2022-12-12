@@ -1288,8 +1288,8 @@ const Create3 = (props) => {
                                       <button
                                         id="submit"
                                         className="btn-main create-collection-btn"
-                                        onClick={async () => {
-                                          await handleCollectionCreate();
+                                        onClick={() => {
+                                          handleCollectionCreate();
                                         }}
                                       >
                                         Create Collection

@@ -58,16 +58,6 @@ const Home1 = () => {
         <Particle />
         <SliderMainParticle />
       </section>
-      {/* <section className="container">
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="text-center">
-              <h2>Popular Items</h2> <div className="small-border"></div>
-            </div>
-          </div>
-        </div>
-        <ColumnNew />
-      </section> */}
       <section className="container no-bottom">
         <div className="row">
           <div className="col-lg-12 ">
