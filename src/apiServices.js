@@ -1,6 +1,6 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 
-const REACT_APP_API_BASE_URL = "http://192.168.1.11:3000/api/v1";
+const REACT_APP_API_BASE_URL = 'http://192.168.1.11:3000/api/v1';
 // const REACT_APP_API_BASE_URL = "http://localhost:3000/api/v1";
 
 export const exportInstance = async (SCAddress, ABI) => {
@@ -17,21 +17,16 @@ export const exportInstance = async (SCAddress, ABI) => {
 
 export const Register = async (account) => {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       sWalletAddress: account,
     }),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/auth/register",
-      requestOptions
-    );
+    let response = await fetch(REACT_APP_API_BASE_URL + '/auth/register', requestOptions);
 
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const data = isJson && (await response.json());
     console.log(data);
 
@@ -45,27 +40,22 @@ export const Register = async (account) => {
     //   this.setState({ postId: data.id });
 
     // this.setState({ errorMessage: error.toString() });
-    console.error("There was an error!", error);
+    console.error('There was an error!', error);
   }
 };
 
 export const Login = async (account) => {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       sWalletAddress: account,
     }),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/auth/login",
-      requestOptions
-    );
+    let response = await fetch(REACT_APP_API_BASE_URL + '/auth/login', requestOptions);
 
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const data = isJson && (await response.json());
     console.log(data);
     // check for error response
@@ -74,72 +64,60 @@ export const Login = async (account) => {
       const error = (data && data.message) || response.status;
       return Promise.reject(error);
     }
-    console.log("token", data.token);
-    localStorage.setItem("Authorization", data.token);
+    console.log('token', data.token);
+    localStorage.setItem('Authorization', data.token);
     return data.token;
     //   this.setState({ postId: data.id });
   } catch (error) {
     // this.setState({ errorMessage: error.toString() });
-    console.error("There was an error!", error);
+    console.error('There was an error!', error);
   }
 };
 
 export const Logout = async () => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: getHeaders(),
     },
   };
-  const response = await fetch(
-    REACT_APP_API_BASE_URL + "/auth/Logout",
-    requestOptions
-  );
+  const response = await fetch(REACT_APP_API_BASE_URL + '/auth/Logout', requestOptions);
 
-  const isJson = response.headers
-    .get("content-type")
-    ?.includes("application/json");
+  const isJson = response.headers.get('content-type')?.includes('application/json');
 
   const data = isJson && (await response.json());
   console.log(data);
 
-  localStorage.removeItem("Authorization", data.token);
+  localStorage.removeItem('Authorization', data.token);
 };
 
 export const getProfile = async () => {
-  const response = await fetch(REACT_APP_API_BASE_URL + "/user/profile", {
+  const response = await fetch(REACT_APP_API_BASE_URL + '/user/profile', {
     headers: { Authorization: getHeaders() },
   });
-  const isJson = response.headers
-    .get("content-type")
-    ?.includes("application/json");
+  const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson && (await response.json());
   console.log(data);
   return data;
 };
 
 export const getHeaders = () => {
-  let t = localStorage.getItem("Authorization");
-  return t && t !== undefined ? t : "";
+  let t = localStorage.getItem('Authorization');
+  return t && t !== undefined ? t : '';
 };
 
 export const checkuseraddress = async (account) => {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       sWalletAddress: account,
     }),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/auth/checkuseraddress",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/auth/checkuseraddress', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const data = isJson && (await response.json());
     console.log(data.message);
     return data;
@@ -151,20 +129,15 @@ export const checkuseraddress = async (account) => {
 export const updateProfile = async (account, data) => {
   console.log(account, data);
   const requestOptions = {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      Authorization: localStorage.getItem("Authorization"),
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/user/updateProfile",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/user/updateProfile', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.message;
@@ -175,21 +148,16 @@ export const updateProfile = async (account, data) => {
 
 export const Follow = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify({ id: data }),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/user/follow",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/user/follow', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.message;
   } catch (err) {
@@ -201,26 +169,21 @@ export const GetAllUserDetails = async () => {
   let searchData = {
     length: 8,
     start: 0,
-    sTextsearch: "",
-    sSellingType: "",
-    sSortingType: "Recently Added",
+    sTextsearch: '',
+    sSellingType: '',
+    sSortingType: 'Recently Added',
   };
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       // Authorization: localStorage.getItem("Authorization"),
     },
     body: JSON.stringify(searchData),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/user/allDetails",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/user/allDetails', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -230,21 +193,16 @@ export const GetAllUserDetails = async () => {
 
 export const GetIndividualAuthorDetail = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      // Authorization: localStorage.getItem("Authorization"),
     },
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/user/profileDetail",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/user/profileDetail', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
 
@@ -257,20 +215,15 @@ export const GetIndividualAuthorDetail = async (data) => {
 
 export const getUsersCollections = async () => {
   const requestOptions = {
-    method: "GET",
+    method: 'GET',
     headers: {
-      Authorization: localStorage.getItem("Authorization"),
+      Authorization: localStorage.getItem('Authorization'),
     },
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/collection/collectionList",
-      requestOptions
-    );
+    let response = await fetch(REACT_APP_API_BASE_URL + '/collection/collectionList', requestOptions);
 
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     if (datas) return datas;
     return [];
@@ -292,20 +245,15 @@ export const getNFTList = async () => {
   //   sGenre: [],
   // };
   const requestOptions = {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getAllNfts",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getAllNfts', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -316,21 +264,16 @@ export const getNFTList = async () => {
 
 export const createCollection = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      Authorization: localStorage.getItem("Authorization"),
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: data,
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/collection/createCollection",
-      requestOptions
-    );
-    console.log("response", response);
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/collection/createCollection', requestOptions);
+    console.log('response', response);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.message;
@@ -341,16 +284,11 @@ export const createCollection = async (data) => {
 
 export const getAllCollections = async () => {
   const requestOptions = {
-    method: "GET",
+    method: 'GET',
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getCollections",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getCollections', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -360,18 +298,13 @@ export const getAllCollections = async () => {
 
 export const getCollectionWiseList = async (data) => {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/allCollectionWiseList",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/allCollectionWiseList', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -383,23 +316,18 @@ export const Like = async () => {};
 
 export const getOrderDetails = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/order/getOrder",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/order/getOrder', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log("get order data is--->", datas);
+    console.log('get order data is--->', datas);
     return datas.data;
   } catch (err) {
     return err;
@@ -408,21 +336,16 @@ export const getOrderDetails = async (data) => {
 
 export const GetOnSaleItems = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getOnSaleItems",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getOnSaleItems', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas.results);
     return datas.results;
@@ -433,22 +356,17 @@ export const GetOnSaleItems = async (data) => {
 
 export const GetNftDetails = async (id) => {
   const requestOptions = {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   };
 
   try {
     console.log(id);
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/viewnft/" + id,
-      requestOptions
-    );
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/viewnft/' + id, requestOptions);
 
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas;
@@ -461,22 +379,17 @@ export const GetNftDetails = async (id) => {
 export const SetNFTOrder = async (data) => {
   try {
     const requestOptions = {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        Authorization: localStorage.getItem("Authorization"),
-        "Content-Type": "application/json",
+        Authorization: localStorage.getItem('Authorization'),
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     };
 
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/setNFTOrder",
-      requestOptions
-    );
-    console.log("record updated", response);
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/setNFTOrder', requestOptions);
+    console.log('record updated', response);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -487,23 +400,18 @@ export const SetNFTOrder = async (data) => {
 
 export const UpdateOrderStatus = async (data) => {
   const requestOptions = {
-    method: "PUT",
+    method: 'PUT',
 
     headers: {
-      Authorization: localStorage.getItem("Authorization"),
-      "Content-Type": "application/json",
+      Authorization: localStorage.getItem('Authorization'),
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/order/updateOrder",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/order/updateOrder', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -513,23 +421,18 @@ export const UpdateOrderStatus = async (data) => {
 
 export const LikeNft = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
 
     headers: {
-      Authorization: localStorage.getItem("Authorization"),
-      "Content-Type": "application/json",
+      Authorization: localStorage.getItem('Authorization'),
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/like",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/like', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -539,22 +442,18 @@ export const LikeNft = async (data) => {
 
 export const GetCollectionsByAddress = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getCollectionDetailsByAddress/",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getCollectionDetailsByAddress/', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
+    console.log(data);
     return datas.data;
   } catch (err) {
     return err;
@@ -563,21 +462,16 @@ export const GetCollectionsByAddress = async (data) => {
 
 export const GetCollectionsById = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getCollectionDetailsById/",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getCollectionDetailsById/', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -587,21 +481,16 @@ export const GetCollectionsById = async (data) => {
 
 export const GetMyNftList = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getNFTList",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getNFTList', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -612,22 +501,17 @@ export const GetMyNftList = async (data) => {
 
 export const GetMyCollectionsList = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/myCollectionList",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/myCollectionList', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -637,21 +521,16 @@ export const GetMyCollectionsList = async (data) => {
 
 export const GetMyLikedNft = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getUserLikedNfts",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getUserLikedNfts', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.results;
@@ -662,23 +541,18 @@ export const GetMyLikedNft = async (data) => {
 
 export const GetMyOnSaleNft = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getUserOnSaleNfts",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getUserOnSaleNfts', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log("dataaasss on sale", datas);
+    console.log('dataaasss on sale', datas);
     return datas.results;
   } catch (err) {
     return err;
@@ -686,25 +560,21 @@ export const GetMyOnSaleNft = async (data) => {
 };
 
 export const GetCollectionsNftList = async (data, owned = false) => {
-  console.log("Data", data);
+  console.log('Data', data);
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
   try {
     let response = await fetch(
-      owned
-        ? REACT_APP_API_BASE_URL + "/nft/getCollectionNFT"
-        : REACT_APP_API_BASE_URL + "/nft/getCollectionNFTOwned",
-      requestOptions
+      owned ? REACT_APP_API_BASE_URL + '/nft/getCollectionNFT' : REACT_APP_API_BASE_URL + '/nft/getCollectionNFTOwned',
+      requestOptions,
     );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -713,22 +583,17 @@ export const GetCollectionsNftList = async (data, owned = false) => {
 };
 
 export const GetSearchedNft = async (data, owned = false) => {
-  console.log("Data", data);
+  console.log('Data', data);
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/getSearchedNft",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getSearchedNft', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -737,23 +602,18 @@ export const GetSearchedNft = async (data, owned = false) => {
 };
 
 export const updateBidNft = async (data) => {
-  console.log("dataaa", data);
+  console.log('dataaa', data);
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/bid/updateBidNft",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/bid/updateBidNft', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas;
   } catch (err) {
@@ -762,23 +622,18 @@ export const updateBidNft = async (data) => {
 };
 
 export const fetchBidNft = async (data) => {
-  console.log("Data", data);
+  console.log('Data', data);
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/bid/fetchBidNft",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/bid/fetchBidNft', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas;
@@ -797,21 +652,16 @@ export const GetOrdersByNftId = async (data) => {
   // }
 
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/order/getOrdersByNftId",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/order/getOrdersByNftId', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas.AllOrders);
     return datas.AllOrders;
@@ -822,25 +672,20 @@ export const GetOrdersByNftId = async (data) => {
 
 export const createNft = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      Authorization: localStorage.getItem("Authorization"),
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: data,
   };
   try {
-    console.log("create nft");
+    console.log('create nft');
     // for (var value of data.values()) {
     //   console.log(value);
     // }
 
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/create",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/create', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
 
@@ -852,25 +697,20 @@ export const createNft = async (data) => {
 
 export const createOrder = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      Authorization: localStorage.getItem("Authorization"),
-      "Content-Type": "application/json",
+      Authorization: localStorage.getItem('Authorization'),
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    console.log("put on marketplace");
+    console.log('put on marketplace');
 
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/order/createOrder",
-      requestOptions
-    );
+    let response = await fetch(REACT_APP_API_BASE_URL + '/order/createOrder', requestOptions);
 
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
 
@@ -882,24 +722,19 @@ export const createOrder = async (data) => {
 
 export const DeleteOrder = async (data) => {
   const requestOptions = {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
 
   try {
-    console.log("remove");
+    console.log('remove');
 
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/order/deleteOrder",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/order/deleteOrder', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -915,25 +750,20 @@ export const TransferNfts = async (data) => {
   //     "page": 1,
   //     "limit": 4
   // }
-  console.log("transfer nft");
+  console.log('transfer nft');
 
   const requestOptions = {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/nft/transferNfts",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/transferNfts', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -942,24 +772,19 @@ export const TransferNfts = async (data) => {
 };
 
 export const createBidNft = async (data) => {
-  console.log("place a bid");
+  console.log('place a bid');
 
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/bid/createBidNft",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/bid/createBidNft', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -968,24 +793,19 @@ export const createBidNft = async (data) => {
 };
 
 export const acceptBid = async (data) => {
-  console.log("accept bid");
+  console.log('accept bid');
 
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("Authorization"),
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('Authorization'),
     },
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/bid/acceptBidNft",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/bid/acceptBidNft', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -996,21 +816,16 @@ export const acceptBid = async (data) => {
 
 export const InsertHistory = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/history/insert",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/history/insert', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.results;
@@ -1022,21 +837,16 @@ export const InsertHistory = async (data) => {
 export const GetHistory = async (data) => {
   console.log(data);
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + "/history/fetchHistory",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + '/history/fetchHistory', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas.results);
     return datas.results;
@@ -1047,21 +857,16 @@ export const GetHistory = async (data) => {
 
 export const GetHotCollections = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      process.env.REACT_APP_API_BASE_URL + "/nft/getHotCollections",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(process.env.REACT_APP_API_BASE_URL + '/nft/getHotCollections', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -1071,21 +876,16 @@ export const GetHotCollections = async (data) => {
 };
 
 export const UpdateTokenCount = async (data) => {
-  console.log(data)
+  console.log(data);
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      Authorization: window.sessionStorage.getItem("Authorization"),
+      Authorization: window.sessionStorage.getItem('Authorization'),
     },
   };
   try {
-    let response = await fetch(
-      REACT_APP_API_BASE_URL + `/collection/updateCollectionToken/${data}`,
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(REACT_APP_API_BASE_URL + `/collection/updateCollectionToken/${data}`, requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -1096,21 +896,16 @@ export const UpdateTokenCount = async (data) => {
 
 export const GetOwnedNftList = async (data) => {
   const requestOptions = {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   };
 
   try {
-    let response = await fetch(
-      process.env.REACT_APP_API_BASE_URL + "/nft/getOwnedNFTList",
-      requestOptions
-    );
-    const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+    let response = await fetch(process.env.REACT_APP_API_BASE_URL + '/nft/getOwnedNFTList', requestOptions);
+    const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.results;

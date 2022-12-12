@@ -1535,13 +1535,13 @@ const ItemDetails = function (props) {
       <div className="col item_author">
         <div className="p_list">
           <div className="p_list_pp">
-            <span>
+            {/* <span>
               <img
                 className="lazy"
                 src={authorDetails && authorDetails.sProfilePicUrl ? authorDetails.sProfilePicUrl : Avatar}
                 alt=""
               />
-            </span>
+            </span> */}
           </div>
           <div className="p_list_info bidsList">
             <div className="row">
@@ -1585,6 +1585,7 @@ const ItemDetails = function (props) {
                         putOnMarketplaceLoader ? 'spn-disabled btn-main btn-btnTransfer' : 'btn-main btn-btnTransfer'
                       }
                       onClick={async () => {
+                        console.log(nftDetails);
                         let res1 = await handleNetworkSwitch(currentUser);
                         setCookie('balance', res1, { path: '/' });
                         if (res1 === false) return;
@@ -2014,7 +2015,7 @@ const ItemDetails = function (props) {
                                 tokenId: nftDetails.nTokenID,
                                 erc721: nftDetails.nType === 1,
                               };
-
+                              console.log(res)
                               let res = await putOnMarketplace(
                                 currentUser ? currentUser : '',
                                 orderData,
@@ -2103,77 +2104,76 @@ const ItemDetails = function (props) {
                     </div>
                   )}
 
-                  {/* {openMenu1 && (
+                  {openMenu1 && (
                     <div className="tab-2 onStep fadeIn">
-                      {loading
-                        ? showProcessingModal('Loading')
-                        : isOwned && haveOrder === false && orders !== 'null'
-                          ? PutOnMarketPlace(ownedQuantity)
-                          : orders != 'null' && orders?.length >= 1 && !isEmpty(orders[0])
-                            ? orders.map((order, key) => {
-                              if (order.oStatus === 1) {
-                                if (order.oType === 0) {
-                                  if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
-                                    return RemoveFromSale(
-                                      order?.oSellerWalletAddress,
-                                      convertToEth(order?.oPrice?.$numberDecimal),
-                                      order._id,
-                                      order.oCreated,
-                                      order.validUpto,
-                                      key,
-                                      order.oQuantity,
-                                      order.quantity_sold,
-                                    );
-                                  } else {
-                                    return buyNow(
-                                      order.oSellerWalletAddress,
-                                      convertToEth(order.oPrice.$numberDecimal),
-                                      order._id,
-                                      order.oCreated,
-                                      key,
-                                      order.oQuantity - order.quantity_sold,
-                                      order.oQuantity,
-                                      order.oType,
-                                    );
-                                  }
-                                } else if (order.oType === 1) {
-                                  if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
-                                    return RemoveFromAuction(
-                                      order.oSellerWalletAddress,
-                                      convertToEth(order.oPrice.$numberDecimal),
-                                      order._id,
-                                      order.oCreated,
-                                      key,
-                                      order.oQuantity,
-                                      order.auction_end_date,
-                                      order.quantity_sold,
-                                      order.paymentTokenData,
-                                      order.oValidUpto,
-                                    );
-                                  } else {
-                                    return placeABid(
-                                      order.oSellerWalletAddress,
-                                      convertToEth(order.oPrice.$numberDecimal),
-                                      order._id,
-                                      order.oCreated,
-                                      order.oValidUpto,
-                                      key,
-                                      order.auction_end_date,
-                                      order.oQuantity,
-                                      order.paymentTokenData,
-                                      order.oSeller,
-                                      order.quantity_sold,
-                                      order.isUserHaveActiveBid,
-                                    );
-                                  }
+                      {true
+                        ? PutOnMarketPlace(ownedQuantity)
+                        : orders != 'null' && orders?.length >= 1 && !isEmpty(orders[0])
+                        ? orders.map((order, key) => {
+                            if (order.oStatus === 1) {
+                              if (order.oType === 0) {
+                                if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
+                                  return RemoveFromSale(
+                                    order?.oSellerWalletAddress,
+                                    convertToEth(order?.oPrice?.$numberDecimal),
+                                    order._id,
+                                    order.oCreated,
+                                    order.validUpto,
+                                    key,
+                                    order.oQuantity,
+                                    order.quantity_sold,
+                                  );
+                                } else {
+                                  return buyNow(
+                                    order.oSellerWalletAddress,
+                                    convertToEth(order.oPrice.$numberDecimal),
+                                    order._id,
+                                    order.oCreated,
+                                    key,
+                                    order.oQuantity - order.quantity_sold,
+                                    order.oQuantity,
+                                    order.oType,
+                                  );
+                                }
+                              } else if (order.oType === 1) {
+                                if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
+                                  return RemoveFromAuction(
+                                    order.oSellerWalletAddress,
+                                    convertToEth(order.oPrice.$numberDecimal),
+                                    order._id,
+                                    order.oCreated,
+                                    key,
+                                    order.oQuantity,
+                                    order.auction_end_date,
+                                    order.quantity_sold,
+                                    order.paymentTokenData,
+                                    order.oValidUpto,
+                                  );
+                                } else {
+                                  return placeABid(
+                                    order.oSellerWalletAddress,
+                                    convertToEth(order.oPrice.$numberDecimal),
+                                    order._id,
+                                    order.oCreated,
+                                    order.oValidUpto,
+                                    key,
+                                    order.auction_end_date,
+                                    order.oQuantity,
+                                    order.paymentTokenData,
+                                    order.oSeller,
+                                    order.quantity_sold,
+                                    order.isUserHaveActiveBid,
+                                  );
                                 }
                               }
                             }
                             return '';
                           })
-                        : !isOwned && orders !== 'null'}
+                        : !isOwned && orders !== 'null'
+                        ? NotForSale(0)
+                        : ''}
                     </div>
-                  )} */}
+                  )}
 
                   {openMenu2 && (
                     <div className="tab-1 onStep fadeIn">

@@ -693,7 +693,8 @@ const CreateSingle = (props) => {
               gasLimit: 9000000,
               value: 0,
             };
-            let mintRes = await NFTcontract.mint(currentUser, 2524, options);
+            console.log(nextId);
+            let mintRes = await NFTcontract.mint(currentUser, nextId, options);
             res1 = await mintRes.wait();
             if (res1.status === 0) {
               NotificationManager.error('Transaction failed', '', 800);
@@ -817,17 +818,16 @@ const CreateSingle = (props) => {
           console.log('insde )');
           _deadline = GENERAL_TIMESTAMP;
           _auctionEndDate = GENERAL_DATE;
-          // _price = ethers.utils.parseEther().toString();
-          _price = '2000000000';
+          _price = ethers.utils.parseEther(price.toString()).toString();
         } else if (chosenType === 1) {
           let _endTime = new Date(endTime).valueOf() / 1000;
           _auctionEndDate = endTime;
           _deadline = _endTime;
-          _price = ethers.utils.parseEther(minimumBid).toString();
+          _price = ethers.utils.parseEther(minimumBid.toString()).toString();
         } else if (chosenType === 2) {
           _deadline = GENERAL_TIMESTAMP;
           _auctionEndDate = GENERAL_DATE;
-          // _price = ethers.utils.parseEther(minimumBid).toString();
+          _price = ethers.utils.parseEther(minimumBid.toString()).toString();
         }
 
         if (isPutOnMarketplace) {
@@ -846,15 +846,8 @@ const CreateSingle = (props) => {
             salt,
           ];
 
-          // console.log(
-          //   "token uri",
-          //   NFTcontract,
-          //   nextId,
-          //   currentUser,
-          //   `https://ipfs.io/ipfs/${res.data.nHash}`
-          // );
-
           console.log('inside BEfore Func');
+          console.log(nextId);
 
           let tokenUri = await NFTcontract.setCustomTokenUri(nextId, '0x00', {
             from: currentUser,
