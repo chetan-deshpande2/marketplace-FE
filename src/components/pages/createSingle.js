@@ -786,10 +786,10 @@ const CreateSingle = (props) => {
             action: 'Creation',
             actionMeta: 'Default',
             message: `By ${profile && profile.user.sUserName
-                ? profile.sUserName
-                : profile.user.sWalletAddress
-                  ? profile.user.sWalletAddress.slice(0, 3) + '...' + profile.user.sWalletAddress.slice(39, 42)
-                  : ''
+              ? profile.sUserName
+              : profile.user.sWalletAddress
+                ? profile.user.sWalletAddress.slice(0, 3) + '...' + profile.user.sWalletAddress.slice(39, 42)
+                : ''
               } `,
             created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           };
@@ -1066,7 +1066,7 @@ const CreateSingle = (props) => {
                                       <span className="sub-heading">Upload Collection Cover</span>
                                       <div className="fileUploader">
                                         <div className="row align-items-center justify-content-center">
-                                          <div className="col-md-6 col-sm-12 uploadImg-container d-flex justify-content-center align-items-center">
+                                          <div className="col-md-6 col-sm-12 uploadImg-container d-flex justify-content-center align-items-center mb-10">
                                             <div className='img-upload-box'>
                                               {!image ? (
                                                 // eslint-disable-next-line jsx-a11y/img-redundant-alt
@@ -1081,7 +1081,7 @@ const CreateSingle = (props) => {
                                                   src={URL.createObjectURL(image)}
                                                   id="get_file_2"
                                                   className="collection_cover_preview img-fluid"
-                                                  style={{height: '100%', borderRadius:'8px'}}
+                                                  style={{ height: '100%', borderRadius: '8px' }}
                                                   alt=""
                                                   onClick={() => fileRefCollection.current.click()}
                                                 />
@@ -1090,34 +1090,37 @@ const CreateSingle = (props) => {
 
                                           </div>
 
-                                          <div className="d-create-file col-md-6 uploadImg-right modal-file-upload">
-                                            <p id="collection_file_name">
-                                              We recommend an image of at least 450x450. PNG, JPG, GIF or WEBP. Max
-                                              {MAX_FILE_SIZE}mb.
-                                            </p>
-                                            {files && files.length > 0 ? <p>{files[0].name}</p> : ''}
-                                            <div className="browse m-0 pl-0">
-                                              {/* <input
+                                          <div className=" col-md-6 uploadImg-right ">
+                                            <div className='d-create-file modal-file-upload'>
+                                              <p id="collection_file_name">
+                                                We recommend an image of at least 450x450. PNG, JPG, GIF or WEBP. Max
+                                                {MAX_FILE_SIZE}mb.
+                                              </p>
+                                              {files && files.length > 0 ? <p>{files[0].name}</p> : ''}
+                                              <div className="browse m-0 pl-0">
+                                                {/* <input
                                                 type="button"
                                                 id="get_file"
                                                 className="btn-main browse-btn"
                                                 value="Browse"
                                                 onClick={() => fileRefCollection.current.click()}
                                               /> */}
-                                              <label className="c-button btn-main">
-                                                Browse
-                                                <input
-                                                  id="upload_file_Upload_collection"
-                                                  type="file"
-                                                  ref={fileRefCollection}
-                                                  required
-                                                  onChange={(e) => onCollectionImgChange(e)}
-                                                />
-                                              </label>
-                                              <div className="img-size">
-                                                {files && files.length > 0 ? files[0].size / 1000000 + 'MB' : ''}
+                                                <label className="c-button btn-main">
+                                                  Browse
+                                                  <input
+                                                    id="upload_file_Upload_collection"
+                                                    type="file"
+                                                    ref={fileRefCollection}
+                                                    required
+                                                    onChange={(e) => onCollectionImgChange(e)}
+                                                  />
+                                                </label>
+                                                <div className="img-size">
+                                                  {files && files.length > 0 ? files[0].size / 1000000 + 'MB' : ''}
+                                                </div>
                                               </div>
                                             </div>
+
                                           </div>
                                         </div>
                                       </div>
