@@ -70,7 +70,7 @@
 }
 .scrollable {
   float: left;
-  width: 100%;
+  width: 95%;
   overflow-y: auto;
   height: 380px;
   scrollbar-width: thin;
@@ -92,7 +92,8 @@
 #form-create-item .de_nav {
   display: grid;
   grid-template-columns: auto auto auto auto;
-  gap: 15px;
+  /* gap: 15px; */
+  gap: 25px 0px;
 }
 .nft__item_wrap .c-previous-items {
   max-height: 200px;
@@ -122,6 +123,12 @@ footer {
 #upload_file_Upload{
   display: none;
 } */
+@media (max-width: 1199px){
+  #form-create-item .de_nav{
+    grid-template-columns: auto auto auto;
+    gap: 20px 0;
+  }
+}
 @media (max-width: 1024px) {
   .subfooter .de-flex,
   .subfooter .de-flex-col {

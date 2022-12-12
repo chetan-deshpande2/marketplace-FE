@@ -345,7 +345,7 @@ const UpdateProfile = (props) => {
                       accept=".png,.jpg,.jpeg,.gif"
                       name="myImage"
                       onChange={(e) => onImageChange(e)}
-                      className="form-control"
+                      className="form-control c-file-upload"
                     />
                   </div>
                 </div>
