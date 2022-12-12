@@ -38,6 +38,7 @@ iframe {
 } */
 .add-collection-box .d-create-file {
   padding: 30px;
+  height: 190px;
 }
 .custom-popup-box .add-collection-box {
   scrollbar-width: thin;
@@ -115,6 +116,15 @@ iframe {
   align-items: center;
   flex-direction: column;
 }
+.img-upload-box {
+  width: 100%;
+  height: 190px;
+  border: dashed 3px #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
 @media (max-width: 991px) {
   .offset-lg-1 {
     margin-left: 0;
@@ -124,6 +134,9 @@ iframe {
     flex-wrap: wrap;
     gap: 15px;
     width: 500px;
+  }
+  .spacer-single{
+    display:none;
   }
 }
 @media (max-width: 767px) {
@@ -184,5 +197,12 @@ iframe {
   }
   .padding_span img {
     max-height: 250px;
+  }
+  footer .widget {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+  }
+  footer.footer-light .subfooter {
+    margin-top: 10px;
   }
 }
