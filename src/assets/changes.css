@@ -138,6 +138,9 @@ iframe {
   .spacer-single{
     display:none;
   }
+  .custom-popup-box .add-collection-box {
+    width: 75%;
+  }
 }
 @media (max-width: 767px) {
   section {
@@ -204,5 +207,8 @@ iframe {
   }
   footer.footer-light .subfooter {
     margin-top: 10px;
+  }
+  .custom-popup-box .add-collection-box {
+    width: 90%;
   }
 }
