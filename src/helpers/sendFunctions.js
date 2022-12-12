@@ -382,7 +382,7 @@ export const putOnMarketplace = async (account, orderData) => {
       let endTime = new Date(orderData.endTime).valueOf() / 1000;
       _deadline = endTime;
       _auctionEndDate = orderData.auctionEndDate;
-      _price = ethers.utils.parseEther(orderData.minimumBid).toString();
+      _price = ethers.utils.parseEther(orderData.minimumBid.toString()).toString();
     } else if (orderData.chosenType === 2) {
       _deadline = new Date().valueOf() / 1000 + 31536000 * 10;
       _auctionEndDate = new Date(GENERAL_DATE);
