@@ -29,7 +29,7 @@ const inline = keyframes`
 const slidermainparticle = () => (
   <div className="container">
     <div className="row align-items-center">
-      <div className="col-md-6">
+      <div className="col-lg-6 col-md-12 col-sm-12">
         <div className="spacer-single"></div>
         <div className="spacer-double"></div>
         <Reveal
@@ -71,6 +71,7 @@ const slidermainparticle = () => (
           <div className="mb-sm-30"></div>
         </Reveal>
       </div>
+      <div className="col-md-6"></div>
     </div>
   </div>
 );
