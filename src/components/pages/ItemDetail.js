@@ -510,12 +510,6 @@ const ItemDetails = function (props) {
     fetch();
   }, [nftDetails, currPage]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      console.log(isOwned);
-    });
-  });
-
   // useEffect(() => {
   //   console.log(nftDetails);
   //   const fetchData = async () => {
@@ -796,11 +790,12 @@ const ItemDetails = function (props) {
           ></input>
           <button
             className="btn-main content-btn1 mt-4 btn-btnTransfer"
-            style={{ color: props.color }}
+            style={{ color: 'blanchedalmond' }}
             onClick={async () => {
-              let res1 = await handleNetworkSwitch(currentUser);
-              setCookie('balance', res1, { path: '/' });
-              if (res1 === false) return;
+              // let res1 = await handleNetworkSwitch(currentUser);
+
+              // setCookie('balance', res1, { path: '/' });
+              // if (res1 === false) return;
               setIsTransferPopup(false);
               setTransferLoader(true);
               if (!checkIfValidAddress(beneficiary)) {
@@ -821,6 +816,7 @@ const ItemDetails = function (props) {
 
               if (nftDetails) {
                 let res;
+                let haveOrder = true;
                 if (haveOrder === true) {
                   res = await handleNftTransfer(
                     nftDetails.nCollection,
@@ -1126,9 +1122,9 @@ const ItemDetails = function (props) {
                           : 'btn-main btn-removefromsale'
                       }
                       onClick={async () => {
-                        let res1 = await handleNetworkSwitch(currentUser);
-                        setCookie('balance', res1, { path: '/' });
-                        if (res1 === false) return;
+                        // let res1 = await handleNetworkSwitch(currentUser);
+                        // setCookie('balance', res1, { path: '/' });
+                        // if (res1 === false) return;
                         if (!currentUser) {
                           setNotConnectedModal(true);
 
@@ -1171,9 +1167,9 @@ const ItemDetails = function (props) {
                           transferLoader ? 'spn-disabled btn-main btn-btnTransfer' : 'btn-main btn-btnTransfer'
                         }
                         onClick={async () => {
-                          let res1 = await handleNetworkSwitch(currentUser);
-                          setCookie('balance', res1, { path: '/' });
-                          if (res1 === false) return;
+                          // let res1 = await handleNetworkSwitch(currentUser);
+                          // setCookie('balance', res1, { path: '/' });
+                          // if (res1 === false) return;
                           if (!currentUser) {
                             setNotConnectedModal(true);
 
@@ -1261,9 +1257,9 @@ const ItemDetails = function (props) {
                     <span
                       className={loading ? 'spn-disabled btn-removefromauction' : 'btn-main btn-removefromauction'}
                       onClick={async () => {
-                        let res1 = await handleNetworkSwitch(currentUser);
-                        setCookie('balance', res1, { path: '/' });
-                        if (res1 === false) return;
+                        // let res1 = await handleNetworkSwitch(currentUser);
+                        // setCookie('balance', res1, { path: '/' });
+                        // if (res1 === false) return;
                         if (!currentUser) {
                           setNotConnectedModal(true);
 
@@ -1312,9 +1308,9 @@ const ItemDetails = function (props) {
                           transferLoader ? 'spn-disabled btn-main btn-btnTransfer' : 'btn-main btn-btnTransfer'
                         }
                         onClick={async () => {
-                          let res1 = await handleNetworkSwitch(currentUser);
-                          setCookie('balance', res1, { path: '/' });
-                          if (res1 === false) return;
+                          // let res1 = await handleNetworkSwitch(currentUser);
+                          // setCookie('balance', res1, { path: '/' });
+                          // if (res1 === false) return;
                           if (!currentUser) {
                             setNotConnectedModal(true);
 
@@ -1586,15 +1582,15 @@ const ItemDetails = function (props) {
                       }
                       onClick={async () => {
                         console.log(nftDetails);
-                        let res1 = await handleNetworkSwitch(currentUser);
-                        setCookie('balance', res1, { path: '/' });
-                        if (res1 === false) return;
-                        if (!currentUser) {
-                          setNotConnectedModal(true);
-                          NotificationManager.error('Please connect your wallet', '', 800);
-                          setPutOnMarketplaceLoader(false);
-                          return;
-                        }
+                        // let res1 = await handleNetworkSwitch(currentUser);
+                        // setCookie('balance', res1, { path: '/' });
+                        // if (res1 === false) return;
+                        // if (!currentUser) {
+                        //   setNotConnectedModal(true);
+                        //   NotificationManager.error('Please connect your wallet', '', 800);
+                        //   setPutOnMarketplaceLoader(false);
+                        //   return;
+                        // }
                         setIsTransferPopup(true);
                       }}
                     >
@@ -1652,7 +1648,7 @@ const ItemDetails = function (props) {
 
       {removeFromSaleLoader ? showProcessingModal('Removing NFT from sale. Please do not refresh...') : ''}
  */}
-      {/* {isTransferPopup ? transferModal : ''}
+      {isTransferPopup ? transferModal : ''}
       {isPlaceABidPopup ? placeBidModal : ''}
       {isUnlocked ? hiddenContentModal : ''}
       {showNotConnectedModal ? (
@@ -1662,7 +1658,7 @@ const ItemDetails = function (props) {
         />
       ) : (
         ''
-      )} */}
+      )}
 
       <section className="container">
         <div className="row mt-md-5 pt-md-4">
@@ -2015,7 +2011,6 @@ const ItemDetails = function (props) {
                                 tokenId: nftDetails.nTokenID,
                                 erc721: nftDetails.nType === 1,
                               };
-                              console.log(res)
                               let res = await putOnMarketplace(
                                 currentUser ? currentUser : '',
                                 orderData,
@@ -2219,9 +2214,9 @@ const ItemDetails = function (props) {
                                                   <button
                                                     className="accept_btn mybtn"
                                                     onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
+                                                      // let res1 = await handleNetworkSwitch(currentUser);
+                                                      // setCookie('balance', res1, { path: '/' });
+                                                      // if (res1 === false) return;
                                                       if (!profile) {
                                                         return;
                                                       }
@@ -2255,9 +2250,9 @@ const ItemDetails = function (props) {
                                                   <button
                                                     className="reject_btn mybtn"
                                                     onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
+                                                      // let res1 = await handleNetworkSwitch(currentUser);
+                                                      // setCookie('balance', res1, { path: '/' });
+                                                      // if (res1 === false) return;
                                                       if (!currentUser) {
                                                         setNotConnectedModal(true);
                                                         NotificationManager.error(
@@ -2282,9 +2277,9 @@ const ItemDetails = function (props) {
                                                   <button
                                                     className="cancel_btn mybtn"
                                                     onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
+                                                      // let res1 = await handleNetworkSwitch(currentUser);
+                                                      // setCookie('balance', res1, { path: '/' });
+                                                      // if (res1 === false) return;
                                                       if (!currentUser) {
                                                         setNotConnectedModal(true);
                                                         NotificationManager.error(

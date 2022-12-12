@@ -36,12 +36,8 @@ export const getMaxAllowedDate = () => {
 };
 
 export const getTokenSymbolByAddress = (addr) => {
-  if (addr === contracts.WMATIC) {
-    return 'WMATIC';
-  } else if (addr === contracts.USDC) {
+  if (addr === contracts.WETH) {
     return 'USDC';
-  } else if (addr === contracts.USDT) {
-    return 'USDT';
   }
   return '';
 };
@@ -59,7 +55,7 @@ export const handleNetworkSwitch = async (account) => {
           },
         ],
       });
-      console.log('switched', res1);
+      console.log('switched222', res1);
       let res = await getBalance(account);
       return res;
     } catch (e) {

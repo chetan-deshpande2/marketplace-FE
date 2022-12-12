@@ -33,6 +33,7 @@ class CustomSlide extends Component {
   }
 }
 
+
 const CarouselNew = (props) => {
   const [height, setHeight] = useState('0');
   const [items, setItems] = useState([]);

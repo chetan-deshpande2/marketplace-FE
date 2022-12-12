@@ -450,11 +450,11 @@ export const GetCollectionsByAddress = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getCollectionDetailsByAddress/', requestOptions);
+    let response = await fetch(REACT_APP_API_BASE_URL + '/collection/getCollectionDetailsByAddress/', requestOptions);
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(data);
-    return datas.data;
+    return datas.collection;
   } catch (err) {
     return err;
   }
