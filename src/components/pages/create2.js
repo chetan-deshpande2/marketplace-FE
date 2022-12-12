@@ -515,51 +515,6 @@ const Create2 = (props) => {
   };
   //*=============================================
 
-  // const handleCollectionCreate = async () => {
-  //   try {
-  //     console.log(props);
-  //     if (title === '' || description === '' || image === '' || symbol === '') {
-  //       //console.log("Fill All details");
-  //       console.log('Fill Details');
-  //       return;
-  //     }
-  //     setLoading(true);
-  //     let collectionData = {
-  //       sName: title,
-  //       sDescription: description,
-  //       nftFile: image,
-  //       erc721: JSON.stringify(true),
-  //       sRoyaltyPercentage: Number(royalty) * 100,
-  //       quantity: 1,
-  //       symbol: symbol,
-  //     };
-  //     console.log('collection Data in create Single', collectionData);
-
-  //     let collectionsList = '';
-  //     try {
-  //       await handleCollectionCreation(true, collectionData, props.account?.account);
-  //       collectionsList = await getUsersCollections();
-  //       console.log(collectionsList);
-  //     } catch (e) {
-  //       setLoading(false);
-  //       return;
-  //     }
-  //     if (collectionsList) {
-  //       collectionsList = collectionsList?.filter((collection) => {
-  //         return collection.erc721 === true;
-  //       });
-  //     }
-  //     console.log('single collectionsList', collectionsList);
-  //     setCollections(collectionsList);
-  //     setLoading(false);
-  //     togglePopup();
-  //   } catch (e) {
-  //     setLoading(false);
-  //     togglePopup();
-  //     console.log(e);
-  //   }
-  // };
-
   const handleCollectionCreate = async () => {
     console.log(props);
     let res = await handleNetworkSwitch(currentUser);
@@ -803,7 +758,7 @@ const Create2 = (props) => {
               gasLimit: 9000000,
               value: 0,
             };
-            let mintRes = await NFTcontract.mint(currentUser, 100002);
+            let mintRes = await NFTcontract.mint(currentUser, 2516);
             res1 = await mintRes.wait();
             if (res1.status === 0) {
               NotificationManager.error("Transaction failed", "", 800);
@@ -927,16 +882,14 @@ const Create2 = (props) => {
         let _deadline;
         let _price;
         let _auctionEndDate;
+        console.log(chosenType, GENERAL_TIMESTAMP, GENERAL_DATE);
+
         if (chosenType === 0) {
           console.log("insde )");
-          console.log(
-            GENERAL_TIMESTAMP,
-            GENERAL_DATE,
-            ethers.utils.parseEther(price).toString()
-          );
           _deadline = GENERAL_TIMESTAMP;
           _auctionEndDate = GENERAL_DATE;
-          _price = ethers.utils.parseEther(price).toString();
+          // _price = ethers.utils.parseEther().toString();
+          _price = "2000000000";
         } else if (chosenType === 1) {
           let _endTime = new Date(endTime).valueOf() / 1000;
           _auctionEndDate = endTime;
@@ -945,7 +898,7 @@ const Create2 = (props) => {
         } else if (chosenType === 2) {
           _deadline = GENERAL_TIMESTAMP;
           _auctionEndDate = GENERAL_DATE;
-          _price = ethers.utils.parseEther(minimumBid).toString();
+          // _price = ethers.utils.parseEther(minimumBid).toString();
         }
 
         if (isPutOnMarketplace) {

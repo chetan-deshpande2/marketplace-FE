@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
-// const REACT_APP_API_BASE_URL = 'http://192.168.1.11:3000/api/v1';
-const REACT_APP_API_BASE_URL = "http://localhost:3000/api/v1";
+const REACT_APP_API_BASE_URL = "http://192.168.1.11:3000/api/v1";
+// const REACT_APP_API_BASE_URL = "http://localhost:3000/api/v1";
 
 export const exportInstance = async (SCAddress, ABI) => {
   let provider = new ethers.providers.Web3Provider(window.ethereum);
