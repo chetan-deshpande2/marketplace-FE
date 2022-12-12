@@ -46,7 +46,7 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const Home1 = () => {
+const Home = () => {
   const [newItemFilter, setNewItemFilter] = useState('Buy Now');
   const [isDropDown, setIsDropDown] = useState(false);
 
@@ -127,4 +127,4 @@ const Home1 = () => {
   );
 };
 
-export default Home1;
+export default Home;

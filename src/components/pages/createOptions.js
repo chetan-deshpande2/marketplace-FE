@@ -69,11 +69,11 @@ export default class CreateOption extends Component {
                 collectible times
               </p>
               <div className="d-flex justify-content-between custom-collection-card">
-                <Link to="/create2" className="opt-create">
+                <Link to="/createSingle" className="opt-create">
                   <img src="./img/misc/coll-single.png" alt="" />
                   <h3 className="mt-3">Single</h3>
                 </Link>
-                <Link to="/create3" className="opt-create">
+                <Link to="/createMultiple" className="opt-create">
                   <img src="./img/misc/coll-multiple.png" alt="" />
                   <h3 className="mt-3">Multiple</h3>
                 </Link>

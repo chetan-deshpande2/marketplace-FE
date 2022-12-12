@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import Clock from "../components/Clock";
-import Footer from "../components/footer";
-import { createGlobalStyle } from "styled-components";
-import $ from "jquery";
-import Loader from "../components/loader";
-import "./styles.css";
+import React, { useState, useEffect, useRef } from 'react';
+import Clock from '../components/Clock';
+import Footer from '../components/footer';
+import { createGlobalStyle } from 'styled-components';
+import $ from 'jquery';
+import Loader from '../components/loader';
 
 //*==========
-import { useCookies } from "react-cookie";
-import Avatar from "./../../assets/images/avatar5.jpg";
-import ItemNotFound from "./ItemNotFound";
+import { useCookies } from 'react-cookie';
+import Avatar from './../../assets/images/avatar5.jpg';
+import ItemNotFound from './ItemNotFound';
 import {
   createNft,
   createOrder,
@@ -18,44 +17,36 @@ import {
   InsertHistory,
   SetNFTOrder,
   exportInstance,
-} from "../../apiServices";
-import UploadImg from "../../assets/images/upload-image.jpg";
-import {
-  handleCollectionCreation,
-  handleBuyNft,
-} from "../../helpers/sendFunctions";
-import { UpdateTokenCount } from "../../apiServices";
-import {
-  getSignature,
-  checkIfCollectionNameAlreadyTaken,
-} from "../../helpers/getterFunctions";
-import { options } from "../../helpers/constants";
-import {
-  CURRENCY,
-  GENERAL_DATE,
-  GENERAL_TIMESTAMP,
-  MAX_FILE_SIZE,
-} from "../../helpers/constants";
-// import simplerERC1155ABI from '../../Config/abis/simpleERC1155.json';
-import extendedERC1155Abi from "../../Config/abis/extendedERC1155Abi.json";
-import contracts from "./../../Config/contracts";
-import { ethers } from "ethers";
-import { connect } from "react-redux";
-import { parseEther } from "ethers/lib/utils.js";
-import NotificationManager from "react-notifications/lib/NotificationManager";
-import { Row, Col } from "react-bootstrap";
-import { convertToEth } from "../../helpers/numberFormatter";
+} from '../../apiServices';
+import UploadImg from '../../assets/images/upload-image.jpg';
+import { handleCollectionCreation, handleBuyNft } from '../../helpers/sendFunctions';
+import { UpdateTokenCount } from '../../apiServices';
+import { getSignature, checkIfCollectionNameAlreadyTaken } from '../../helpers/getterFunctions';
+import { options } from '../../helpers/constants';
+import { CURRENCY, GENERAL_DATE, GENERAL_TIMESTAMP, MAX_FILE_SIZE } from '../../helpers/constants';
+
+import extendedERC721Abi from '../../Config/abis/extendedERC721Abi.json';
+import contracts from '../../Config/contracts';
+import { ethers } from 'ethers';
+import { connect } from 'react-redux';
+import { parseEther } from 'ethers/lib/utils.js';
+import NotificationManager from 'react-notifications/lib/NotificationManager';
+import { Row, Col } from 'react-bootstrap';
+import { convertToEth } from '../../helpers/numberFormatter';
 import {
   checkIfValidAddress,
   checkIfValidFileExtension,
   getMaxAllowedDate,
   getTokenSymbolByAddress,
   handleNetworkSwitch,
-} from "../../helpers/utils";
-import previewImage from "./../../assets/images/preview.jpeg";
-import { showProcessingModal } from "../../utils";
-import moment from "moment";
-import "./Create.css";
+} from '../../helpers/utils';
+import previewImage from './../../assets/images/preview.jpeg';
+import { showProcessingModal } from '../../utils';
+import moment from 'moment';
+import './Create.css';
+import './styles.css';
+
+//!=============
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -91,24 +82,24 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const Create3 = (props) => {
+const CreateSingle = (props) => {
   const [nftFiles, setNftFiles] = useState([]);
   const [isActive, setIsActive] = useState(false);
   const [isUnlock, setIsUnlock] = useState(true);
   const [files, setFiles] = useState([]);
   const [image, setImage] = useState();
-  const [title, setTitle] = useState("");
-  const [symbol, setSymbol] = useState("");
-  const [description, setDescription] = useState("");
-  const [royalty, setRoyalty] = useState("");
+  const [title, setTitle] = useState('');
+  const [symbol, setSymbol] = useState('');
+  const [description, setDescription] = useState('');
+  const [royalty, setRoyalty] = useState('');
   const [loading, setLoading] = useState(false);
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState('');
   const [collections, setCollections] = useState([]);
-  const [nftContractAddress, setNftContractAddress] = useState("");
-  const [nftImage, setNftImage] = useState("");
-  const [nftDesc, setNftDesc] = useState("");
-  const [nftTitle, setNftTitle] = useState("");
-  const [nextId, setNextId] = useState("");
+  const [nftContractAddress, setNftContractAddress] = useState('');
+  const [nftImage, setNftImage] = useState('');
+  const [nftDesc, setNftDesc] = useState('');
+  const [nftTitle, setNftTitle] = useState('');
+  const [nextId, setNextId] = useState('');
   const [profilePic, setProfilePic] = useState();
   const [isOpenForBid, setIsOpenForBid] = useState();
   const [timeLeft, setTimeLeft] = useState();
@@ -128,15 +119,12 @@ const Create3 = (props) => {
   const [quantity, setQuantity] = useState(1);
   const [salt, setSalt] = useState();
   const [isPopup, setIsPopup] = useState(false);
-  const [chosenType, setChosenType] = useState(0);
-  const [minimumBid, setMinimumBid] = useState("");
-  const [endTime, setEndTime] = useState();
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState(
-    contracts.USDT
-  );
-  const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
   const [isPutOnMarketplace, setIsPutOnMarketPlace] = useState(true);
-  const [onTimedAuction, setOnTimedAuction] = useState(false);
+  const [chosenType, setChosenType] = useState(0);
+  const [minimumBid, setMinimumBid] = useState();
+  const [endTime, setEndTime] = useState();
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState(contracts.USDT);
+  const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
 
   /************ Create NFT Popup Checks ********** */
   const [isShowPopup, setisShowPopup] = useState(false);
@@ -144,28 +132,20 @@ const Create3 = (props) => {
   const [hideRedirectPopup, sethideRedirectPopup] = useState(false);
   const [ClosePopupDisabled, setClosePopupDisabled] = useState(true);
   const [RedirectPopupDisabled, setRedirectPopupDisabled] = useState(true);
-  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState(CURRENCY);
-
   const [createdItemId, setCreatedItemId] = useState();
-
-  const [isUploadPopupClass, setisUploadPopupClass] =
-    useState("checkiconDefault");
-  const [isApprovePopupClass, setisApprovePopupClass] =
-    useState("checkiconDefault");
-  const [isMintPopupClass, setisMintPopupClass] = useState("checkiconDefault");
-  const [isRoyaltyPopupClass, setisRoyaltyPopupClass] =
-    useState("checkiconDefault");
-  const [isPutOnSalePopupClass, setisPutOnSalePopupClass] =
-    useState("checkiconDefault");
-  const [lockedContent, setLockedContent] = useState("");
+  const [isUploadPopupClass, setisUploadPopupClass] = useState('checkiconDefault');
+  const [isApprovePopupClass, setisApprovePopupClass] = useState('checkiconDefault');
+  const [isMintPopupClass, setisMintPopupClass] = useState('checkiconDefault');
+  const [isRoyaltyPopupClass, setisRoyaltyPopupClass] = useState('checkiconDefault');
+  const [isPutOnSalePopupClass, setisPutOnSalePopupClass] = useState('checkiconDefault');
+  const [lockedContent, setLockedContent] = useState('');
+  const [currentUser, setCurrentUser] = useState('');
+  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState(CURRENCY);
   const [profile, setProfile] = useState();
-  const [currentUser, setCurrentUser] = useState("");
+  const [cookies, setCookie] = useCookies(['selected_account', 'Authorization']);
   const [collectionCreation, setCollectionCreation] = useState(false);
   const [isLazyMinting, setIsLazyMinting] = useState(false);
-  const [cookies, setCookie] = useCookies([
-    "selected_account",
-    "Authorization",
-  ]);
+  const [onTimedAuction, setOnTimedAuction] = useState(false);
 
   const myRef = React.createRef();
 
@@ -175,7 +155,7 @@ const Create3 = (props) => {
   const togglePopup = () => {
     console.log(currentUser);
     if (!currentUser) {
-      NotificationManager.error("Please Connect Your Wallet", "", 800);
+      NotificationManager.error('Please Connect Your Wallet', '', 800);
       return;
     }
     setIsPopup(!isPopup);
@@ -191,11 +171,11 @@ const Create3 = (props) => {
     sethideRedirectPopup(false);
     setClosePopupDisabled(true);
     setRedirectPopupDisabled(true);
-    setisUploadPopupClass("checkiconDefault");
-    setisApprovePopupClass("checkiconDefault");
-    setisMintPopupClass("checkiconDefault");
-    setisRoyaltyPopupClass("checkiconDefault");
-    setisPutOnSalePopupClass("checkiconDefault");
+    setisUploadPopupClass('checkiconDefault');
+    setisApprovePopupClass('checkiconDefault');
+    setisMintPopupClass('checkiconDefault');
+    setisRoyaltyPopupClass('checkiconDefault');
+    setisPutOnSalePopupClass('checkiconDefault');
   }
 
   function stopCreateNFTPopup() {
@@ -212,24 +192,24 @@ const Create3 = (props) => {
   function inputPrice(event) {
     const re = /[+-]?[0-9]+\.?[0-9]*/;
     let val = event.target.value;
-    if (event.target.value === "" || re.test(event.target.value)) {
+    if (event.target.value === '' || re.test(event.target.value)) {
       const numStr = String(val);
-      if (numStr.includes(".")) {
-        if (numStr.split(".")[1].length > 8) {
+      if (numStr.includes('.')) {
+        if (numStr.split('.')[1].length > 8) {
         } else {
-          if (val.split(".").length > 2) {
-            val = val.replace(/\.+$/, "");
+          if (val.split('.').length > 2) {
+            val = val.replace(/\.+$/, '');
           }
-          if (val.length === 2 && val !== "0.") {
+          if (val.length === 2 && val !== '0.') {
             val = Number(val);
           }
           setPrice(val);
         }
       } else {
-        if (val.split(".").length > 2) {
-          val = val.replace(/\.+$/, "");
+        if (val.split('.').length > 2) {
+          val = val.replace(/\.+$/, '');
         }
-        if (val.length === 2 && val !== "0.") {
+        if (val.length === 2 && val !== '0.') {
           val = Number(val);
         }
         setPrice(val);
@@ -240,24 +220,24 @@ const Create3 = (props) => {
   function inputPriceAuction(event) {
     const re = /[+-]?[0-9]+\.?[0-9]*/;
     let val = event.target.value;
-    if (event.target.value === "" || re.test(event.target.value)) {
+    if (event.target.value === '' || re.test(event.target.value)) {
       const numStr = String(val);
-      if (numStr.includes(".")) {
-        if (numStr.split(".")[1].length > 8) {
+      if (numStr.includes('.')) {
+        if (numStr.split('.')[1].length > 8) {
         } else {
-          if (val.split(".").length > 2) {
-            val = val.replace(/\.+$/, "");
+          if (val.split('.').length > 2) {
+            val = val.replace(/\.+$/, '');
           }
-          if (val.length === 2 && val !== "0.") {
+          if (val.length === 2 && val !== '0.') {
             val = Number(val);
           }
           setMinimumBid(val);
         }
       } else {
-        if (val.split(".").length > 2) {
-          val = val.replace(/\.+$/, "");
+        if (val.split('.').length > 2) {
+          val = val.replace(/\.+$/, '');
         }
-        if (val.length === 2 && val !== "0.") {
+        if (val.length === 2 && val !== '0.') {
           val = Number(val);
         }
         setMinimumBid(val);
@@ -269,18 +249,14 @@ const Create3 = (props) => {
     var nftFiles = e.target.files;
     var filesArr = Array.prototype.slice.call(nftFiles);
     var file = e.target.files[0];
-    if (
-      !checkIfValidFileExtension(file, ["jpg", "jpeg", "gif", "png", "webp"])
-    ) {
-      NotificationManager.error("This file type not supported", "", 800);
+    if (!checkIfValidFileExtension(file, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
+      NotificationManager.error('This file type not supported', '', 800);
       return;
     }
     if (file.size / 1000000 > MAX_FILE_SIZE)
-      NotificationManager.warning(
-        `File size should be less than ${MAX_FILE_SIZE} MB`
-      );
+      NotificationManager.warning(`File size should be less than ${MAX_FILE_SIZE} MB`);
 
-    document.getElementById("file_name").style.display = "none";
+    document.getElementById('file_name').style.display = 'none';
     setNftFiles([...nftFiles, ...filesArr]);
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
@@ -308,19 +284,13 @@ const Create3 = (props) => {
     var files = e.target.files;
     var filesArr = Array.prototype.slice.call(files);
     var file = e.target.files[0];
-    if (
-      !checkIfValidFileExtension(file, ["jpg", "jpeg", "gif", "png", "webp"])
-    ) {
-      NotificationManager.error("This file type not supported", "", 800);
+    if (!checkIfValidFileExtension(file, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
+      NotificationManager.error('This file type not supported', '', 800);
       return;
     }
     if (file.size / 1000000 > MAX_FILE_SIZE)
-      NotificationManager.warning(
-        `File size should be less than ${MAX_FILE_SIZE} MB`,
-        "",
-        800
-      );
-    document.getElementById("collection_file_name").style.display = "none";
+      NotificationManager.warning(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
+    document.getElementById('collection_file_name').style.display = 'none';
 
     setFiles([...files, ...filesArr]);
     if (e.target.files && e.target.files[0]) {
@@ -331,66 +301,67 @@ const Create3 = (props) => {
 
   const handleShow = () => {
     setOnTimedAuction(false);
-    document.getElementById("tab_opt_1").classList.add("show");
-    document.getElementById("tab_opt_1").classList.remove("hide");
-    document.getElementById("tab_opt_2").classList.add("hide");
-    document.getElementById("tab_opt_2").classList.remove("show");
-    document.getElementById("tab_opt_3").classList.add("hide");
-    document.getElementById("tab_opt_3").classList.remove("show");
-    document.getElementById("btn1").classList.add("active");
-    document.getElementById("btn2").classList.remove("active");
-    document.getElementById("btn3").classList.remove("active");
+    document.getElementById('tab_opt_1').classList.add('show');
+    document.getElementById('tab_opt_1').classList.remove('hide');
+    document.getElementById('tab_opt_2').classList.add('hide');
+    document.getElementById('tab_opt_2').classList.remove('show');
+    document.getElementById('tab_opt_3').classList.remove('show');
+    document.getElementById('tab_opt_3').classList.add('hide');
+
+    document.getElementById('btn1').classList.add('active');
+    document.getElementById('btn2').classList.remove('active');
+    document.getElementById('btn3').classList.remove('active');
     setSaleType(0);
     setChosenType(0);
-    setPrice("");
-    setMinimumBid("");
-    setSelectedTokenSymbol("MATIC");
+    setPrice('');
+    setMinimumBid('');
+    setSelectedTokenSymbol('MATIC');
   };
 
   const handleShow1 = () => {
     setOnTimedAuction(true);
-    document.getElementById("tab_opt_1").classList.add("hide");
-    document.getElementById("tab_opt_1").classList.remove("show");
-    document.getElementById("tab_opt_2").classList.add("show");
-    document.getElementById("tab_opt_2").classList.remove("hide");
-    document.getElementById("tab_opt_3").classList.add("hide");
-    document.getElementById("tab_opt_3").classList.remove("show");
-    document.getElementById("btn1").classList.remove("active");
-    document.getElementById("btn2").classList.add("active");
-    document.getElementById("btn3").classList.remove("active");
+    document.getElementById('tab_opt_1').classList.add('hide');
+    document.getElementById('tab_opt_1').classList.remove('show');
+    document.getElementById('tab_opt_2').classList.remove('hide');
+    document.getElementById('tab_opt_2').classList.add('show');
+    document.getElementById('tab_opt_3').classList.add('hide');
+    document.getElementById('tab_opt_3').classList.remove('show');
+    document.getElementById('btn1').classList.remove('active');
+    document.getElementById('btn2').classList.add('active');
+    document.getElementById('btn3').classList.remove('active');
     setSaleType(1);
     setChosenType(1);
-    setPrice("");
-    setMinimumBid("");
+    setPrice('');
+    setMinimumBid('');
     setSelectedTokenSymbol(options[0].title);
   };
 
   const handleShow2 = () => {
     setOnTimedAuction(false);
-    document.getElementById("tab_opt_1").classList.add("hide");
-    document.getElementById("tab_opt_1").classList.remove("show");
-    document.getElementById("tab_opt_2").classList.add("hide");
-    document.getElementById("tab_opt_2").classList.remove("show");
-    document.getElementById("tab_opt_3").classList.remove("hide");
-    document.getElementById("tab_opt_3").classList.add("show");
-    document.getElementById("btn1").classList.remove("active");
-    document.getElementById("btn2").classList.remove("active");
-    document.getElementById("btn3").classList.add("active");
+    document.getElementById('tab_opt_1').classList.add('hide');
+    document.getElementById('tab_opt_1').classList.remove('show');
+    document.getElementById('tab_opt_2').classList.add('hide');
+    document.getElementById('tab_opt_2').classList.remove('show');
+    document.getElementById('tab_opt_3').classList.remove('hide');
+    document.getElementById('tab_opt_3').classList.add('show');
+    document.getElementById('btn1').classList.remove('active');
+    document.getElementById('btn2').classList.remove('active');
+    document.getElementById('btn3').classList.add('active');
     setSaleType(1);
     setChosenType(2);
-    setPrice("");
-    setMinimumBid("");
+    setPrice('');
+    setMinimumBid('');
     setSelectedTokenSymbol(options[0].title);
   };
 
   const handleShow3 = () => {
-    document.getElementById("btn4").classList.add("active");
+    document.getElementById('btn4').classList.add('active');
   };
 
   const handleShow4 = (address, i) => {
     setNftContractAddress(address);
-    $(".active").removeClass("clicked");
-    $("#my_cus_btn" + i).addClass("clicked");
+    $('.active').removeClass('clicked');
+    $('#my_cus_btn' + i).addClass('clicked');
   };
 
   const clickToLazyMint = () => {
@@ -410,22 +381,18 @@ const Create3 = (props) => {
   };
 
   const handleAddCollaborator = async () => {
-    console.log(
-      "currCollaborator,currCollaboratorPercent",
-      currCollaborator,
-      currCollaboratorPercent
-    );
-    if (currCollaborator === "" || currCollaboratorPercent === "") {
-      NotificationManager.error("Invalid inputs");
+    console.log('currCollaborator,currCollaboratorPercent', currCollaborator, currCollaboratorPercent);
+    if (currCollaborator === '' || currCollaboratorPercent === '') {
+      NotificationManager.error('Invalid inputs');
       return;
     }
     if (currCollaborator.length <= 41) {
-      NotificationManager.error("Invalid Address");
+      NotificationManager.error('Invalid Address');
       return;
     }
 
     if (Number(currCollaboratorPercent) > 10000) {
-      NotificationManager.error("percentage should be less than 100");
+      NotificationManager.error('percentage should be less than 100');
     }
 
     let tempArr1 = [];
@@ -439,29 +406,29 @@ const Create3 = (props) => {
     for (let i = 0; i < tempArr2.length; i++) {
       sum = sum + Number(tempArr2[i]);
     }
-    console.log("sum22", sum);
+    console.log('sum22', sum);
     if (sum > 90) {
-      NotificationManager.error("Total percentage should be less than 90");
+      NotificationManager.error('Total percentage should be less than 90');
       return;
     }
     setCollaborators(tempArr1);
     setCollaboratorPercents(tempArr2);
-    setCurrCollaborator("");
+    setCurrCollaborator('');
     setCurrCollaboratorPercent(0);
   };
 
   const handleRemoveCollaborator = async (index) => {
     let tempArr1 = [...collaborators];
-    tempArr1[index] = "";
+    tempArr1[index] = '';
     setCollaborators(tempArr1);
     let tempArr2 = [...collaboratorPercents];
-    tempArr2[index] = "";
+    tempArr2[index] = '';
     setCollaboratorPercents(tempArr2);
   };
 
   const handleAddProperty = async () => {
-    if (currPropertyKey === "" || currPropertyValue === "") {
-      NotificationManager.error("Invalid inputs");
+    if (currPropertyKey === '' || currPropertyValue === '') {
+      NotificationManager.error('Invalid inputs');
       return;
     }
 
@@ -474,16 +441,16 @@ const Create3 = (props) => {
 
     setPropertyKeys(tempArr1);
     setPropertyValues(tempArr2);
-    setCurrPropertyKey("");
-    setCurrPropertyValue("");
+    setCurrPropertyKey('');
+    setCurrPropertyValue('');
   };
 
   const handleRemoveProperty = async (index) => {
     let tempArr1 = [...propertyKeys];
-    tempArr1[index] = "";
+    tempArr1[index] = '';
     setPropertyKeys(tempArr1);
     let tempArr2 = [...propertyValues];
-    tempArr2[index] = "";
+    tempArr2[index] = '';
     setPropertyValues(tempArr2);
   };
 
@@ -493,16 +460,12 @@ const Create3 = (props) => {
       sum = sum + Number(collaboratorPercents[i]);
     }
     if (sum > 100) {
-      NotificationManager.error(
-        "Total percentage should be less than 100",
-        "",
-        800
-      );
+      NotificationManager.error('Total percentage should be less than 100', '', 800);
       setLoading(false);
       return false;
     }
     if (!nftContractAddress) {
-      NotificationManager.error("Please Choose Valid Collection", "", 800);
+      NotificationManager.error('Please Choose Valid Collection', '', 800);
       return false;
     }
 
@@ -512,35 +475,34 @@ const Create3 = (props) => {
     // }
     return true;
   };
-
-  //*======================
+  //*=============================================
 
   const handleCollectionCreate = async () => {
     console.log(props);
     let res = await handleNetworkSwitch(currentUser);
-    setCookie("balance", res, { path: "/" });
+    setCookie('balance', res, { path: '/' });
     if (res === false) return;
     setIsPopup(false);
     setCollectionCreation(true);
     if (!currentUser && profile) {
-      NotificationManager.error("Please Connect Your Wallet", "", 800);
+      NotificationManager.error('Please Connect Your Wallet', '', 800);
       return;
     }
 
     try {
-      let _title = title.replace(/^\s+|\s+$/g, "");
-      if (_title === "" || _title === undefined) {
-        NotificationManager.error("Please Enter Title", "", 800);
+      let _title = title.replace(/^\s+|\s+$/g, '');
+      if (_title === '' || _title === undefined) {
+        NotificationManager.error('Please Enter Title', '', 800);
         setCollectionCreation(false);
         return;
       }
       if (image === undefined) {
-        NotificationManager.error("Please Upload Image", "", 800);
+        NotificationManager.error('Please Upload Image', '', 800);
         setCollectionCreation(false);
         return;
       }
-      if (symbol === "") {
-        NotificationManager.error("Please Enter symbol", "", 800);
+      if (symbol === '') {
+        NotificationManager.error('Please Enter symbol', '', 800);
         setCollectionCreation(false);
         return;
       }
@@ -552,11 +514,7 @@ const Create3 = (props) => {
       // }
       if (files && files.length > 0) {
         if (files[0].size / 1000000 > MAX_FILE_SIZE) {
-          NotificationManager.error(
-            `File size should be less than ${MAX_FILE_SIZE} MB`,
-            "",
-            800
-          );
+          NotificationManager.error(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
           return;
         }
       }
@@ -565,37 +523,32 @@ const Create3 = (props) => {
         sName: _title,
         sDescription: description,
         nftFile: image,
-        erc721: JSON.stringify(false),
+        erc721: JSON.stringify(true),
+        quantity: 1,
         sRoyaltyPercentage: Number(royalty) * 100,
-
         symbol: symbol,
       };
-      let collectionsList = "";
+      let collectionsList = '';
       try {
-        let ress = await handleCollectionCreation(
-          false,
-          collectionData,
-          currentUser
-        );
+        let ress = await handleCollectionCreation(true, collectionData, currentUser);
         collectionsList = await getUsersCollections({
           page: 1,
           limit: 100,
           userId: profile._id,
         });
         if (collectionsList && collectionsList?.results?.length > 0) {
-          collectionsList.results = collectionsList?.results?.filter(
-            (collection) => {
-              return collection.erc721 === false;
-            }
-          );
+          collectionsList.results = collectionsList?.results?.filter((collection) => {
+            return collection.erc721 === true;
+          });
           setCollections(collectionsList?.results);
 
           window.location.reload();
         }
         if (ress === false) {
           setCollectionCreation(false);
-          // window.location.reload();
+          window.location.reload();
         }
+        setCollectionCreation(false);
       } catch (e) {
         setCollectionCreation(false);
         return;
@@ -608,82 +561,76 @@ const Create3 = (props) => {
       setCollectionCreation(false);
       togglePopup();
       console.log(e);
+      window.location.reload();
     }
   };
 
   const handleNftCreation = async () => {
     let res = await handleNetworkSwitch(currentUser);
-    console.log(res);
-    setCookie("balance", res, { path: "/" });
+    setCookie('balance', res, { path: '/' });
     if (res === false) return;
     let options;
     if (!currentUser) {
-      NotificationManager.error("Please Connect Your Wallet", "", 800);
+      NotificationManager.error('Please Connect Your Wallet', '', 800);
       return;
     }
-    let _nftTitle = nftTitle.replace(/^\s+|\s+$/g, "");
-    if (_nftTitle && _nftTitle.length > 0) {
-      if (_nftTitle[0].size / 1000000 > MAX_FILE_SIZE) {
-        NotificationManager.error(
-          `File size should be less than ${MAX_FILE_SIZE} MB`
-        );
+    if (nftFiles && nftFiles.length > 0) {
+      if (nftFiles[0].size / 1000000 > MAX_FILE_SIZE) {
+        NotificationManager.error(`File size should be less than ${MAX_FILE_SIZE} MB`);
         return;
       }
     }
+    let _nftTitle = nftTitle.replace(/^\s+|\s+$/g, '');
+
     if (!nftImage) {
-      NotificationManager.error("Please Upload NFT Image", "", 800);
+      NotificationManager.error('Please Upload NFT Image', '', 800);
       return;
     }
-    if (_nftTitle === "" || _nftTitle === undefined) {
-      NotificationManager.error("Please Enter NFT Title", "", 800);
+    if (_nftTitle === '' || _nftTitle === undefined) {
+      NotificationManager.error('Please Enter NFT Title', '', 800);
       return;
     }
-    if (quantity === "" || quantity === 0 || quantity === undefined) {
-      NotificationManager.error("Please Enter NFT Quantity", "", 800);
+    if (quantity === '' || quantity === 0 || quantity === undefined) {
+      NotificationManager.error('Please Enter NFT Quantity', '', 800);
       return;
     }
 
     if (Number(quantity) < 1) {
-      NotificationManager.error("Quantity can't be 0", "", 800);
+      NotificationManager.error("Quantity can't be 0", '', 800);
       return;
     }
     if (isPutOnMarketplace) {
       if (chosenType === 0 && Number(price) <= 0) {
-        NotificationManager.error("Price can't be less than zero", "", 800);
+        NotificationManager.error("Price can't be less than zero", '', 800);
         return;
       }
       if ((chosenType === 1 || chosenType === 2) && Number(minimumBid) <= 0) {
-        NotificationManager.error(
-          "minimum bid amount can't be less than zero",
-          "",
-          800
-        );
+        NotificationManager.error("minimum bid amount can't be less than zero", '', 800);
         return;
       }
     }
     if (onTimedAuction && endTime === undefined) {
-      NotificationManager.error("Please Select an Expiration Date");
+      NotificationManager.error('Please Select an Expiration Date');
       return;
     }
     try {
-      console.log("updateCount");
       await UpdateTokenCount(nftContractAddress);
     } catch (e) {
-      console.log("error", e);
+      console.log('error', e);
     }
+
     if (currentUser && profile) {
       try {
         let isValid = validateInputs();
         if (!isValid) return;
 
         setisShowPopup(true);
-        setisApprovePopupClass("clockloader");
-        console.log(nftContractAddress);
 
-        const NFTcontract = await exportInstance(
-          nftContractAddress,
-          extendedERC1155Abi.abi
-        );
+        setisApprovePopupClass('clockloader');
+
+        const NFTcontract = await exportInstance(nftContractAddress, extendedERC721Abi.abi);
+
+        console.log('NFTcontract', NFTcontract);
 
         try {
           // let gasLimit = await NFTcontract.estimateGas.isApprovedForAll(
@@ -691,84 +638,77 @@ const Create3 = (props) => {
           //   contracts.MARKETPLACE,
           //   { from: currentUser, value: 0 }
           // );
-          // options = {
-          //   from: currentUser,
-          //   gasLimit: gasLimit + 10,
-          //   value: 0,
-          // };
           options = {
             from: currentUser,
-            gasPrice: 10000000000,
             gasLimit: 9000000,
             value: 0,
           };
-          let approval = await NFTcontract.isApprovedForAll(
-            currentUser,
-            contracts.MARKETPLACE
-          );
+          let approval = await NFTcontract.isApprovedForAll(currentUser, contracts.MARKETPLACE, options);
           let approvalRes;
 
           if (approval) {
-            setisApprovePopupClass("checkiconCompleted");
+            setisApprovePopupClass('checkiconCompleted');
           }
           if (!approval) {
-            approvalRes = await NFTcontract.setApprovalForAll(
-              contracts.MARKETPLACE,
-              true
-            );
+            approvalRes = await NFTcontract.setApprovalForAll(contracts.MARKETPLACE, true, options);
             approvalRes = await approvalRes.wait();
             if (approvalRes.status === 0) {
-              NotificationManager.error("Transaction failed", "", 800);
+              NotificationManager.error('Transaction failed', '', 800);
               return;
             }
+
             if (approvalRes) {
-              setisApprovePopupClass("checkiconCompleted");
+              setisApprovePopupClass('checkiconCompleted');
             } else {
-              setisApprovePopupClass("errorIcon");
+              setisApprovePopupClass('errorIcon');
               stopCreateNFTPopup();
+
               return;
             }
-            NotificationManager.success("Approved", "", 800);
+            NotificationManager.success('Approved', '', 800);
           }
         } catch (e) {
-          console.log("err", e);
-          setisApprovePopupClass("errorIcon");
+          console.log('err', e);
+          setisApprovePopupClass('errorIcon');
           stopCreateNFTPopup();
           return;
         }
 
-        setisMintPopupClass("clockloader");
+        setisMintPopupClass('clockloader');
         if (!isLazyMinting) {
-          let res1 = "";
+          let res1 = '';
           try {
             // let gasLimit = await NFTcontract.estimateGas.mint(
             //   currentUser,
             //   nextId,
-            //   quantity,
             //   { from: currentUser, value: 0 }
             // );
+            // options = {
+            //   from: currentUser,
+            //   gasLimit: gasLimit + 10,
+            //   value: 0,
+            // };
             const options = {
               from: currentUser,
               gasLimit: 9000000,
               value: 0,
             };
-            let mintRes = await NFTcontract.mint(currentUser, nextId, quantity);
-
+            let mintRes = await NFTcontract.mint(currentUser, 2521, options);
             res1 = await mintRes.wait();
             if (res1.status === 0) {
-              stopCreateNFTPopup();
-              return;
+              NotificationManager.error('Transaction failed', '', 800);
               return;
             }
           } catch (minterr) {
-            setisMintPopupClass("errorIcon");
+            setisMintPopupClass('errorIcon');
             stopCreateNFTPopup();
             return;
           }
         }
 
-        setisMintPopupClass("checkiconCompleted");
-        setisRoyaltyPopupClass("clockloader");
+        setisMintPopupClass('checkiconCompleted');
+        setisRoyaltyPopupClass('clockloader');
+
         let localCollabPercent = [];
         for (let i = 0; i < collaboratorPercents.length; i++) {
           localCollabPercent[i] = Number(collaboratorPercents[i]) * 100;
@@ -782,24 +722,26 @@ const Create3 = (props) => {
             //     nextId,
             //     { from: currentUser, value: 0 }
             //   );
-            options = {
+            const options = {
               from: currentUser,
               gasLimit: 9000000,
               value: 0,
             };
-            let collaborator = await NFTcontract.setTokenRoyaltyDistribution(
-              collaborators,
-              localCollabPercent,
-              nextId
-            );
-            await collaborator.wait();
+            let collaborator = await NFTcontract.setTokenRoyaltyDistribution(collaborators, localCollabPercent, nextId);
+            collaborator = await collaborator.wait();
+            if (collaborator.status === 0) {
+              NotificationManager.error('Transaction failed', '', 800);
+              return;
+            }
+            stopCreateNFTPopup();
           } catch (Collerr) {
-            setisRoyaltyPopupClass("errorIcon");
+            setisRoyaltyPopupClass('errorIcon');
             stopCreateNFTPopup();
             return;
           }
         }
-        setisRoyaltyPopupClass("checkiconCompleted");
+        setisRoyaltyPopupClass('checkiconCompleted');
+
         let metaData = [];
         for (let i = 0; i < propertyKeys.length; i++) {
           metaData.push({
@@ -809,66 +751,59 @@ const Create3 = (props) => {
         }
 
         var fd = new FormData();
-        fd.append("metaData", JSON.stringify(metaData));
-        fd.append("nCreatorAddress", currentUser.toLowerCase());
-        fd.append("nTitle", _nftTitle);
-        fd.append("nftFile", nftImage);
-        fd.append("nQuantity", quantity);
-        fd.append("nCollaborator", [...collaborators]);
-        fd.append("nCollaboratorPercentage", [...collaboratorPercents]);
-        fd.append("nRoyaltyPercentage", 40);
-        fd.append("nCollection", nftContractAddress);
-        fd.append("nDescription", nftDesc);
-        fd.append("nTokenID", nextId);
-        fd.append("nType", 2);
-        fd.append("lockedContent", lockedContent);
-        fd.append("nLazyMintingStatus", isLazyMinting ? 1 : 0);
+        fd.append('metaData', JSON.stringify(metaData));
+        fd.append('nCreatorAddress', currentUser.toLowerCase());
+        fd.append('nTitle', _nftTitle);
+        fd.append('nftFile', nftImage);
+        fd.append('nQuantity', quantity);
+        fd.append('nCollaborator', [...collaborators]);
+        fd.append('nCollaboratorPercentage', [...collaboratorPercents]);
+        fd.append('nRoyaltyPercentage', 10);
+        fd.append('nCollection', nftContractAddress);
+        fd.append('nDescription', nftDesc);
+        fd.append('nTokenID', nextId);
+        fd.append('nType', 1);
+        fd.append('lockedContent', lockedContent);
+        fd.append('nLazyMintingStatus', isLazyMinting ? 1 : 0);
+        let res;
+        setisUploadPopupClass('clockloader');
+        try {
+          res = await createNft(fd);
+        } catch (e) {
+          console.log('err', e);
+          return;
+        }
 
-        setisUploadPopupClass("clockloader");
-
-        let res = await createNft(fd);
-        console.log("res========", res);
-        // if (res.message === 'Invalid file type! Only JPG, JPEG, PNG, GIF, WEBP, MP3 & MPEG  files are allowed. ') {
-        //   setisUploadPopupClass('errorIcon');
-        //   stopCreateNFTPopup();
-        //   NotificationManager.error(
-        //     'Invalid file type! Only JPG, JPEG, PNG, GIF, WEBP,  MP3 & MPEG  files are allowed. ',
-        //     '',
-        //     800,
-        //   );
-        //   return;
-        // }
+        console.log(res);
         setCreatedItemId(res.result._id);
-        console.log(setCreatedItemId(res.result._id));
+        console.log(createdItemId);
         try {
           let historyMetaData = {
             nftId: res.result._id,
             userId: res.result.nCreater,
-            action: "Creation",
-            actionMeta: "Default",
-            message: `${quantity} Quantity by ${
-              profile && profile.sUserName
-                ? profile.user.sUserName
+            action: 'Creation',
+            actionMeta: 'Default',
+            message: `By ${
+              profile && profile.user.sUserName
+                ? profile.sUserName
                 : profile.user.sWalletAddress
-                ? profile.user.sWalletAddress.slice(0, 3) +
-                  "..." +
-                  profile.user.sWalletAddress.slice(39, 42)
-                : ""
-            }`,
-
-            created_ts: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+                ? profile.user.sWalletAddress.slice(0, 3) + '...' + profile.user.sWalletAddress.slice(39, 42)
+                : ''
+            } `,
+            created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           };
 
           await InsertHistory(historyMetaData);
         } catch (e) {
-          console.log("error in history api", e);
+          console.log('error in history api', e);
           return;
         }
-        // if (res.data) {
-        //   setisUploadPopupClass('checkiconCompleted');
-        //   setisPutOnSalePopupClass('clockloader');
+
+        // if (res.result) {
+        //   setisUploadPopupClass("checkiconCompleted");
+        //   setisPutOnSalePopupClass("clockloader");
         // } else {
-        //   setisUploadPopupClass('errorIcon');
+        //   setisUploadPopupClass("errorIcon");
         //   stopCreateNFTPopup();
         //   return;
         // }
@@ -876,65 +811,72 @@ const Create3 = (props) => {
         let _deadline;
         let _price;
         let _auctionEndDate;
-        console.log(chosenType);
+        console.log(chosenType, GENERAL_TIMESTAMP, GENERAL_DATE);
+
         if (chosenType === 0) {
+          console.log('insde )');
           _deadline = GENERAL_TIMESTAMP;
           _auctionEndDate = GENERAL_DATE;
-          _price = ethers.utils.parseEther(price.toString()).toString();
+          // _price = ethers.utils.parseEther().toString();
+          _price = '2000000000';
         } else if (chosenType === 1) {
-          let _endTime = endTime
-            ? new Date(endTime).valueOf() / 1000
-            : GENERAL_TIMESTAMP;
+          let _endTime = new Date(endTime).valueOf() / 1000;
           _auctionEndDate = endTime;
           _deadline = _endTime;
-          _price = ethers.utils.parseEther(minimumBid.toString()).toString();
+          _price = ethers.utils.parseEther(minimumBid).toString();
         } else if (chosenType === 2) {
           _deadline = GENERAL_TIMESTAMP;
           _auctionEndDate = GENERAL_DATE;
-          _price = ethers.utils.parseEther(minimumBid.toString()).toString();
+          // _price = ethers.utils.parseEther(minimumBid).toString();
         }
 
-        console.log(_deadline, _price, _auctionEndDate);
-        console.log(isPutOnMarketplace);
         if (isPutOnMarketplace) {
+          console.log('inside Put Func');
           let sellerOrder = [
             currentUser.toLowerCase(),
             nftContractAddress,
             nextId,
             quantity,
             saleType,
-            saleType !== 0
-              ? selectedTokenAddress
-              : "0x0000000000000000000000000000000000000000",
+            saleType !== 0 ? selectedTokenAddress : '0x0000000000000000000000000000000000000000',
             _price,
             _deadline,
             [],
             [],
             salt,
           ];
-          // let tokenUri = await NFTcontract.setCustomTokenUri(nextId, `https://ipfs.io/ipfs/${res.result.nHash}`, {
-          //   from: currentUser,
-          //   value: 0,
-          // });
-          // if (tokenUri && tokenUri.status === 0) {
-          //   setisPutOnSalePopupClass('errorIcon');
-          //   stopCreateNFTPopup();
-          //   return;
-          // }
-          console.log(currentUser);
+
+          // console.log(
+          //   "token uri",
+          //   NFTcontract,
+          //   nextId,
+          //   currentUser,
+          //   `https://ipfs.io/ipfs/${res.data.nHash}`
+          // );
+
+          console.log('inside BEfore Func');
+
+          let tokenUri = await NFTcontract.setCustomTokenUri(nextId, '0x00', {
+            from: currentUser,
+            gasLimit: 9000000,
+            value: 0,
+          });
+
+          if (tokenUri && tokenUri.status === 0) {
+            return;
+          }
+          console.log('inside TS Func');
+
           let signature = await getSignature(currentUser, ...sellerOrder);
           if (signature === false) {
-            setisPutOnSalePopupClass("errorIcon");
+            setisPutOnSalePopupClass('errorIcon');
             stopCreateNFTPopup();
             return;
           }
           let reqParams = {
             nftId: res.result._id,
             seller: currentUser.toLowerCase(),
-            tokenAddress:
-              saleType !== 0
-                ? selectedTokenAddress
-                : "0x0000000000000000000000000000000000000000",
+            tokenAddress: saleType !== 0 ? selectedTokenAddress : '0x0000000000000000000000000000000000000000',
             collection: nftContractAddress,
             price: _price,
             quantity: quantity,
@@ -946,52 +888,48 @@ const Create3 = (props) => {
             salt: salt,
           };
 
-          let data = "";
+          let data = '';
           try {
             data = await createOrder(reqParams);
             try {
               let historyMetaData = {
                 nftId: res.result._id,
                 userId: res.result.nCreater,
-                action: "Marketplace",
-                actionMeta: "Listed",
-                message: `${quantity} quantity For ${convertToEth(_price)} ${
-                  saleType === 0 ? CURRENCY : selectedTokenSymbol
-                } by ${
-                  currentUser.slice(0, 3) + "..." + currentUser.slice(39, 42)
+                action: 'Marketplace',
+                actionMeta: 'Listed',
+                message: `For ${convertToEth(_price)} ${saleType === 0 ? CURRENCY : selectedTokenSymbol} by ${
+                  currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
                 } `,
-                created_ts: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+                created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               };
 
               await InsertHistory(historyMetaData);
             } catch (e) {
-              console.log("error in history api", e);
+              console.log('error in history api', e);
               return;
             }
           } catch (DataErr) {
-            setisPutOnSalePopupClass("errorIcon");
+            setisPutOnSalePopupClass('errorIcon');
             stopCreateNFTPopup();
             return;
           }
-          console.log(data);
-
           try {
             await SetNFTOrder({
               orderId: data.results._id,
               nftId: data.results.oNftId,
             });
-            console.log("order Completed");
           } catch (NFTErr) {
-            setisPutOnSalePopupClass("errorIcon");
+            setisPutOnSalePopupClass('errorIcon');
             stopCreateNFTPopup();
             return;
           }
-          setisPutOnSalePopupClass("checkiconCompleted");
+          setisPutOnSalePopupClass('checkiconCompleted');
         }
-        setisPutOnSalePopupClass("checkiconCompleted");
+        setisPutOnSalePopupClass('checkiconCompleted');
         closeCreateNFTPopup();
+        // window.location.href = "/profile";
       } catch (err) {
-        console.log("error", err);
+        console.log('error', err);
         stopCreateNFTPopup();
         return;
       }
@@ -1013,7 +951,7 @@ const Create3 = (props) => {
     setIsTimedAuction(false);
     setSaleType(0);
     setQuantity(1);
-    setTimeLeft("December, 30, 2022");
+    setTimeLeft('December, 30, 2022');
     setSalt(Math.round(Math.random() * 10000000));
   }, []);
 
@@ -1028,11 +966,9 @@ const Create3 = (props) => {
         userId: profile?._id,
       });
       if (collectionsList && collectionsList?.results?.length >= 1) {
-        collectionsList.results = collectionsList.results.filter(
-          (collection) => {
-            return collection.erc721 === false;
-          }
-        );
+        collectionsList.results = collectionsList.results.filter((collection) => {
+          return collection.erc721 === true;
+        });
         setCollections(collectionsList?.results);
       }
 
@@ -1061,7 +997,7 @@ const Create3 = (props) => {
         </Col>
 
         <Col>
-          {" "}
+          {' '}
           <input
             type="text"
             className="property-input property-value"
@@ -1079,26 +1015,23 @@ const Create3 = (props) => {
   ) : (
     <div>
       <GlobalStyles />
-      {loading ? showProcessingModal("Loading") : ""}
       {collectionCreation ? (
-        showProcessingModal(
-          "Collection creation is under process. Please do not refresh the page"
-        )
+        showProcessingModal('Collection creation is under process. Please do not refresh the page')
       ) : (
         <></>
       )}
-
+      {loading ? showProcessingModal('Loading') : ''}
       <section
         className="jumbotron breadcumb no-bg"
         style={{
-          backgroundImage: `url(${"./img/background/subheader.jpg"})`,
+          backgroundImage: `url(${'./img/background/subheader.jpg'})`,
         }}
       >
         <div className="mainbreadcumb">
           <div className="container">
             <div className="row m-10-hor">
               <div className="col-12">
-                <h1 className="text-center">Create Multiple NFT</h1>
+                <h1 className="text-center">Create Single NFT</h1>
               </div>
             </div>
           </div>
@@ -1111,7 +1044,6 @@ const Create3 = (props) => {
             <div id="form-create-item" className="form-border" action="#">
               <div className="field-set">
                 <h5 className="required">Choose Collection</h5>
-
                 <div className="de_tab tab_methods">
                   <div className="scrollable mb-5 c-collections">
                     <ul className="de_nav">
@@ -1123,8 +1055,13 @@ const Create3 = (props) => {
 
                       {isPopup && (
                         <div className="collection-popup-box custom-popup-box">
-                          {/* {loading ? <Loader /> : <></>} */}
-                          <span className="close-icon" onClick={togglePopup}>
+                          <span
+                            className="close-icon"
+                            onClick={() => {
+                              togglePopup();
+                              window.location.reload();
+                            }}
+                          >
                             x
                           </span>
                           <div className="add-collection-box">
@@ -1132,26 +1069,19 @@ const Create3 = (props) => {
                               <div className="CollectionPopupBox">
                                 <div className="row">
                                   <h3>Collections</h3>
-                                  <div
-                                    id="form-create-item"
-                                    className="form-border"
-                                    action="#"
-                                  >
+                                  <div id="form-create-item" className="form-border" action="#">
                                     <div className="collection-field-set">
-                                      <span className="sub-heading">
-                                        Upload Collection Cover
-                                      </span>
-                                      <div className="fileUploader mt-3">
+                                      <span className="sub-heading">Upload Collection Cover</span>
+                                      <div className="fileUploader">
                                         <div className="row align-items-center justify-content-center">
-                                          <span className="col-md-5 col-sm-12 padding_span uploadImg-container">
+                                          <div className="col-md-5 col-sm-12 uploadImg-container d-flex justify-content-center align-items-center">
                                             {!image ? (
+                                              // eslint-disable-next-line jsx-a11y/img-redundant-alt
                                               <img
                                                 alt="upload image"
                                                 src={UploadImg}
                                                 className=""
-                                                onClick={() =>
-                                                  fileRefCollection.current.click()
-                                                }
+                                                onClick={() => fileRefCollection.current.click()}
                                               />
                                             ) : (
                                               <img
@@ -1159,25 +1089,18 @@ const Create3 = (props) => {
                                                 id="get_file_2"
                                                 className="collection_cover_preview img-fluid"
                                                 alt=""
-                                                onClick={() =>
-                                                  fileRefCollection.current.click()
-                                                }
+                                                onClick={() => fileRefCollection.current.click()}
                                               />
                                             )}
-                                          </span>
+                                          </div>
+
                                           <div className="d-create-file col-md-7 uploadImg-right modal-file-upload">
                                             <p id="collection_file_name">
-                                              We recommend an image of at least
-                                              450x450. PNG, JPG, GIF, WEBP or
-                                              MP4. Max
+                                              We recommend an image of at least 450x450. PNG, JPG, GIF or WEBP. Max
                                               {MAX_FILE_SIZE}mb.
                                             </p>
-                                            {files && files.length > 0 ? (
-                                              <p>{files[0].name}</p>
-                                            ) : (
-                                              ""
-                                            )}
-                                            <div className="browse">
+                                            {files && files.length > 0 ? <p>{files[0].name}</p> : ''}
+                                            <div className="browse m-0 pl-0">
                                               {/* <input
                                                 type="button"
                                                 id="get_file"
@@ -1191,22 +1114,21 @@ const Create3 = (props) => {
                                                   id="upload_file_Upload_collection"
                                                   type="file"
                                                   ref={fileRefCollection}
-                                                  className="btn-main browse-btn"
                                                   required
-                                                  onChange={(e) =>
-                                                    onCollectionImgChange(e)
-                                                  }
+                                                  onChange={(e) => onCollectionImgChange(e)}
                                                 />
                                               </label>
+                                              <div className="img-size">
+                                                {files && files.length > 0 ? files[0].size / 1000000 + 'MB' : ''}
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
                                       </div>
+
                                       <div className="spacer-20"></div>
 
-                                      <h5 className="createColTitle m-0 required">
-                                        Title
-                                      </h5>
+                                      <h5 className="createColTitle m-0 required">Title</h5>
                                       <input
                                         type="text"
                                         name="item_title"
@@ -1220,15 +1142,12 @@ const Create3 = (props) => {
                                         }}
                                       />
 
-                                      <h5 className="createColTitle m-0 required">
-                                        Symbol
-                                      </h5>
+                                      <h5 className="createColTitle m-0 required">Symbol</h5>
 
                                       <input
                                         type="text"
                                         name="item_title"
                                         value={symbol}
-                                        required
                                         id="item_title"
                                         className="form-control createColInput"
                                         placeholder="e.g. 'Crypto Funk"
@@ -1238,11 +1157,10 @@ const Create3 = (props) => {
                                       />
 
                                       <h5 className="createColTitle m-0">
-                                        Description
+                                        Description <span className="optional_text">(optional)</span>
                                       </h5>
                                       <input
                                         type="text"
-                                        data-autoresize
                                         name="item_desc"
                                         required
                                         id="item_desc"
@@ -1254,9 +1172,7 @@ const Create3 = (props) => {
                                         }}
                                       ></input>
 
-                                      <h5 className="createColTitle m-0">
-                                        Royalties
-                                      </h5>
+                                      <h5 className="createColTitle m-0">Royalties</h5>
                                       <input
                                         type="Number"
                                         name="item_royalties"
@@ -1268,18 +1184,14 @@ const Create3 = (props) => {
                                         placeholder="suggested: 0, 10%, 20%, 30%. Maximum is 50%"
                                         onChange={(e) => {
                                           if (Number(e.target.value) > 50) {
-                                            NotificationManager.error(
-                                              "Percentage should be less than 50%",
-                                              "",
-                                              800
-                                            );
+                                            NotificationManager.error('Percentage should be less than 50%', '', 800);
+
                                             return;
                                           }
                                           var t = e.target.value;
                                           e.target.value =
-                                            t.indexOf(".") >= 0
-                                              ? t.substr(0, t.indexOf(".")) +
-                                                t.substr(t.indexOf("."), 3)
+                                            t.indexOf('.') >= 0
+                                              ? t.substr(0, t.indexOf('.')) + t.substr(t.indexOf('.'), 3)
                                               : t;
                                           setRoyalty(Number(e.target.value));
                                         }}
@@ -1311,10 +1223,7 @@ const Create3 = (props) => {
                                 className="active"
                                 ref={myRef}
                                 onClick={(e) => {
-                                  handleShow4(
-                                    collection.sContractAddress,
-                                    index
-                                  );
+                                  handleShow4(collection.sContractAddress, index);
                                   setNextId(collection.nextId);
                                 }}
                               >
@@ -1326,46 +1235,42 @@ const Create3 = (props) => {
                                     width="10px"
                                     src={`http://${collection.sHash}.ipfs.w3s.link/${collection.sImageName}`}
                                   ></img>
-                                  <p className="mt-2 mb-0">
-                                    {collection.sName}
-                                  </p>
+                                  <p className="mt-2 mb-0">{collection.sName}</p>
                                 </span>
                               </li>
                             );
                           })
-                        : ""}
+                        : ''}
                     </ul>
                   </div>
                 </div>
+                <h5>Upload file</h5>
 
-                <h5 className="required">Upload file</h5>
                 <div className="d-create-file">
                   <div className="uploadFile">
-                    {" "}
+                    {' '}
                     <p id="file_name">
-                      We recommend an image of at least 450x450.&nbsp; PNG, JPG,
-                      GIF or WEBP.&nbsp; Max &nbsp;
+                      We recommend an image of at least 450x450.&nbsp; PNG, JPG, GIF or WEBP.&nbsp; Max &nbsp;
                       {MAX_FILE_SIZE}
                       mb.
                     </p>
                   </div>
 
                   <p>
+                    {/* {nftFiles && nftFiles.length > 0 ? nftFiles[0].name : ""} */}
+
                     {nftFiles && nftFiles.length > 0 ? (
                       <>
                         {nftFiles[0].name.length > 50
                           ? nftFiles[0].name.slice(0, 10) +
-                            nftFiles[0].name.slice(
-                              nftFiles[0].name.length - 4,
-                              nftFiles[0].name.length
-                            )
+                            nftFiles[0].name.slice(nftFiles[0].name.length - 4, nftFiles[0].name.length)
                           : nftFiles[0].name}
                       </>
                     ) : (
-                      ""
+                      ''
                     )}
                   </p>
-                  <div className="browse">
+                  <div className="browse ">
                     {/* <input
                       type="button"
                       id="get_file"
@@ -1377,15 +1282,14 @@ const Create3 = (props) => {
                       Browse
                       <input
                         id="upload_file_Upload"
+                        placeholder="Browse"
                         type="file"
                         ref={fileRef}
-                        className="nftFile"
                         onChange={(e) => onChange(e)}
                       />
                     </label>
                   </div>
                 </div>
-
                 <div className="spacer-20"></div>
 
                 <div className="switch-with-title">
@@ -1394,28 +1298,15 @@ const Create3 = (props) => {
                     Unlock Once Purchased
                   </h5>
                   <div className="de-switch">
-                    <input
-                      type="checkbox"
-                      id="switch-unlock"
-                      className="checkbox"
-                    />
+                    <input type="checkbox" id="switch-unlock" className="checkbox" />
                     {isActive ? (
-                      <label
-                        htmlFor="switch-unlock"
-                        onClick={unlockHide}
-                      ></label>
+                      <label htmlFor="switch-unlock" onClick={unlockHide}></label>
                     ) : (
-                      <label
-                        htmlFor="switch-unlock"
-                        onClick={unlockClick}
-                      ></label>
+                      <label htmlFor="switch-unlock" onClick={unlockClick}></label>
                     )}
                   </div>
                   <div className="clearfix"></div>
-                  <p className="p-info pb-3">
-                    {" "}
-                    Unlock content after successful transaction.
-                  </p>
+                  <p className="p-info pb-3"> Unlock content after successful transaction.</p>
 
                   {isActive ? (
                     <div id="unlockCtn" className="hide-content">
@@ -1435,25 +1326,17 @@ const Create3 = (props) => {
                 <div className="switch-with-title">
                   <h5>
                     <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
-                    Put on Marketplace
+                    Put On Marketplace
                   </h5>
 
                   <div className="de-switch">
-                    <input
-                      type="checkbox"
-                      id="switch-unlock1"
-                      className="checkbox"
-                      checked={isUnlock}
-                    />
+                    <input type="checkbox" id="switch-unlock1" className="checkbox" checked={isUnlock} />
 
-                    <label
-                      htmlFor="switch-unlock1"
-                      onClick={clickToUnlock}
-                    ></label>
+                    <label htmlFor="switch-unlock1" onClick={clickToUnlock}></label>
                   </div>
                 </div>
 
-                <div className="spacer-20"></div>
+                {/* <div className="spacer-single"></div> */}
                 {isUnlock ? (
                   <>
                     <div className="spacer-20"></div>
@@ -1483,19 +1366,19 @@ const Create3 = (props) => {
                           <input
                             type="text"
                             name="item_price"
-                            min="0"
-                            max="18"
                             id="item_price"
                             value={price}
-                            onKeyPress={(e) => {
-                              if (!/^\d*\.?\d*$/.test(e.key))
-                                e.preventDefault();
-                            }}
+                            max="18"
+                            min="0"
                             onChange={(e) => {
                               if (Number(e.target.value) > 100000000000000) {
                                 return;
                               }
+
                               inputPrice(e);
+                            }}
+                            onKeyPress={(e) => {
+                              if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
                             }}
                             className="form-control"
                             placeholder={`0 (${CURRENCY})`}
@@ -1506,16 +1389,32 @@ const Create3 = (props) => {
                   </>
                 ) : null}
 
-                <div className="de_tab_content">
+                <div className="switch-with-title">
+                  <h5>
+                    <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
+                    Lazy Minting
+                  </h5>
+
+                  <div className="de-switch">
+                    <input type="checkbox" id="switch-unlock1" className="checkbox" checked={isLazyMinting} />
+
+                    <label htmlFor="switch-unlock1" onClick={clickToLazyMint}></label>
+                  </div>
+                </div>
+
+                <div className="spacer-20"></div>
+
+                {/* <div className="spacer-single"></div> */}
+                <div className="de_tab_content pt-3">
                   <div id="tab_opt_2" className="hide">
                     <h5 className="required">Minimum bid</h5>
                     <input
                       type="text"
-                      min="0"
-                      max="18"
                       name="item_price_bid"
                       id="item_price_bid"
                       value={minimumBid}
+                      min="0"
+                      max="18"
                       onKeyPress={(e) => {
                         if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
                       }}
@@ -1536,26 +1435,19 @@ const Create3 = (props) => {
                         <h5 className="required">Payment Token</h5>
                         <select
                           className="form-control selectOpt"
-                          onChange={async (e) => {
+                          onChange={(e) => {
                             setSelectedTokenAddress(e.target.value);
-                            let symbol = getTokenSymbolByAddress(
-                              e.target.value
-                            );
+                            let symbol = getTokenSymbolByAddress(e.target.value);
                             setSelectedTokenSymbol(symbol);
                           }}
                         >
                           {options
                             ? options.map((option, key) => {
-                                return (
-                                  <option value={option.value}>
-                                    {option.title}
-                                  </option>
-                                );
+                                return <option value={option.value}>{option.title}</option>;
                               })
-                            : ""}
+                            : ''}
                         </select>
                       </div>
-
                       <div className="col-md-6">
                         <h5 className="required">Expiration date</h5>
                         <input
@@ -1571,14 +1463,15 @@ const Create3 = (props) => {
                       </div>
                     </div>
                   </div>
+
                   <div id="tab_opt_3" className="hide">
                     <h5 className="required">Minimum bid</h5>
                     <input
                       type="text"
                       name="item_price_bid"
+                      id="item_price_bid"
                       min="0"
                       max="18"
-                      id="item_price_bid"
                       value={minimumBid}
                       onKeyPress={(e) => {
                         if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
@@ -1600,44 +1493,19 @@ const Create3 = (props) => {
                         className="form-control selectOpt"
                         onChange={(e) => {
                           setSelectedTokenAddress(e.target.value);
+                          let symbol = getTokenSymbolByAddress(e.target.value);
+                          setSelectedTokenSymbol(symbol);
                         }}
                       >
                         {options
                           ? options.map((option, key) => {
-                              return (
-                                <option value={option.value}>
-                                  {option.title}
-                                </option>
-                              );
+                              return <option value={option.value}>{option.title}</option>;
                             })
-                          : ""}
+                          : ''}
                       </select>
                     </div>
                   </div>
                 </div>
-
-                <div className="switch-with-title">
-                  <h5>
-                    <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
-                    Lazy Minting
-                  </h5>
-
-                  <div className="de-switch">
-                    <input
-                      type="checkbox"
-                      id="switch-unlock1"
-                      className="checkbox"
-                      checked={isLazyMinting}
-                    />
-
-                    <label
-                      htmlFor="switch-unlock1"
-                      onClick={clickToLazyMint}
-                    ></label>
-                  </div>
-                </div>
-
-                <div className="spacer-20"></div>
                 {/* <div className="spacer-20"></div> */}
                 <h5 className="required">Title</h5>
                 <input
@@ -1671,60 +1539,16 @@ const Create3 = (props) => {
                   placeholder="My NFT description"
                 ></textarea>
 
-                <h5>Quantity</h5>
-                <input
-                  type="text"
-                  name="item_title"
-                  min="1"
-                  step="1"
-                  value={quantity}
-                  id="item_title"
-                  onKeyPress={(e) => {
-                    if (!/^\d*$/.test(e.key)) e.preventDefault();
-                  }}
-                  onChange={(e) => {
-                    const re = new RegExp("^[0-9]*$");
-                    let val = e.target.value;
-                    if (e.target.value === "" || re.test(e.target.value)) {
-                      const numStr = String(val);
-                      if (numStr.includes(".")) {
-                        if (numStr.split(".")[1].length > 8) {
-                        } else {
-                          if (val.split(".").length > 2) {
-                            val = val.replace(/\.+$/, "");
-                          }
-                          if (val.length === 2 && val !== "0.") {
-                            val = Number(val);
-                          }
-                          setQuantity(val);
-                        }
-                      } else {
-                        if (val.split(".").length > 2) {
-                          val = val.replace(/\.+$/, "");
-                        }
-                        if (val.length === 2 && val !== "0.") {
-                          val = Number(val);
-                        }
-                        setQuantity(val);
-                      }
-                    }
-                  }}
-                  className="form-control"
-                  placeholder=""
-                />
-
                 <div className="spacer-10"></div>
-                <div
-                  className={
-                    isLazyMinting ? "hideCollaborator" : "showCollaborator"
-                  }
-                >
+                <div className={isLazyMinting ? 'hideCollaborator' : 'showCollaborator'}>
                   <h5>Collaborator (Optional)</h5>
                   <input
                     type="text"
                     name="item_collaborator"
                     id="item_collaborator"
-                    onChange={(e) => setCurrCollaborator(e.target.value)}
+                    onChange={(e) => {
+                      setCurrCollaborator(e.target.value);
+                    }}
                     value={currCollaborator}
                     className="form-control"
                     placeholder="Please Enter Collaborator's Wallet Address"
@@ -1734,21 +1558,18 @@ const Create3 = (props) => {
                     type="Number"
                     name="item_collaborator_percent"
                     id="item_collaborator_percent"
-                    min="0"
-                    value={currCollaboratorPercent}
                     onChange={(e) => {
                       if (Number(e.target.value) > 100) {
-                        NotificationManager.error("Invalid Percent", "", 800);
-                        return;
+                        NotificationManager.error('Invalid Percent', '', 800);
                       }
+
                       var t = e.target.value;
                       e.target.value =
-                        t.indexOf(".") >= 0
-                          ? t.substr(0, t.indexOf(".")) +
-                            t.substr(t.indexOf("."), 3)
-                          : t;
+                        t.indexOf('.') >= 0 ? t.substr(0, t.indexOf('.')) + t.substr(t.indexOf('.'), 3) : t;
                       setCurrCollaboratorPercent(e.target.value);
                     }}
+                    min="0"
+                    value={currCollaboratorPercent}
                     className="form-control"
                     placeholder="Percent"
                   />
@@ -1762,17 +1583,16 @@ const Create3 = (props) => {
                     Add Collaborator
                   </button>
                 </div>
+
                 <ul>
                   {collaborators && collaboratorPercents
                     ? collaborators.map((collaborator, key) => {
-                        return collaborator !== "" ? (
+                        return collaborator !== '' ? (
                           <li className="added_collaborator_list">
                             <div className="d-flex justify-content-around align-items-baseline">
                               <h5>
-                                {collaborator.slice(0, 5) +
-                                  "..." +
-                                  collaborator.slice(38, 42)}{" "}
-                                : <span>{collaboratorPercents[key] + "%"}</span>
+                                {collaborator.slice(0, 5) + '...' + collaborator.slice(38, 42)} :{' '}
+                                <span>{Number(collaboratorPercents[key]) + '%'}</span>
                               </h5>
                               <button
                                 className="remove-btn btn-main"
@@ -1785,21 +1605,16 @@ const Create3 = (props) => {
                             </div>
                           </li>
                         ) : (
-                          ""
+                          ''
                         );
                       })
-                    : ""}
+                    : ''}
                 </ul>
 
-                <button
-                  className="btn-main showHideBtn"
-                  onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}
-                >
-                  {isAdvancedSetting
-                    ? "Hide Advanced Settings"
-                    : "Show Advanced Settings"}
+                <button className="btn-main showHideBtn" onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}>
+                  {isAdvancedSetting ? 'Hide Advanced Settings' : 'Show Advanced Settings'}
                 </button>
-                {isAdvancedSetting ? PropertiesSection() : ""}
+                {isAdvancedSetting ? PropertiesSection() : ''}
                 {isAdvancedSetting ? (
                   <button
                     id="submit"
@@ -1811,14 +1626,14 @@ const Create3 = (props) => {
                     Add Property
                   </button>
                 ) : (
-                  ""
+                  ''
                 )}
                 <div className="spacer-40"></div>
                 <div className="nft_attr_section">
                   <div className="row gx-2">
                     {propertyKeys && propertyValues
                       ? propertyKeys.map((propertyKey, key) => {
-                          return propertyKey !== "" ? (
+                          return propertyKey !== '' ? (
                             <div className="col-lg-4 col-md-6 col-sm-6">
                               <div className="createProperty">
                                 <div className="nft_attr">
@@ -1831,18 +1646,15 @@ const Create3 = (props) => {
                                     handleRemoveProperty(key);
                                   }}
                                 >
-                                  <i
-                                    className="fa fa-trash"
-                                    aria-hidden="true"
-                                  ></i>
+                                  <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                               </div>
                             </div>
                           ) : (
-                            ""
+                            ''
                           );
                         })
-                      : ""}
+                      : ''}
                   </div>
                 </div>
                 <div className="spacer-10"></div>
@@ -1867,33 +1679,31 @@ const Create3 = (props) => {
                   <Clock deadline={timeLeft} />
                 </div>
               ) : (
-                ""
+                ''
               )}
 
               <div className="author_list_pp_explore_page author_list_pp">
                 <span>
-                  <img
-                    className="lazy author_image"
-                    // /img/author/author-7.jpg
-                    src={profilePic ? profilePic : Avatar}
-                    alt=""
-                  />
+                  {profilePic !== undefined ? (
+                    <img className="lazy author_image" src={profilePic ? profilePic : Avatar} alt="" />
+                  ) : (
+                    <img className="lazy author_list_pp1_img" src={Avatar} alt="" />
+                  )}
+
                   <i className="fa fa-check profile_img_check"></i>
                 </span>
               </div>
               <div className="nft__item_wrap">
                 <span className="c-previous-items">
                   <img
-                    src={
-                      nftImage ? URL.createObjectURL(nftImage) : previewImage
-                    }
+                    src={nftImage ? URL.createObjectURL(nftImage) : previewImage}
                     id="get_file_2"
                     className="lazy nft__item_preview slider-img-preview"
                     alt=""
                   />
                 </span>
               </div>
-              {/* <div className="nft__item_info">
+              <div className="nft__item_info">
                 <span>
                   <h4>{nftTitle ? (nftTitle.length > 15 ? nftTitle.slice(0, 15) + '...' : nftTitle) : 'NFT NAME'}</h4>
                 </span>
@@ -1905,13 +1715,13 @@ const Create3 = (props) => {
                     : `0 ${selectedTokenSymbol}`}
                 </div>
                 {/* <div className="nft__item_action">
-                  <span>{isOpenForBid ? "Place a bid" : ""}</span>
+                  <span>{isOpenForBid ? "Place a bid" : "Buy Now"}</span>
                 </div> */}
-              {/* <div className="nft__item_like">
+                {/* <div className="nft__item_like">
                   <i className="fa fa-heart"></i>
                   <span>0</span>
-                </div>
-              </div> */}
+                </div> */}
+              </div>
             </div>
           </div>
         </div>
@@ -1919,9 +1729,7 @@ const Create3 = (props) => {
           <div className="popup-bg" id="CreateNftLoader">
             <div className="loader_popup-box">
               <div className="row">
-                <h2 className="col-12 d-flex justify-content-center mt-2 mb-3">
-                  Follow Steps
-                </h2>
+                <h2 className="col-12 d-flex justify-content-center mt-2 mb-3">Follow Steps</h2>
               </div>
 
               <div className="row customDisplayPopup">
@@ -1930,9 +1738,7 @@ const Create3 = (props) => {
                 </div>
                 <div className="col-8 icontxtDisplayPopup">
                   <h5 className="popupHeading">Approve</h5>
-                  <span className="popupText">
-                    This transaction is conducted only once per collection
-                  </span>
+                  <span className="popupText">This transaction is conducted only once per collection</span>
                 </div>
               </div>
               <div className="row customDisplayPopup">
@@ -1941,9 +1747,7 @@ const Create3 = (props) => {
                 </div>
                 <div className="col-8 icontxtDisplayPopup">
                   <h5 className="popupHeading">Mint</h5>
-                  <span className="popupText">
-                    Send transaction to create your NFT
-                  </span>
+                  <span className="popupText">Send transaction to create your NFT</span>
                 </div>
               </div>
               <div className="row customDisplayPopup">
@@ -1952,9 +1756,7 @@ const Create3 = (props) => {
                 </div>
                 <div className="col-8 icontxtDisplayPopup">
                   <h5 className="popupHeading">Royalty</h5>
-                  <span className="popupText">
-                    Setting Royalty % for your NFT
-                  </span>
+                  <span className="popupText">Setting Royalty % for your NFT</span>
                 </div>
               </div>
               <div className="row customDisplayPopup">
@@ -1963,9 +1765,7 @@ const Create3 = (props) => {
                 </div>
                 <div className="col-8 icontxtDisplayPopup">
                   <h5 className="popupHeading">Upload</h5>
-                  <span className="popupText">
-                    Uploading of all media assets and metadata to IPFS
-                  </span>
+                  <span className="popupText">Uploading of all media assets and metadata to IPFS</span>
                 </div>
               </div>
               {isPutOnMarketplace ? (
@@ -1974,26 +1774,20 @@ const Create3 = (props) => {
                     <div className={isPutOnSalePopupClass}></div>
                   </div>
                   <div className="col-8 icontxtDisplayPopup">
-                    <h5 className="popupHeading">Put On Sale</h5>
-                    <span className="popupText">
-                      Sign message to set fixed price
-                    </span>
+                    <h5 className="popupHeading">Put on sale</h5>
+                    <span className="popupText">Sign message to set fixed price</span>
                   </div>
                 </div>
               ) : (
-                ""
+                ''
               )}
               <div className="row customDisplayPopup">
                 {hideClosePopup ? (
-                  <button
-                    className="closeBtn btn-main"
-                    disabled={ClosePopupDisabled}
-                    onClick={closePopup}
-                  >
+                  <button className="closeBtn btn-main" disabled={ClosePopupDisabled} onClick={closePopup}>
                     Close
                   </button>
                 ) : (
-                  ""
+                  ''
                 )}
                 {hideRedirectPopup ? (
                   <button
@@ -2004,18 +1798,27 @@ const Create3 = (props) => {
                     Close
                   </button>
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
             </div>
           </div>
         ) : (
-          ""
+          ''
         )}
       </section>
+
       <Footer />
     </div>
   );
 };
 
-export default Create3;
+const mapStateToProps = (state) => {
+  return {
+    account: state.account,
+    token: state.token,
+    profileData: state.profileData,
+  };
+};
+
+export default connect(mapStateToProps)(CreateSingle);

@@ -4,12 +4,12 @@ import { createGlobalStyle } from 'styled-components';
 
 import ScrollToTopBtn from './menu/ScrollToTop';
 import Header from './menu/header';
-import Home1 from './pages/home1';
+import Home from './pages/Home';
 import Explore from './pages/explore';
 import Auction from './pages/Auction';
 import ItemDetail from './pages/ItemDetail';
-import Create2 from './pages/create2';
-import Create3 from './pages/create3';
+import CreateSingle from './pages/createSingle';
+import CreateMultiple from './pages/createMultiple';
 import CreateOption from './pages/createOptions';
 import PersonalProfile from './pages/PersonalProfile';
 import UpdateProfile from './pages/updateProfile';
@@ -47,11 +47,11 @@ const app = () => (
     <Header />
     <PosedRouter>
       <ScrollTop path="/">
-        <Home1 path="/" />
+        <Home path="/" />
         <Explore path="/explore" />
         <CreateOption path="/createOptions" />
-        <Create2 path="/create2" />
-        <Create3 path="/create3" />
+        <CreateSingle path="/createSingle" />
+        <CreateMultiple path="/createMultiple" />
         <Auction path="/Auction" />
         <ItemDetail path="/itemDetail/:id" />
         <UpdateProfile path="/updateProfile" />
