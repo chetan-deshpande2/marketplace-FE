@@ -44,7 +44,7 @@ import {
 import previewImage from './../../assets/images/preview.jpeg';
 import { showProcessingModal } from '../../utils';
 import moment from 'moment';
-import './Create.css';
+import '../../assets/Create.css'
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -1055,7 +1055,8 @@ const CreateMultiple = (props) => {
                                       <span className="sub-heading">Upload Collection Cover</span>
                                       <div className="fileUploader mt-3">
                                         <div className="row align-items-center justify-content-center">
-                                          <span className="col-md-5 col-sm-12 padding_span uploadImg-container">
+                                          <div className="col-md-6 col-sm-12 uploadImg-container">
+                                          <div className='img-upload-box'>
                                             {!image ? (
                                               <img
                                                 alt="upload image"
@@ -1068,12 +1069,14 @@ const CreateMultiple = (props) => {
                                                 src={URL.createObjectURL(image)}
                                                 id="get_file_2"
                                                 className="collection_cover_preview img-fluid"
+                                                style={{height: '100%', borderRadius:'8px'}}
                                                 alt=""
                                                 onClick={() => fileRefCollection.current.click()}
                                               />
                                             )}
-                                          </span>
-                                          <div className="d-create-file col-md-7 uploadImg-right modal-file-upload">
+                                            </div>
+                                          </div>
+                                          <div className="d-create-file col-md-6 uploadImg-right modal-file-upload">
                                             <p id="collection_file_name">
                                               We recommend an image of at least 450x450. PNG, JPG, GIF, WEBP or MP4. Max
                                               {MAX_FILE_SIZE}mb.
