@@ -584,7 +584,7 @@ const ItemDetails = function (props) {
   const modal = (
     <PopupModal
       content={
-        <div className="popup-content1">
+        <div className="popup-content1 collection-popup-box custom-popup-box">
           <h3 className="modal_heading">Checkout</h3>
           <p className="bid_buy_text">
             You are about to purchase a{' '}
@@ -1553,8 +1553,8 @@ const ItemDetails = function (props) {
                 {qty / (nftDetails ? nftDetails.nQuantity : 0) > 1 ? 'editions' : 'edition'} each
               </div>
               <div className='col-md-10'>
-                <div className="d-flex flex-wrap justify-content-between modal-buttons">
-                  <div className="vCenter itemDet-btn mb-10">
+                <div className="d-flex flex-wrap modal-buttons">
+                  <div className="vCenter itemDet-btn mb-10 me-5">
                     <button
                       className={loading ? 'spn-disabled btn-main btn-putonMarket' : 'btn-main btn-putonMarket'}
                       onClick={() => {
@@ -2053,9 +2053,9 @@ const ItemDetails = function (props) {
                   ''
                 )}
 
-                <div className="de_tab_content">
+                <div className="de_tab_content ">
                   {openMenu && (
-                    <div className="tab-1 onStep fadeIn historyTab">
+                    <div className="tab-1 onStep fadeIn historyTab h-scrollable">
                       {history && history?.length > 0
                         ? history.map((h, i) => {
                           console.log(
