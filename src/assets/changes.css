@@ -129,10 +129,15 @@ iframe {
   border-radius: 8px;
 }
 .modal-buttons .btn-putonMarket{
-  padding: 20px;
+  padding: 15px;
 }
 .modal-buttons .btn-btnTransfer{
-  padding: 20px;
+  padding: 15px;
+}
+.h-scrollable{
+  height: 200px;
+  overflow-x: scroll;
+  scrollbar-width: thin;
 }
 /* .c-file-upload::file-selector-button{
   background-color: #8364e2;
