@@ -693,7 +693,7 @@ const CreateSingle = (props) => {
               gasLimit: 9000000,
               value: 0,
             };
-            let mintRes = await NFTcontract.mint(currentUser, 2521, options);
+            let mintRes = await NFTcontract.mint(currentUser, 2524, options);
             res1 = await mintRes.wait();
             if (res1.status === 0) {
               NotificationManager.error('Transaction failed', '', 800);
