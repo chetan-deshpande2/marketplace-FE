@@ -86,13 +86,16 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
     } else {
       options = {
         from: account,
-        gasLimit: 900000000,
+        gasPrice: 10000000000,
+        gasLimit: 9000000,
         value: 0,
       };
+      console.log(collectionData.nftFile, collectionData.sRoyaltyPercentage, contracts.WETH);
       res1 = await creator.deployExtendedERC1155(
         collectionData.nftFile,
         collectionData.sRoyaltyPercentage,
         contracts.WETH,
+        options,
       );
     }
 

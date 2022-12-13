@@ -556,7 +556,7 @@ const CreateSingle = (props) => {
 
       setCollectionCreation(false);
       togglePopup();
-      // window.location.reload();
+      window.location.reload();
     } catch (e) {
       setCollectionCreation(false);
       togglePopup();

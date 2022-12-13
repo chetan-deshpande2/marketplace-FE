@@ -44,7 +44,7 @@ import {
 import previewImage from './../../assets/images/preview.jpeg';
 import { showProcessingModal } from '../../utils';
 import moment from 'moment';
-import '../../assets/Create.css'
+import '../../assets/Create.css';
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -542,7 +542,7 @@ const CreateMultiple = (props) => {
           });
           setCollections(collectionsList?.results);
 
-          window.location.reload();
+          // window.location.reload();
         }
         if (ress === false) {
           setCollectionCreation(false);
@@ -1056,24 +1056,24 @@ const CreateMultiple = (props) => {
                                       <div className="fileUploader mt-3">
                                         <div className="row align-items-center justify-content-center">
                                           <div className="col-md-6 col-sm-12 uploadImg-container">
-                                          <div className='img-upload-box'>
-                                            {!image ? (
-                                              <img
-                                                alt="upload image"
-                                                src={UploadImg}
-                                                className=""
-                                                onClick={() => fileRefCollection.current.click()}
-                                              />
-                                            ) : (
-                                              <img
-                                                src={URL.createObjectURL(image)}
-                                                id="get_file_2"
-                                                className="collection_cover_preview img-fluid"
-                                                style={{height: '100%', borderRadius:'8px'}}
-                                                alt=""
-                                                onClick={() => fileRefCollection.current.click()}
-                                              />
-                                            )}
+                                            <div className="img-upload-box">
+                                              {!image ? (
+                                                <img
+                                                  alt="upload image"
+                                                  src={UploadImg}
+                                                  className=""
+                                                  onClick={() => fileRefCollection.current.click()}
+                                                />
+                                              ) : (
+                                                <img
+                                                  src={URL.createObjectURL(image)}
+                                                  id="get_file_2"
+                                                  className="collection_cover_preview img-fluid"
+                                                  style={{ height: '100%', borderRadius: '8px' }}
+                                                  alt=""
+                                                  onClick={() => fileRefCollection.current.click()}
+                                                />
+                                              )}
                                             </div>
                                           </div>
                                           <div className="d-create-file col-md-6 uploadImg-right modal-file-upload">
