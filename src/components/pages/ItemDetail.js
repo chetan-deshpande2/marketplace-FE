@@ -577,7 +577,7 @@ const ItemDetails = function (props) {
       content={
         <div className="popup-content1">
           <h3 className="modal_heading">Checkout</h3>
-          <p className="bid_buy_text">
+          <p className="bid_buy_text mb-2">
             You are about to purchase a{' '}
             <strong>
               {nftDetails
@@ -586,7 +586,7 @@ const ItemDetails = function (props) {
                   : nftDetails.nTitle
                 : ''}
             </strong>{' '}
-            from <br />
+            from 
             <strong>
               {authorDetails
                 ? authorDetails.sUserName
@@ -598,13 +598,13 @@ const ItemDetails = function (props) {
             </strong>
           </p>
           <div className="bid_user_details">
-            <div className="polygonLogo">
+            {/* <div className="polygonLogo">
               <img src={PolygonLogo} />
-            </div>
-            <div className="bid_user_address">
+            </div> */}
+            <div className="bid_user_address mb-2">
               <div>
-                <span className="adr">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
-                <span className="badge badge-success">Connected</span>
+                <span className="adr me-2">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
+                <span className="badge badge-success" style={{color:'green', background:'rgb(198, 253, 207)',padding:'10px',borderRadius:'25px'}}>Connected</span>
               </div>
               <span className="pgn">Polygon</span>
             </div>
@@ -635,11 +635,11 @@ const ItemDetails = function (props) {
             ''
           )}
 
-          <div className="bid_user_calculations">
+          <div className="bid_user_calculations mb-2">
             {placeBidCal?.map(({ key, value }) => {
               return (
                 <div className="cal_div">
-                  <span>{key}</span>
+                  <span style={{color:'#000',fontWeight:'600'}}>{key}:</span>
                   <span className="cal_div_value">
                     {value} {CURRENCY}
                   </span>
@@ -929,7 +929,7 @@ const ItemDetails = function (props) {
                 <span className="adr">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
                 <span className="badge badge-success">Connected</span>
               </div>
-              <span className="pgn">Polygon</span>
+              <span className="pgn mb-2">Polygon</span>
             </div>
           </div>
           <h6 className="enter_quantity_heading required">Please Enter the Bid Quantity</h6>
@@ -1464,7 +1464,7 @@ const ItemDetails = function (props) {
                     each
                   </span>
                 </div>
-                <div className="vCenter itemDet-btn">
+                <div className="vCenter itemDet-btn mt-3">
                   <span
                     className="btn-main btn-buyNow"
                     onClick={async () => {
