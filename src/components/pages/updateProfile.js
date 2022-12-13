@@ -23,9 +23,9 @@ const GlobalStyles = createGlobalStyle`
   header#myHeader .dropdown-toggle::after{
     color: rgba(255, 255, 255, .5);
   }
-  header#myHeader .logo .d-block{
-    display: none !important;
-  }
+  // header#myHeader .logo .d-block{
+  //   display: none !important;
+  // }
   header#myHeader .logo .d-none{
     display: block !important;
   }
@@ -208,7 +208,15 @@ const UpdateProfile = (props) => {
           backgroundImage: `url(${'./img/background/subheader.jpg'})`,
         }}
       >
-        <div className="mainbreadcumb"></div>
+        <div className="mainbreadcumb">
+        <div className="container">
+            <div className="row m-10-hor">
+              <div className="col-12">
+                <h1 className="text-center">Update Profile</h1>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="container">

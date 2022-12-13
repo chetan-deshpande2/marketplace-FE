@@ -29,9 +29,9 @@ const GlobalStyles = createGlobalStyle`
   header#myHeader .dropdown-toggle::after{
     color: rgba(255, 255, 255, .5);;
   }
-  header#myHeader .logo .d-block{
-    display: none !important;
-  }
+  // header#myHeader .logo .d-block{
+  //   display: none !important;
+  // }
   header#myHeader .logo .d-none{
     display: block !important;
   }
@@ -200,7 +200,7 @@ const PersonalProfile = function (props) {
                       <div className="d-flex">
                         {fullName}
                         <BsPencilSquare
-                          className="BsPencilSquare"
+                          className="BsPencilSquare pe-auto"
                           onClick={() => {
                             window.location.href = '/updateProfile';
                           }}
