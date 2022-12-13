@@ -479,10 +479,10 @@ const CreateSingle = (props) => {
 
   const handleCollectionCreate = async () => {
     console.log(props);
-    let res = await handleNetworkSwitch(currentUser);
-    setCookie('balance', res, { path: '/' });
-    if (res === false) return;
-    setIsPopup(false);
+    // let res = await handleNetworkSwitch(currentUser);
+    // setCookie('balance', res, { path: '/' });
+    // if (res === false) return;
+    // setIsPopup(false);
     setCollectionCreation(true);
     if (!currentUser && profile) {
       NotificationManager.error('Please Connect Your Wallet', '', 800);
@@ -542,11 +542,11 @@ const CreateSingle = (props) => {
           });
           setCollections(collectionsList?.results);
 
-          window.location.reload();
+          // window.location.reload();
         }
         if (ress === false) {
           setCollectionCreation(false);
-          window.location.reload();
+          // window.location.reload();
         }
         setCollectionCreation(false);
       } catch (e) {
@@ -556,12 +556,12 @@ const CreateSingle = (props) => {
 
       setCollectionCreation(false);
       togglePopup();
-      window.location.reload();
+      // window.location.reload();
     } catch (e) {
       setCollectionCreation(false);
       togglePopup();
       console.log(e);
-      window.location.reload();
+      // window.location.reload();
     }
   };
 
@@ -643,14 +643,22 @@ const CreateSingle = (props) => {
             gasLimit: 9000000,
             value: 0,
           };
-          let approval = await NFTcontract.isApprovedForAll(currentUser, contracts.MARKETPLACE, options);
+          let approval = await NFTcontract.isApprovedForAll(currentUser, contracts.MARKETPLACE, {
+            from: currentUser,
+            gasLimit: 9000000,
+            value: 0,
+          });
           let approvalRes;
 
           if (approval) {
             setisApprovePopupClass('checkiconCompleted');
           }
           if (!approval) {
-            approvalRes = await NFTcontract.setApprovalForAll(contracts.MARKETPLACE, true, options);
+            approvalRes = await NFTcontract.setApprovalForAll(contracts.MARKETPLACE, true, {
+              from: currentUser,
+              gasLimit: 9000000,
+              value: 0,
+            });
             approvalRes = await approvalRes.wait();
             if (approvalRes.status === 0) {
               NotificationManager.error('Transaction failed', '', 800);

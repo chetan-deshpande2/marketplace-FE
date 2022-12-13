@@ -60,7 +60,8 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
 
       options = {
         from: account,
-        gasLimit: 90000000,
+        gasPrice: 10000000000,
+        gasLimit: 9000000,
         value: 0,
       };
       // let transactionFee = gasPrice * gasLimit;
@@ -71,6 +72,7 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
         collectionData.nftFile,
         collectionData.sRoyaltyPercentage,
         contracts.WETH,
+        options,
       );
 
       res1 = await creator.deployExtendedERC721(
@@ -122,8 +124,14 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
         gasLimit: 9000000,
         value: 0,
       };
+      console.log([account], [collectionData.sRoyaltyPercentage], options);
 
-      let res = await royalty.setDefaultRoyaltyDistribution([account], [collectionData.sRoyaltyPercentage]);
+      let res = await royalty.setDefaultRoyaltyDistribution([account], [collectionData.sRoyaltyPercentage], {
+        from: account,
+        gasPrice: 10000000000,
+        gasLimit: 9000000,
+        value: 0,
+      });
 
       res = await res.wait();
 
