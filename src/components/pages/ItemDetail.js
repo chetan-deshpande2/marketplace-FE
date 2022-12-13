@@ -111,7 +111,7 @@ const ItemDetails = function (props) {
 
   const [nftDetails, setNftDetails] = useState({});
   const [authorDetails, setAuthorDetails] = useState({});
-  const [orders, setOrders] = useState('null');
+  const [orders, setOrders] = useState(null);
   const [isPopup, setIsPopup] = useState(false);
   const [buyQuantity, setBuyQuantity] = useState(1);
   const [isMarketplacePopup, setMarketplacePopup] = useState(false);
@@ -119,7 +119,7 @@ const ItemDetails = function (props) {
   const [marketplaceSaleType, setMarketplaceSaleType] = useState(0);
   const [isOwned, setIsOwned] = useState(false);
   const [marketplaceQuantity, setMarketplaceQuantity] = useState(1);
-  const [haveOrder, setHaveOrder] = useState('null');
+  const [haveOrder, setHaveOrder] = useState(false);
   const [ownedQuantity, setOwnedQuantity] = useState();
   const [minimumBid, setMinimumBid] = useState('');
   const [endTime, setEndTime] = useState();
@@ -143,9 +143,6 @@ const ItemDetails = function (props) {
   const [metaData, setMetaData] = useState([]);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [history, setHistory] = useState([]);
-  const [totalLikes, setTotalLikes] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeEvent, setLikeEvent] = useState(false);
   const [profile, setProfile] = useState();
   const [cookies, setCookie] = useCookies(['selected_account', 'Authorization']);
   const [currOrderType, setCurrOrderType] = useState();
@@ -367,11 +364,6 @@ const ItemDetails = function (props) {
             console.log(authorData);
           }
 
-          let is_user_like = profile
-            ? data.nUser_likes.filter((d) => {
-                return d === profile?._id;
-              }).length > 0
-            : false;
           console.log(data.nOwnedBy, currentUser);
 
           if (data && data.nOwnedBy && currentUser) {
@@ -406,7 +398,6 @@ const ItemDetails = function (props) {
           } else {
             let _orderState = [];
             for (let i = 0; i < d?.length; i++) {
-              console.log(_orderState[i]);
               _orderState[i] = false;
 
               let searchParams = {
@@ -417,7 +408,8 @@ const ItemDetails = function (props) {
               };
 
               let _data = await fetchBidNft(searchParams);
-              console.log(_data);
+
+              console.log(d[i].oPaymentToken);
               if (data && currentUser) {
                 if (d[i].oPaymentToken !== ZERO_ADDRESS) {
                   let paymentData = await getPaymentTokenInfo(currentUser, d.results[i].oPaymentToken);
@@ -451,35 +443,33 @@ const ItemDetails = function (props) {
             }
             console.log(_orderState);
             setOrderState(_orderState);
-            console.log(d);
             let _orders = d;
             console.log(_orders.length, _orders[0], currentUser);
             if (_orders.length >= 1 && !isEmpty(_orders[0]) && currentUser) {
+              console.log(_orders[0]);
               let datas = _orders.filter((data, key) => {
                 return data.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase();
               });
-              if (datas.length >= 1) {
-                setConnectedUserOrderId(datas[0]._id);
+              console.log(datas);
+              if (datas.length > 0) {
+                console.log('inside l');
                 setHaveOrder(true);
-              } else {
-                setHaveOrder(false);
+                setConnectedUserOrderId(datas[0]._id);
+                setOrders(datas);
               }
             }
+            console.log(haveOrder);
 
-            setOrders(d.results ? d.results : []);
+            setNftDetails(data);
+            console.log(orders, haveOrder);
+            console.log(authorData);
+            setAuthorDetails(authorData);
+            if (isEmpty(data)) {
+              window.location.href = '/profile';
+            }
           }
-
-          setIsLiked(is_user_like);
-          setTotalLikes(data?.nUser_likes?.length);
-          setNftDetails(data);
-          console.log(data);
-          console.log(authorData);
-          setAuthorDetails(authorData);
-          if (isEmpty(data)) {
-            window.location.href = '/profile';
-          }
+          setLoading(false);
         }
-        setLoading(false);
       }
       fetch();
     },
@@ -1637,19 +1627,20 @@ const ItemDetails = function (props) {
 
       {loading ? showProcessingModal('Loading') : ''}
       {isPopup ? modal : ''}
-      {/* 
+
       {checkoutLoader ? showProcessingModal('Transaction is in progress. Please do not refresh...') : ''}
       {putOnMarketplaceLoader ? showProcessingModal(`Placing on marketplace. Please do not refresh...`) : ''}
       {transferLoader
         ? showProcessingModal(
-          `Transferring ${transferQuantity} qty to ${beneficiary.slice(0, 3) + '...' + beneficiary.slice(39, 42)
-          }. Please do not refresh...`,
-        )
+            `Transferring ${transferQuantity} qty to ${
+              beneficiary.slice(0, 3) + '...' + beneficiary.slice(39, 42)
+            }. Please do not refresh...`,
+          )
         : ''}
       {placeBidLoader ? showProcessingModal('Placing bid. Please do not refresh...') : ''}
 
       {removeFromSaleLoader ? showProcessingModal('Removing NFT from sale. Please do not refresh...') : ''}
- */}
+
       {isTransferPopup ? transferModal : ''}
       {isPlaceABidPopup ? placeBidModal : ''}
       {isUnlocked ? hiddenContentModal : ''}
@@ -2096,19 +2087,25 @@ const ItemDetails = function (props) {
                           })
                         : ''}
                       <div className="row customRow">
-                        <div className="col-lg-12">{totalPages > 1 ? 'null' : ''}</div>
+                        <div className="col-lg-12">{totalPages > 1 ? null : ''}</div>
                       </div>
                     </div>
                   )}
 
                   {openMenu1 && (
                     <div className="tab-2 onStep fadeIn">
-                      {true
+                      {loading
+                        ? showProcessingModal('Loading..')
+                        : isOwned && haveOrder === false && orders !== null
                         ? PutOnMarketPlace(ownedQuantity)
-                        : orders != 'null' && orders?.length >= 1 && !isEmpty(orders[0])
+                        : orders != null && orders.length > 0
                         ? orders.map((order, key) => {
                             if (order.oStatus === 1) {
                               if (order.oType === 0) {
+                                <>
+                                  <p>dfdfsdfdsf</p>
+                                  <h1>{JSON.stringify('yes')}</h1>;
+                                </>;
                                 if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
                                   return RemoveFromSale(
                                     order?.oSellerWalletAddress,
@@ -2133,6 +2130,10 @@ const ItemDetails = function (props) {
                                   );
                                 }
                               } else if (order.oType === 1) {
+                                <>
+                                  <p>another</p>
+                                  <h1>{JSON.stringify('yes')}</h1>;
+                                </>;
                                 if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
                                   return RemoveFromAuction(
                                     order.oSellerWalletAddress,
@@ -2162,11 +2163,16 @@ const ItemDetails = function (props) {
                                     order.isUserHaveActiveBid,
                                   );
                                 }
+                              } else {
+                                <>
+                                  <p>fail</p>
+                                  <h1>{JSON.stringify('yes')}</h1>;
+                                </>;
                               }
                             }
                             return '';
                           })
-                        : !isOwned && orders !== 'null'
+                        : !isOwned && orders !== null
                         ? NotForSale(0)
                         : ''}
                     </div>

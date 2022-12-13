@@ -328,7 +328,7 @@ export const getOrderDetails = async (data) => {
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log('get order data is--->', datas);
-    return datas.data;
+    return datas.order;
   } catch (err) {
     return err;
   }
