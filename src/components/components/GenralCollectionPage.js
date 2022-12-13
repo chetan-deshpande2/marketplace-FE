@@ -3,7 +3,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styled from 'styled-components';
 import { getCollections, isEmpty } from '../../helpers/getterFunctions';
-// import { Pagination } from '@material-ui/lab';
+import { Pagination } from '@material-ui/lab';
 import Placeholder from './placeholder';
 import { perPageCount } from '../../helpers/constants';
 
@@ -127,17 +127,18 @@ const CollectionsList = (props) => {
           ))
         : ''}
 
-      {totalPages > 1
-        ? // <Pagination
-          //   count={totalPages}
-          //   size="large"
-          //   page={currPage}
-          //   variant="outlined"
-          //   shape="rounded"
-          //   onChange={handleChange}
-          // />
-          'null'
-        : ''}
+      {totalPages > 1 ? (
+        <Pagination
+          count={totalPages}
+          size="large"
+          page={currPage}
+          variant="outlined"
+          shape="rounded"
+          onChange={handleChange}
+        />
+      ) : (
+        ''
+      )}
     </div>
   );
 };

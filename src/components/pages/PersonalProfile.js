@@ -12,6 +12,7 @@ import ItemNotFound from './ItemNotFound';
 import { useNavigate } from '@reach/router';
 import '../component-css/profile-page.css';
 import Loader from '../components/loader';
+import GeneralCollectionsPage from '../components/GenralCollectionPage';
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
@@ -80,29 +81,30 @@ const PersonalProfile = function (props) {
       if (currentUser) {
         setLoading(true);
         const profileInfo = await getProfile();
+        console.log(profileInfo);
         if (profileInfo) {
           let profileData = profileInfo;
-          if (profileData.oName && profileData.oName.sFirstname && profileData.oName.sLastname) {
-            setFullName(profileData.oName.sFirstname + ' ' + profileData.oName.sLastname);
+          if (profileData.user.oName && profileData.user.oName.sFirstname && profileData.user.oName.sLastname) {
+            setFullName(profileData.user.oName.sFirstname + ' ' + profileData.user.oName.sLastname);
           } else {
             setFullName('Unnamed');
           }
 
-          if (profileData.sUserName) {
-            setUserName('@' + profileData.sUserName);
+          if (profileData.user.sUserName) {
+            setUserName('@' + profileData.user.sUserName);
           } else {
             setUserName('@unnamed');
           }
 
-          if (profileData.sWalletAddress) {
-            setAddress(profileData.sWalletAddress);
+          if (profileData.user.sWalletAddress) {
+            setAddress(profileData.user.sWalletAddress);
           } else if (currentUser) {
             setAddress(currentUser);
           } else {
             setAddress('0x0..');
           }
 
-          let sProfilePicUrl = profileData.sProfilePicUrl === undefined ? Avatar : profileData.sProfilePicUrl;
+          let sProfilePicUrl = profileData.user.sProfilePicUrl === undefined ? Avatar : profileData.user.sProfilePicUrl;
           setProfilePic(sProfilePicUrl);
           setProfileData(profileData);
           setLoading(false);
@@ -297,11 +299,11 @@ const PersonalProfile = function (props) {
             <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
           </div>
         )}
-        {/* {openMenu4 && (
+        {openMenu4 && (
           <div id="zero5" className="onStep fadeIn">
             <GeneralCollectionsPage userId={profileData?._id} isAllCollections={false} />
           </div>
-        )} */}
+        )}
       </section>
       )
       <Footer />

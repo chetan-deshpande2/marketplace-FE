@@ -56,7 +56,7 @@ const OnSaleItems = (props) => {
         }
       } else {
         console.log('in else block');
-        console.log(props.profile);
+        console.log(props.profile.user);
         if ((props.profile.message = 'user found')) {
           console.log('user found');
           console.log(
@@ -189,18 +189,18 @@ const OnSaleItems = (props) => {
 
                 <div className="author_list_pp_explore_page">
                   {/* <Outer> */}
-                    <span onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
-                      <img
-                        onLoad={onImgLoad}
-                        src={`http://${nft.nHash}.ipfs.w3s.link/${nft.nNftImage}`}
-                        className="lazy nft__item_preview slider-img-preview img-fluid"
-                        alt=""
-                      />
-                    </span>
+                  <span onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
+                    <img
+                      onLoad={onImgLoad}
+                      src={`http://${nft.nHash}.ipfs.w3s.link/${nft.nNftImage}`}
+                      className="lazy nft__item_preview slider-img-preview img-fluid"
+                      alt=""
+                    />
+                  </span>
                   {/* </Outer> */}
                 </div>
                 <div className="nft__item_info mt-3">
-                  <span className='text-center' onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
+                  <span className="text-center" onClick={() => (window.location.href = '/itemDetail/' + nft.id)}>
                     <h4 className="nft_title_class">
                       {nft.title ? (nft.title.length > 15 ? nft.title.slice(0, 15) + '...' : nft.title) : ''}
                     </h4>
@@ -214,42 +214,6 @@ const OnSaleItems = (props) => {
                       {props.isProfile ? 'View NFT' : 'Buy Now'}
                     </span>
                   </div>
-
-                  {/* <div className="spacer-20"></div> */}
-                  {/* LIKE START*/}
-
-                  <div className="nft__item_like">
-                    {/* {likedItems && likedItems[index] ? (
-                      <i
-                        id={`item${index}`}
-                        style={{ color: "red" }}
-                        className="fa fa-heart"
-                        onClick={async () => {
-                          await LikeNft({ id: nft._id });
-
-                          setLikeEvent(!likeEvent);
-                          NotificationManager.success(
-                            "Nft disliked successfully"
-                          );
-                        }}
-                      ></i>
-                    ) : (
-                      <i
-                        id={`item${index}`}
-                        className="fa fa-heart"
-                        onClick={async () => {
-                          await LikeNft({ id: nft._id });
-                          setLikeEvent(!likeEvent);
-                          NotificationManager.success("Nft liked successfully");
-                        }}
-                      ></i>
-                    )}
-                    <span id={`totalLikes${index}`}>
-                      {totalLikes && totalLikes[index] ? totalLikes[index] : 0}
-                    </span> */}
-                  </div>
-
-                  {/* LIKE ENDS*/}
                 </div>
               </div>
             </div>
