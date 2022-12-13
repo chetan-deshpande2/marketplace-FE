@@ -33,7 +33,7 @@ iframe {
   justify-content: center;
   align-items: center;
 }
-.mb-10{
+.mb-10 {
   margin-bottom: 10px;
 }
 /* .de_tab_content .p_list_pp {
@@ -42,6 +42,9 @@ iframe {
 .add-collection-box .d-create-file {
   padding: 30px;
   height: 190px;
+}
+.mr-48 {
+  margin-right: 48px;
 }
 .custom-popup-box .add-collection-box {
   scrollbar-width: thin;
@@ -113,8 +116,8 @@ iframe {
 .c-button input[type="file"] {
   display: none;
 }
-.modal-file-upload{
-  display:flex;
+.modal-file-upload {
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -128,24 +131,29 @@ iframe {
   justify-content: center;
   border-radius: 8px;
 }
-.modal-buttons .btn-putonMarket{
+.modal-buttons .btn-putonMarket {
   padding: 15px;
 }
-.modal-buttons .btn-btnTransfer{
+.modal-buttons .btn-btnTransfer {
   padding: 15px;
 }
-.h-scrollable{
-  height: 200px;
-  overflow-x: scroll;
+.h-scrollable {
+  max-height: 145px;
+  overflow-x: hidden;
+  overflow-y: auto;
   scrollbar-width: thin;
+  width: 85%;
+}
+.customRow .p_list_info {
+  padding-left: 60px;
 }
 /* .c-file-upload::file-selector-button{
   background-color: #8364e2;
   color: #fff;
 } */
-@media (max-width: 1199px){
+@media (max-width: 1199px) {
   .navbar .nav-icon {
-    top: 47%;
+    top: 45px;
   }
 }
 @media (max-width: 991px) {
@@ -158,13 +166,13 @@ iframe {
     gap: 15px;
     width: 500px;
   }
-  .spacer-single{
-    display:none;
+  .spacer-single {
+    display: none;
   }
   .custom-popup-box .add-collection-box {
     width: 75%;
   }
-  .mb-10{
+  .mb-10 {
     margin-bottom: 10px;
   }
 }
@@ -210,9 +218,10 @@ iframe {
   .mt-30 {
     margin-top: 30px;
   }
-  .mb-10{
+  .mb-10 {
     margin-bottom: 10px;
   }
+
   .c-de_nav {
     display: flex;
     flex-wrap: wrap;
@@ -240,10 +249,21 @@ iframe {
   .custom-popup-box .add-collection-box {
     width: 90%;
   }
-  .modal-buttons .btn-putonMarket{
-    padding: 20px;
+  .modal-buttons .btn-putonMarket {
+    padding: 15px;
   }
-  .modal-buttons .btn-btnTransfer{
-    padding: 20px;
+  .modal-buttons .btn-btnTransfer {
+    padding: 15px;
+  }
+  .h-scrollable {
+    width: 100%;
+  }
+  .mr-48 {
+    margin-right: 5px;
+  }
+}
+@media screen and (max-width: 350px) {
+  .logo a img {
+    max-width: 150px;
   }
 }
