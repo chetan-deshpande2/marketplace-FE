@@ -1,4 +1,4 @@
-import { BigNumber } from 'big-number';
+import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
 import { NotificationManager } from 'react-notifications';
 import { GENERAL_DATE, GENERAL_TIMESTAMP, MAX_ALLOWANCE_AMOUNT } from './constants';
@@ -190,7 +190,10 @@ export const handleBuyNft = async (id, isERC721, account, balance, qty = 1) => {
   let sellerOrder = [];
   let buyerOrder = [];
   console.log('details.signature', details.oSignature);
-  let amount = new BigNumber(order[6].toString()).multipliedBy(new BigNumber(qty.toString())).toString();
+  console.log(details);
+  console.log(order[6].toString(), qty);
+
+  let amount = new BigNumber(order[6].toString()).multipliedBy(new BigNumber(qty).toString()).toString();
   console.log(
     'price',
     new BigNumber(order[6].toString()).multipliedBy(new BigNumber(order[3].toString())).toString(),

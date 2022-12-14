@@ -12,6 +12,7 @@
     "@tim-soft/react-spring-web": "^9.0.0-beta.36",
     "@walletconnect/web3-provider": "^1.8.0",
     "big-number": "^2.0.0",
+    "bignumber.js": "^9.1.1",
     "bootstrap": "^5.1.1",
     "cra-template": "1.1.2",
     "elegant-icons": "0.0.1",
