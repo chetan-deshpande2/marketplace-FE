@@ -501,73 +501,67 @@ const ItemDetails = function (props) {
     fetch();
   }, [nftDetails, currPage]);
 
-  // useEffect(() => {
-  //   console.log(nftDetails);
-  //   const fetchData = async () => {
-  //     if (nftDetails && nftDetails.nHash) {
-  //       let resp = await fetch(process.env.REACT_APP_IPFS_URL + nftDetails.nHash);
-  //       resp = await resp.json();
+  useEffect(() => {
+    console.log(nftDetails);
+    const fetchData = async () => {
+      if (nftDetails && nftDetails.nHash) {
+        let resp = await fetch(process.env.REACT_APP_IPFS_URL + nftDetails.nHash);
+        resp = await resp.json();
 
-  //       setMetaData(eval(resp.attributes));
-  //     }
-  //   };
+        setMetaData(eval(resp.attributes));
+      }
+    };
 
-  //   fetchData();
-  // }, [nftDetails]);
+    fetchData();
+  }, [nftDetails]);
 
-  // useEffect(() => {
-  //   const checkIfOpenForSale = async () => {
-  //     for (let i = 0; i < orders.length; i++) {
-  //       console.log(orders[i]);
-  //       if (orders[i].oStatus >= 1) {
-  //         return;
-  //       }
-  //     }
-  //     return;
-  //   };
+  useEffect(() => {
+    const checkIfOpenForSale = async () => {
+      for (let i = 0; i < orders.length; i++) {
+        console.log(orders[i]);
+        if (orders[i].oStatus >= 1) {
+          return;
+        }
+      }
+      return;
+    };
 
-  //   checkIfOpenForSale();
-  // }, [orders]);
+    checkIfOpenForSale();
+  }, [orders]);
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     setLoading(true);
-  //     console.log(nftDetails.nHash, nftDetails.nNftImage);
-  //     if (nftDetails && nftDetails._id) {
-  //       let data = await getAllBidsByNftId(nftDetails._id);
-  //       console.log(data);
-  //       let _highestBid = {};
-  //       _highestBid = data?.highestBid;
-  //       console.log(data);
-  //       // data = data?.data;
+  useEffect(() => {
+    const fetch = async () => {
+      setLoading(true);
+      console.log(nftDetails.nHash, nftDetails.nNftImage);
+      if (nftDetails && nftDetails._id) {
+        let data = await getAllBidsByNftId(nftDetails._id);
+        console.log(data);
+        let _highestBid = {};
+        _highestBid = data?.highestBid;
+        console.log(data);
+        // data = data?.data;
 
-  //       if (data.length > 0 && isEmpty(data[0])) data = [];
-  //       setBids(data);
-  //       setHighestBid(_highestBid);
-  //     }
-  //     setLoading(false);
-  //   };
-  //   fetch();
-  // }, [nftDetails]);
+        if (data.length > 0 && isEmpty(data[0])) data = [];
+        setBids(data);
+        setHighestBid(_highestBid);
+      }
+      setLoading(false);
+    };
+    fetch();
+  }, [nftDetails]);
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
-  //       new BigNumber(bidQty?.toString()),
-  //     );
-  //     let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
+  useEffect(() => {
+    const fetch = async () => {
+      let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
+        new BigNumber(bidQty?.toString()),
+      );
+      let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
 
-  //     setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
-  //   };
-  //   fetch();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log(isOwned);
-  //   });
-  // });
+      setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
+    };
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
 
   //*======================= Popups ==========
 

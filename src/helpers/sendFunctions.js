@@ -725,6 +725,7 @@ export const createBid = async (
   let buyerOrder = [];
   try {
     SellerOrder = await buildSellOrder(orderID);
+    console.log(SellerOrder);
     for (let index = 0; index < 11; index++) {
       switch (index) {
         case 0:
@@ -770,10 +771,15 @@ export const createBid = async (
           buyerOrder.push(parseInt(SellerOrder[index]));
       }
     }
-    if (!LazyMintingStatus) {
-      let usrHaveQuantity = await GetOwnerOfToken(sellerOrder[1], sellerOrder[2], erc721, sellerOrder[0]);
-    }
+    console.log('outside for');
+    console.log(buyerOrder[0], buyerOrder[5]);
+
     let userTokenBal = await getUsersTokenBalance(buyerOrder[0], buyerOrder[5]);
+    console.log(userTokenBal);
+
+    // if (!LazyMintingStatus) {
+    //   let usrHaveQuantity = await GetOwnerOfToken(sellerOrder[1], sellerOrder[2], erc721, sellerOrder[0]);
+    // }
 
     if (
       new BigNumber(bidPrice).multipliedBy(new BigNumber(qty.toString())).isGreaterThan(new BigNumber(userTokenBal))
@@ -829,7 +835,7 @@ export const createBid = async (
 
 export const handleApproveToken = async (userAddress, tokenAddress) => {
   try {
-    let token = await exportInstance(tokenAddress, erc20Abi);
+    let token = await exportInstance(tokenAddress, erc20Abi.abi);
     const options = {
       from: userAddress,
       gasLimit: 9000000,

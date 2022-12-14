@@ -7,7 +7,7 @@ export const exportInstance = async (SCAddress, ABI) => {
   let provider = new ethers.providers.Web3Provider(window.ethereum);
   let signer = provider.getSigner();
   let a = new ethers.Contract(SCAddress, ABI, signer);
-
+  console.log(a);
   if (a) {
     return a;
   } else {
@@ -786,7 +786,8 @@ export const createBidNft = async (data) => {
     let response = await fetch(REACT_APP_API_BASE_URL + '/bid/createBidNft', requestOptions);
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
-    return datas.data;
+    console.log(data);
+    return datas;
   } catch (err) {
     return err;
   }

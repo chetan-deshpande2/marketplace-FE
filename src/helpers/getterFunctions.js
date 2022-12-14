@@ -194,7 +194,7 @@ export const getMaxAllowedDate = () => {
 export const getTokenNameAndSymbolByAddress = async (address) => {
   try {
     if (address === ZERO_ADDRESS) return;
-    let token = await exportInstance(address, erc20Abi);
+    let token = await exportInstance(address, erc20Abi.abi);
     let symbol = await token.symbol();
     let name = await token.name();
     console.log(symbol, name);
@@ -221,7 +221,7 @@ export const getPaymentTokenInfo = async (userWallet, tokenAddress) => {
     if (userWallet === '') {
       return getTokenNameAndSymbolByAddress(tokenAddress);
     }
-    let token = await exportInstance(tokenAddress, erc20Abi);
+    let token = await exportInstance(tokenAddress, erc20Abi.abi);
     let symbol = await token.symbol();
     let name = await token.name();
     console.log(name, symbol);
@@ -247,7 +247,7 @@ export const buildSellOrder = async (id) => {
   let details;
   try {
     details = await getOrderDetails({ orderId: id });
-    console.log('details 123', details);
+    console.log(details);
     const order = [
       details.oSellerWalletAddress,
       details.oTokenAddress,
@@ -262,13 +262,12 @@ export const buildSellOrder = async (id) => {
       details.oSalt,
     ];
 
-    console.log('getOrder', order);
-
     return order;
   } catch (e) {
     console.log('error in api', e);
   }
 };
+
 export const getNextId = async (collection) => {
   try {
     let details = await GetCollectionsByAddress({
@@ -384,10 +383,12 @@ export const getUsersNFTs = async (currPage, perPageCount, paramType, walletAddr
 };
 
 export const getUsersTokenBalance = async (account, tokenAddress) => {
-  let token;
-  token = await exportInstance(tokenAddress, erc20Abi);
-  let userBalance = await token.balanceOf(account);
-  console.log('token', token, 'userBalance', userBalance.toString(), account);
+  console.log(account, tokenAddress);
+  let addressofToken;
+  addressofToken = await exportInstance(tokenAddress, erc20Abi.abi);
+  console.log(addressofToken);
+  let userBalance = await addressofToken.balanceOf(account);
+  console.log('token', addressofToken, 'userBalance', userBalance.toString(), account);
   return userBalance.toString();
 };
 
