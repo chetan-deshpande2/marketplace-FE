@@ -123,7 +123,7 @@ const CreateSingle = (props) => {
   const [chosenType, setChosenType] = useState(0);
   const [minimumBid, setMinimumBid] = useState();
   const [endTime, setEndTime] = useState();
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState(contracts.USDT);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState(contracts.WETH);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
 
   /************ Create NFT Popup Checks ********** */

@@ -22,6 +22,7 @@ import erc721Abi from './../Config/abis/simpleERC721.json';
 import erc1155Abi from '../Config/abis/simpleERC1155.json';
 import { GENERAL_DATE, GENERAL_TIMESTAMP } from './constants';
 import Avatar from './../assets/react.svg';
+import NotificationManager from 'react-notifications/lib/NotificationManager';
 
 const ipfsAPI = require('ipfs-api');
 const ipfs = ipfsAPI('ipfs.infura.io', '5001', {
@@ -117,27 +118,16 @@ export const GetOwnerOfToken = async (collection, tokenId, isERC721, account) =>
 
 export const getSignature = async (signer, ...args) => {
   try {
-    console.log('111');
     const order = toTypedOrder(...args);
-    console.log('order is---->', order);
     let provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send('eth_requestAccounts', []);
-
-    console.log('222');
-    console.log(provider.getSigner());
     const signer1 = provider.getSigner();
-    console.log('signer1=========>', signer1.address);
-    console.log('333');
-    console.log(args);
     const signedTypedHash = await signer1._signTypedData(order.domain, order.types, order.value);
-    console.log('444');
     const sig = ethers.utils.splitSignature(signedTypedHash);
-    console.log('555');
 
     return [sig.v, sig.r, sig.s];
   } catch (e) {
     if (e.code === 4001) {
-      console.log('User denied ');
+      NotificationManager.error('User denied ');
       return false;
     }
     console.log('error in api', e);

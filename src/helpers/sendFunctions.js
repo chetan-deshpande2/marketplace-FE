@@ -81,7 +81,6 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
         collectionData.nftFile,
         collectionData.sRoyaltyPercentage,
         contracts.WETH,
-        options,
       );
     } else {
       options = {

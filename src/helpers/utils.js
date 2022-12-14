@@ -37,7 +37,7 @@ export const getMaxAllowedDate = () => {
 
 export const getTokenSymbolByAddress = (addr) => {
   if (addr === contracts.WETH) {
-    return 'USDC';
+    return 'WETH';
   }
   return '';
 };
