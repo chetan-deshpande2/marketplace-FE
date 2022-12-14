@@ -520,7 +520,9 @@ export const handleRemoveFromAuction = async (orderId, account) => {
     marketplace = await exportInstance(contracts.MARKETPLACE, marketPlaceABI.abi);
 
     let order = await buildSellOrder(orderId);
+    console.log(order);
     let details = await getOrderDetails({ orderId: orderId });
+    console.log(details.oSignature);
     // let gasLimit = await marketplace.estimateGas.cancelOrder(
     //   order,
     //   details.oSignature,
@@ -661,6 +663,7 @@ export const handleRemoveFromSale = async (orderId, account) => {
   let marketplace;
   let order;
   let details;
+  console.log(orderId, account);
   try {
     marketplace = await exportInstance(contracts.MARKETPLACE, marketPlaceABI.abi);
     const options = {
@@ -669,11 +672,13 @@ export const handleRemoveFromSale = async (orderId, account) => {
       value: '0',
     };
     order = await buildSellOrder(orderId);
+    console.log(order);
     details = await getOrderDetails({ orderId: orderId });
     console.log('order and details are', order, details);
 
     console.log('details.signature', details.oSignature);
     let res = await marketplace.cancelOrder(order, details.oSignature, options);
+
     res = await res.wait();
     if (res.status === 0) {
       NotificationManager.error('Transaction failed');
