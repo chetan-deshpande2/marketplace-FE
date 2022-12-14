@@ -192,6 +192,10 @@ iframe {
 .c-popup-box .c-buy-items .d-token{
   font-weight: 600;
 }
+.token-button .btn-removefromauction{
+margin-bottom: 10px;
+margin-right: 10px;
+}
 @media (max-width: 1199px) {
   .navbar .nav-icon {
     top: 45px;
@@ -215,6 +219,9 @@ iframe {
   }
   .mb-10 {
     margin-bottom: 10px;
+  }
+  .c-popup-box .add-collection-box {
+    width: 50%;
   }
 }
 @media (max-width: 767px) {
@@ -301,6 +308,10 @@ iframe {
   }
   .mr-48 {
     margin-right: 5px;
+  }
+  .c-popup-box .add-collection-box {
+    padding: 10px;
+    width: 90%;
   }
 }
 @media screen and (max-width: 350px) {

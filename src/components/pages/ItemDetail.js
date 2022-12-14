@@ -599,7 +599,7 @@ const ItemDetails = function (props) {
               <div className="bid_user_address mb-2">
                 <div>
                   <span className="adr me-2 d-color">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
-                  <span className="badge badge-success" style={{ color: 'green', background: 'rgb(198, 253, 207)', padding: '10px', borderRadius: '25px' }}>Connected</span>
+                  <span className="badge badge-success" style={{ color: 'green', background: 'rgb(198, 253, 207)', padding: '10px', borderRadius: '25px',float:'right' }}>Connected</span>
                 </div>
                 <span className="pgn d-token">Polygon</span>
               </div>
@@ -1240,7 +1240,7 @@ const ItemDetails = function (props) {
                     ''
                   )}
                 </div>
-                <div className="d-flex flex-wrap">
+                <div className="d-flex flex-wrap token-button">
                   <div className="vCenter itemDet-btn">
                     <span
                       className={loading ? 'spn-disabled btn-removefromauction' : 'btn-main btn-removefromauction'}
