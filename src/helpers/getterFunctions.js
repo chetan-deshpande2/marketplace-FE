@@ -20,7 +20,7 @@ import contracts from '../Config/contracts';
 import erc20Abi from '../Config/abis/erc20.json';
 import erc721Abi from './../Config/abis/simpleERC721.json';
 import erc1155Abi from '../Config/abis/simpleERC1155.json';
-import { GENERAL_DATE, GENERAL_TIMESTAMP } from './constants';
+import { GENERAL_DATE, GENERAL_TIMESTAMP, ZERO_ADDRESS } from './constants';
 import Avatar from './../assets/react.svg';
 import NotificationManager from 'react-notifications/lib/NotificationManager';
 
@@ -118,7 +118,9 @@ export const GetOwnerOfToken = async (collection, tokenId, isERC721, account) =>
 
 export const getSignature = async (signer, ...args) => {
   try {
+    console.log('args====>', args);
     const order = toTypedOrder(...args);
+    console.log('order=>', order);
     let provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer1 = provider.getSigner();
     const signedTypedHash = await signer1._signTypedData(order.domain, order.types, order.value);
@@ -189,20 +191,56 @@ export const getMaxAllowedDate = () => {
   return maxDate;
 };
 
+export const getTokenNameAndSymbolByAddress = async (address) => {
+  try {
+    if (address === ZERO_ADDRESS) return;
+    let token = await exportInstance(address, erc20Abi);
+    let symbol = await token.symbol();
+    let name = await token.name();
+    console.log(symbol, name);
+
+    return {
+      symbol: symbol,
+      name: name,
+    };
+  } catch (e) {
+    return {
+      symbol: '',
+      name: '',
+    };
+  }
+};
+
 export const getPaymentTokenInfo = async (userWallet, tokenAddress) => {
-  let token = await exportInstance(tokenAddress, erc20Abi);
-  console.log('token is ----->', token);
-  let symbol = await token.symbol();
-  let name = await token.name();
-  let allowance = await token.allowance(userWallet, contracts.MARKETPLACE);
-  let balance = await token.balanceOf(userWallet);
-  console.log('allowance', allowance.toString());
-  return {
-    symbol: symbol,
-    name: name,
-    balance: balance.toString(),
-    allowance: allowance.toString(),
-  };
+  try {
+    if (tokenAddress === ZERO_ADDRESS)
+      return {
+        symbol: '',
+        name: '',
+      };
+    if (userWallet === '') {
+      return getTokenNameAndSymbolByAddress(tokenAddress);
+    }
+    let token = await exportInstance(tokenAddress, erc20Abi);
+    let symbol = await token.symbol();
+    let name = await token.name();
+    console.log(name, symbol);
+    let allowance = await token.allowance(userWallet, contracts.MARKETPLACE);
+    let balance = await token.balanceOf(userWallet);
+    return {
+      symbol: symbol,
+      name: name,
+      balance: balance.toString(),
+      allowance: allowance.toString(),
+    };
+  } catch (e) {
+    return {
+      symbol: '',
+      name: '',
+      balance: '',
+      allowance: '',
+    };
+  }
 };
 
 export const buildSellOrder = async (id) => {

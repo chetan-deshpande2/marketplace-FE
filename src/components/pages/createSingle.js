@@ -785,7 +785,6 @@ const CreateSingle = (props) => {
 
         console.log(res);
         setCreatedItemId(res.result._id);
-        console.log(createdItemId);
         try {
           let historyMetaData = {
             nftId: res.result._id,
@@ -857,15 +856,16 @@ const CreateSingle = (props) => {
           console.log('inside BEfore Func');
           console.log(nextId);
 
-          let tokenUri = await NFTcontract.setCustomTokenUri(nextId, '0x00', {
-            from: currentUser,
-            gasLimit: 9000000,
-            value: 0,
-          });
+          // let tokenUri = await NFTcontract.setCustomTokenUri(nextId, '0x00', {
+          //   from: currentUser,
+          //   gasLimit: 9000000,
+          //   value: 0,
+          // });
 
-          if (tokenUri && tokenUri.status === 0) {
-            return;
-          }
+          // if (tokenUri && tokenUri.status === 0) {
+          //   return token URI
+          //   return;
+          // }
           console.log('inside TS Func');
 
           let signature = await getSignature(currentUser, ...sellerOrder);

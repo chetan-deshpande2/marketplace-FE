@@ -120,7 +120,7 @@ const CreateMultiple = (props) => {
   const [chosenType, setChosenType] = useState(0);
   const [minimumBid, setMinimumBid] = useState('');
   const [endTime, setEndTime] = useState();
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState(contracts.USDT);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState(contracts.WETH);
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
   const [isPutOnMarketplace, setIsPutOnMarketPlace] = useState(true);
   const [onTimedAuction, setOnTimedAuction] = useState(false);

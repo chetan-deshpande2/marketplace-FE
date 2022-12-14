@@ -412,12 +412,12 @@ const ItemDetails = function (props) {
               console.log(d[i].oPaymentToken);
               if (data && currentUser) {
                 if (d[i].oPaymentToken !== ZERO_ADDRESS) {
-                  let paymentData = await getPaymentTokenInfo(currentUser, d.results[i].oPaymentToken);
+                  let paymentData = await getPaymentTokenInfo(currentUser, d[i].oPaymentToken);
 
                   if (currOrderType !== 0) {
                     setUserBalance(Number(convertToEth(paymentData?.balance)).toFixed(4));
                   }
-                  paymentData.paymentToken = d.results[i].oPaymentToken;
+                  paymentData.paymentToken = d[i].oPaymentToken;
 
                   d[i].paymentTokenData = paymentData;
                 } else {
