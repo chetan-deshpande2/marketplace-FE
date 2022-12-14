@@ -46,6 +46,9 @@ iframe {
 .mr-48 {
   margin-right: 48px;
 }
+.pl-60 {
+  padding-left: 60px;
+}
 .custom-popup-box .add-collection-box {
   scrollbar-width: thin;
   border-radius: 0px;
@@ -151,6 +154,14 @@ iframe {
   background-color: #8364e2;
   color: #fff;
 } */
+.c-buy-box .c-buy-items {
+  border-radius: 25px;
+  border: 1px solid #cdcdcd;
+  padding: 10px;
+}
+.c-popup-box .close-icon{
+  background: #8364e2;
+}
 @media (max-width: 1199px) {
   .navbar .nav-icon {
     top: 45px;
