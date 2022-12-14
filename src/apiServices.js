@@ -787,7 +787,7 @@ export const createBidNft = async (data) => {
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(data);
-    return datas;
+    return datas.result;
   } catch (err) {
     return err;
   }
