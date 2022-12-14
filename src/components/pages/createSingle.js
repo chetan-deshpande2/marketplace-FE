@@ -1069,14 +1069,14 @@ const CreateSingle = (props) => {
                             <div className="add-collection-popup-content text-center">
                               <div className="CollectionPopupBox">
                                 <div className="row">
-                                  <h3>Collections</h3>
+                                  <h2 className='mb-2'>Collections</h2>
                                   <div id="form-create-item" className="form-border" action="#">
                                     <div className="collection-field-set">
                                       <span className="sub-heading">Upload Collection Cover</span>
                                       <div className="fileUploader">
                                         <div className="row align-items-center justify-content-center">
-                                          <div className="col-md-6 col-sm-12 uploadImg-container d-flex justify-content-center align-items-center mb-10">
-                                            <div className="img-upload-box">
+                                          <div className="col-md-4 col-sm-12 uploadImg-container d-flex justify-content-center align-items-center mb-10">
+                                            {/* <div className="img-upload-box"> */}
                                               {!image ? (
                                                 // eslint-disable-next-line jsx-a11y/img-redundant-alt
                                                 <img
@@ -1095,10 +1095,10 @@ const CreateSingle = (props) => {
                                                   onClick={() => fileRefCollection.current.click()}
                                                 />
                                               )}
-                                            </div>
+                                            {/* </div> */}
                                           </div>
 
-                                          <div className=" col-md-6 uploadImg-right ">
+                                          <div className=" col-md-8 uploadImg-right ">
                                             <div className="d-create-file modal-file-upload">
                                               <p id="collection_file_name">
                                                 We recommend an image of at least 450x450. PNG, JPG, GIF or WEBP. Max
