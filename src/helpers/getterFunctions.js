@@ -261,10 +261,11 @@ export const buildSellOrder = async (id) => {
       details.oBundleTokensQuantities,
       details.oSalt,
     ];
+    console.log(order);
 
     return order;
   } catch (e) {
-    console.log('error in api', e);
+    console.log('error in api=====>', e);
   }
 };
 
