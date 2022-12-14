@@ -570,7 +570,7 @@ const ItemDetails = function (props) {
     <PopupModal
       content={
         <div className="popup-content1 c-buy-box">
-          <h3 className="modal_heading">Checkout</h3>
+          <h2 className="modal_heading mb-3">Checkout</h2>
           <p className="bid_buy_text mb-2">
             You are about to purchase a{' '}
             <strong>
@@ -593,22 +593,22 @@ const ItemDetails = function (props) {
           </p>
           <div className="bid_user_details d-flex justify-content-center align-items-center">
             <div className='d-flex align-items-center c-buy-items'>
-              <div className="polygonLogo">
+              <div className="polygonLogo pe-3">
                 <img src={PolygonLogo} />
               </div>
               <div className="bid_user_address mb-2">
                 <div>
-                  <span className="adr me-2">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
+                  <span className="adr me-2 d-color">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
                   <span className="badge badge-success" style={{ color: 'green', background: 'rgb(198, 253, 207)', padding: '10px', borderRadius: '25px' }}>Connected</span>
                 </div>
-                <span className="pgn">Polygon</span>
+                <span className="pgn d-token">Polygon</span>
               </div>
             </div>
 
           </div>
           {nftDetails.nType !== 1 ? (
             <>
-              <h6 className="enter_quantity_heading required"> Please Enter the Quantity</h6>
+              <h6 className="enter_quantity_heading required mt-2"> Please Enter the Quantity</h6>
               <input
                 className="form-control quantity-input-fields"
                 type="text"
@@ -632,7 +632,7 @@ const ItemDetails = function (props) {
             ''
           )}
 
-          <div className="bid_user_calculations mb-2">
+          <div className="bid_user_calculations mb-2 mt-2">
             {placeBidCal?.map(({ key, value }) => {
               return (
                 <div className="cal_div d-flex justify-content-between">
@@ -650,82 +650,85 @@ const ItemDetails = function (props) {
           ) : Number(willPay) > Number(userBalance) ? (
             <p className="disabled_text">Insufficient Balance in {CURRENCY}</p>
           ) : (
-            <button
-              disabled={loading}
-              className="btn-main btn-buyNow content-btn1 mt-4"
-              // style={{ color: props.color }}
-              min="1"
-              onClick={async () => {
-                let res1 = await handleNetworkSwitch(currentUser);
-                setCookie('balance', res1, { path: '/' });
-                if (res1 === false) return;
-                setIsPopup(false);
-                setCheckoutLoader(true);
-                if (!currentUser) {
-                  NotificationManager.error('Please try to reconnect wallet', '', 800);
-                  setLoading(false);
-                  return;
-                }
+            <div className='d-flex justify-content-center'>
+              <button
+                disabled={loading}
+                className="btn-main btn-buyNow content-btn1 mt-4"
+                // style={{ color: props.color }}
+                min="1"
+                onClick={async () => {
+                  let res1 = await handleNetworkSwitch(currentUser);
+                  setCookie('balance', res1, { path: '/' });
+                  if (res1 === false) return;
+                  setIsPopup(false);
+                  setCheckoutLoader(true);
+                  if (!currentUser) {
+                    NotificationManager.error('Please try to reconnect wallet', '', 800);
+                    setLoading(false);
+                    return;
+                  }
 
-                let bal = new BigNumber(convertToEth(cookies.balance));
-                let payableAmount;
-                if (nftDetails && nftDetails.nType === 1)
-                  payableAmount = new BigNumber(1).multipliedBy(new BigNumber(currentBuyPrice));
-                else payableAmount = new BigNumber(buyQuantity).multipliedBy(new BigNumber(currentBuyPrice));
+                  let bal = new BigNumber(convertToEth(cookies.balance));
+                  let payableAmount;
+                  if (nftDetails && nftDetails.nType === 1)
+                    payableAmount = new BigNumber(1).multipliedBy(new BigNumber(currentBuyPrice));
+                  else payableAmount = new BigNumber(buyQuantity).multipliedBy(new BigNumber(currentBuyPrice));
 
-                if (payableAmount.isGreaterThan(bal)) {
-                  NotificationManager.error('Not enough balance', '', 800);
-                  setLoading(false);
-                  return;
-                }
-                if (Number(buyQuantity) < 1) {
-                  NotificationManager.error("Quantity can't be zero", '', 800);
-                  setLoading(false);
-                  return;
-                }
+                  if (payableAmount.isGreaterThan(bal)) {
+                    NotificationManager.error('Not enough balance', '', 800);
+                    setLoading(false);
+                    return;
+                  }
+                  if (Number(buyQuantity) < 1) {
+                    NotificationManager.error("Quantity can't be zero", '', 800);
+                    setLoading(false);
+                    return;
+                  }
 
-                let isERC;
-                if (nftDetails && nftDetails.nType === 1) {
-                  isERC = true;
-                } else {
-                  isERC = false;
-                }
+                  let isERC;
+                  if (nftDetails && nftDetails.nType === 1) {
+                    isERC = true;
+                  } else {
+                    isERC = false;
+                  }
 
-                let res = await handleBuyNft(
-                  currentOrderId,
-                  isERC,
-                  currentUser?.toLowerCase(),
-                  cookies.balance ? cookies.balance : 0,
-                  // window.sessionStorage.getItem("balance"),
-                  buyQuantity,
-                  nftDetails.nLazyMintingStatus,
-                );
-                if (res === false) {
-                  setLoading(false);
+                  let res = await handleBuyNft(
+                    currentOrderId,
+                    isERC,
+                    currentUser?.toLowerCase(),
+                    cookies.balance ? cookies.balance : 0,
+                    // window.sessionStorage.getItem("balance"),
+                    buyQuantity,
+                    nftDetails.nLazyMintingStatus,
+                  );
+                  if (res === false) {
+                    setLoading(false);
+                    setCheckoutLoader(false);
+                    return;
+                  }
+                  try {
+                    let historyMetaData = {
+                      nftId: nftDetails._id,
+                      userId: nftDetails.nCreater._id,
+                      action: 'Purchase',
+                      actionMeta: 'Default',
+                      message: `${buyQuantity} Quantity For ${currentOrderMinBid} ${CURRENCY} by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                        }`,
+                      created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                    };
+
+                    await InsertHistory(historyMetaData);
+                  } catch (e) {
+                    console.log('error in history api', e);
+                    return;
+                  }
                   setCheckoutLoader(false);
-                  return;
-                }
-                try {
-                  let historyMetaData = {
-                    nftId: nftDetails._id,
-                    userId: nftDetails.nCreater._id,
-                    action: 'Purchase',
-                    actionMeta: 'Default',
-                    message: `${buyQuantity} Quantity For ${currentOrderMinBid} ${CURRENCY} by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
-                      }`,
-                    created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                  };
+                }}
+              >
+                Buy Now
+              </button>
+            </div>
 
-                  await InsertHistory(historyMetaData);
-                } catch (e) {
-                  console.log('error in history api', e);
-                  return;
-                }
-                setCheckoutLoader(false);
-              }}
-            >
-              Buy Now
-            </button>
           )}
         </div>
       }

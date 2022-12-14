@@ -779,13 +779,12 @@ const CreateMultiple = (props) => {
             userId: res.result.nCreater,
             action: 'Creation',
             actionMeta: 'Default',
-            message: `${quantity} Quantity by ${
-              profile && profile.sUserName
-                ? profile.user.sUserName
-                : profile.user.sWalletAddress
+            message: `${quantity} Quantity by ${profile && profile.sUserName
+              ? profile.user.sUserName
+              : profile.user.sWalletAddress
                 ? profile.user.sWalletAddress.slice(0, 3) + '...' + profile.user.sWalletAddress.slice(39, 42)
                 : ''
-            }`,
+              }`,
 
             created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           };
@@ -879,9 +878,8 @@ const CreateMultiple = (props) => {
                 userId: res.result.nCreater,
                 action: 'Marketplace',
                 actionMeta: 'Listed',
-                message: `${quantity} quantity For ${convertToEth(_price)} ${
-                  saleType === 0 ? CURRENCY : selectedTokenSymbol
-                } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)} `,
+                message: `${quantity} quantity For ${convertToEth(_price)} ${saleType === 0 ? CURRENCY : selectedTokenSymbol
+                  } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)} `,
                 created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               };
 
@@ -1040,7 +1038,7 @@ const CreateMultiple = (props) => {
                       </li>
 
                       {isPopup && (
-                        <div className="collection-popup-box custom-popup-box">
+                        <div className="collection-popup-box custom-popup-box modal-dialog-centered">
                           {/* {loading ? <Loader /> : <></>} */}
                           <span className="close-icon" onClick={togglePopup}>
                             x
@@ -1049,13 +1047,13 @@ const CreateMultiple = (props) => {
                             <div className="add-collection-popup-content text-center">
                               <div className="CollectionPopupBox">
                                 <div className="row">
-                                  <h3>Collections</h3>
+                                  <h2 className='mb-2'>Collections</h2>
                                   <div id="form-create-item" className="form-border" action="#">
                                     <div className="collection-field-set">
                                       <span className="sub-heading">Upload Collection Cover</span>
                                       <div className="fileUploader mt-3">
                                         <div className="row align-items-center justify-content-center">
-                                          <div className="col-md-6 col-sm-12 uploadImg-container">
+                                          <div className="col-md-4 col-sm-12 uploadImg-container">
                                             <div className="img-upload-box">
                                               {!image ? (
                                                 <img
@@ -1076,37 +1074,38 @@ const CreateMultiple = (props) => {
                                               )}
                                             </div>
                                           </div>
-                                          <div className="d-create-file col-md-6 uploadImg-right modal-file-upload">
-                                            <p id="collection_file_name">
-                                              We recommend an image of at least 450x450. PNG, JPG, GIF, WEBP or MP4. Max
-                                              {MAX_FILE_SIZE}mb.
-                                            </p>
-                                            {files && files.length > 0 ? <p>{files[0].name}</p> : ''}
-                                            <div className="browse">
-                                              {/* <input
+                                          <div className=" col-md-8 uploadImg-right ">
+                                            <div className='modal-file-upload d-create-file'>
+                                              <p id="collection_file_name">
+                                                We recommend an image of at least 450x450. PNG, JPG, GIF, WEBP or MP4. Max
+                                                {MAX_FILE_SIZE}mb.
+                                              </p>
+                                              {files && files.length > 0 ? <p>{files[0].name}</p> : ''}
+                                              <div className="browse">
+                                                {/* <input
                                                 type="button"
                                                 id="get_file"
                                                 className="btn-main browse-btn"
                                                 value="Browse"
                                                 onClick={() => fileRefCollection.current.click()}
                                               /> */}
-                                              <label className="c-button btn-main">
-                                                Browse
-                                                <input
-                                                  id="upload_file_Upload_collection"
-                                                  type="file"
-                                                  ref={fileRefCollection}
-                                                  className="btn-main browse-btn"
-                                                  required
-                                                  onChange={(e) => onCollectionImgChange(e)}
-                                                />
-                                              </label>
+                                                <label className="c-button btn-main">
+                                                  Browse
+                                                  <input
+                                                    id="upload_file_Upload_collection"
+                                                    type="file"
+                                                    ref={fileRefCollection}
+                                                    className="btn-main browse-btn"
+                                                    required
+                                                    onChange={(e) => onCollectionImgChange(e)}
+                                                  />
+                                                </label>
+                                              </div>
                                             </div>
+
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="spacer-20"></div>
-
                                       <h5 className="createColTitle m-0 required">Title</h5>
                                       <input
                                         type="text"
@@ -1174,16 +1173,17 @@ const CreateMultiple = (props) => {
                                           setRoyalty(Number(e.target.value));
                                         }}
                                       />
-
-                                      <button
-                                        id="submit"
-                                        className="btn-main create-collection-btn"
-                                        onClick={() => {
-                                          handleCollectionCreate();
-                                        }}
-                                      >
-                                        Create Collection
-                                      </button>
+                                      <div className='d-flex justify-content-center'>
+                                        <button
+                                          id="submit"
+                                          className="btn-main create-collection-btn"
+                                          onClick={() => {
+                                            handleCollectionCreate();
+                                          }}
+                                        >
+                                          Create Collection
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -1194,30 +1194,30 @@ const CreateMultiple = (props) => {
                       )}
                       {collections && collections.length >= 1
                         ? collections.map((collection, index) => {
-                            return (
-                              <li
-                                key={index}
-                                id={`my_cus_btn${index}`}
-                                className="active"
-                                ref={myRef}
-                                onClick={(e) => {
-                                  handleShow4(collection.sContractAddress, index);
-                                  setNextId(collection.nextId);
-                                }}
-                              >
-                                <span className="span-border radio-img">
-                                  <img
-                                    className="choose-collection-img image"
-                                    alt=""
-                                    height="10px"
-                                    width="10px"
-                                    src={`http://${collection.sHash}.ipfs.w3s.link/${collection.sImageName}`}
-                                  ></img>
-                                  <p className="mt-2 mb-0">{collection.sName}</p>
-                                </span>
-                              </li>
-                            );
-                          })
+                          return (
+                            <li
+                              key={index}
+                              id={`my_cus_btn${index}`}
+                              className="active"
+                              ref={myRef}
+                              onClick={(e) => {
+                                handleShow4(collection.sContractAddress, index);
+                                setNextId(collection.nextId);
+                              }}
+                            >
+                              <span className="span-border radio-img">
+                                <img
+                                  className="choose-collection-img image"
+                                  alt=""
+                                  height="10px"
+                                  width="10px"
+                                  src={`http://${collection.sHash}.ipfs.w3s.link/${collection.sImageName}`}
+                                ></img>
+                                <p className="mt-2 mb-0">{collection.sName}</p>
+                              </span>
+                            </li>
+                          );
+                        })
                         : ''}
                     </ul>
                   </div>
@@ -1239,7 +1239,7 @@ const CreateMultiple = (props) => {
                       <>
                         {nftFiles[0].name.length > 50
                           ? nftFiles[0].name.slice(0, 10) +
-                            nftFiles[0].name.slice(nftFiles[0].name.length - 4, nftFiles[0].name.length)
+                          nftFiles[0].name.slice(nftFiles[0].name.length - 4, nftFiles[0].name.length)
                           : nftFiles[0].name}
                       </>
                     ) : (
@@ -1403,8 +1403,8 @@ const CreateMultiple = (props) => {
                         >
                           {options
                             ? options.map((option, key) => {
-                                return <option value={option.value}>{option.title}</option>;
-                              })
+                              return <option value={option.value}>{option.title}</option>;
+                            })
                             : ''}
                         </select>
                       </div>
@@ -1457,8 +1457,8 @@ const CreateMultiple = (props) => {
                       >
                         {options
                           ? options.map((option, key) => {
-                              return <option value={option.value}>{option.title}</option>;
-                            })
+                            return <option value={option.value}>{option.title}</option>;
+                          })
                           : ''}
                       </select>
                     </div>
@@ -1599,27 +1599,27 @@ const CreateMultiple = (props) => {
                 <ul>
                   {collaborators && collaboratorPercents
                     ? collaborators.map((collaborator, key) => {
-                        return collaborator !== '' ? (
-                          <li className="added_collaborator_list">
-                            <div className="d-flex justify-content-around align-items-baseline">
-                              <h5>
-                                {collaborator.slice(0, 5) + '...' + collaborator.slice(38, 42)} :{' '}
-                                <span>{collaboratorPercents[key] + '%'}</span>
-                              </h5>
-                              <button
-                                className="remove-btn btn-main"
-                                onClick={() => {
-                                  handleRemoveCollaborator(key);
-                                }}
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          </li>
-                        ) : (
-                          ''
-                        );
-                      })
+                      return collaborator !== '' ? (
+                        <li className="added_collaborator_list">
+                          <div className="d-flex justify-content-around align-items-baseline">
+                            <h5>
+                              {collaborator.slice(0, 5) + '...' + collaborator.slice(38, 42)} :{' '}
+                              <span>{collaboratorPercents[key] + '%'}</span>
+                            </h5>
+                            <button
+                              className="remove-btn btn-main"
+                              onClick={() => {
+                                handleRemoveCollaborator(key);
+                              }}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </li>
+                      ) : (
+                        ''
+                      );
+                    })
                     : ''}
                 </ul>
 
@@ -1645,27 +1645,27 @@ const CreateMultiple = (props) => {
                   <div className="row gx-2">
                     {propertyKeys && propertyValues
                       ? propertyKeys.map((propertyKey, key) => {
-                          return propertyKey !== '' ? (
-                            <div className="col-lg-4 col-md-6 col-sm-6">
-                              <div className="createProperty">
-                                <div className="nft_attr">
-                                  <h5>{propertyKey}</h5>
-                                  <h4>{propertyValues[key]}</h4>
-                                </div>
-                                <button
-                                  className="remove-btn btn-main removeBTN"
-                                  onClick={() => {
-                                    handleRemoveProperty(key);
-                                  }}
-                                >
-                                  <i className="fa fa-trash" aria-hidden="true"></i>
-                                </button>
+                        return propertyKey !== '' ? (
+                          <div className="col-lg-4 col-md-6 col-sm-6">
+                            <div className="createProperty">
+                              <div className="nft_attr">
+                                <h5>{propertyKey}</h5>
+                                <h4>{propertyValues[key]}</h4>
                               </div>
+                              <button
+                                className="remove-btn btn-main removeBTN"
+                                onClick={() => {
+                                  handleRemoveProperty(key);
+                                }}
+                              >
+                                <i className="fa fa-trash" aria-hidden="true"></i>
+                              </button>
                             </div>
-                          ) : (
-                            ''
-                          );
-                        })
+                          </div>
+                        ) : (
+                          ''
+                        );
+                      })
                       : ''}
                   </div>
                 </div>
