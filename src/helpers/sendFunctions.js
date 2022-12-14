@@ -559,7 +559,7 @@ export const handleRemoveFromAuction = async (orderId, account) => {
     }
     return false;
   }
-  // slowRefresh();
+  slowRefresh();
   // window.location.href = "/profile";
 
   // console.log("res", res);
@@ -628,7 +628,7 @@ export const handleNftTransfer = async (
     res = await res.wait();
     if (res.status === 0) {
       // NotificationManager.error("Transaction failed");
-      // slowRefresh();
+      slowRefresh();
       return false;
     }
     try {
