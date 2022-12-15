@@ -319,14 +319,14 @@ export const getUsersNFTs = async (currPage, perPageCount, paramType, walletAddr
       details = await GetMyLikedNft(searchParams);
     } else if (paramType === 3) {
       searchParams = {
-        nOwnedBy: walletAddress,
+        sortType: -1,
+        sortKey: 'nTitle',
+        page: currPage,
+        searchType: 'owned',
+        limit: perPageCount,
+        userWalletAddress: walletAddress,
       };
-      details = await GetMyNftList(searchParams);
-    } else if (paramType === 5) {
-      searchParams = {
-        nOwnedBy: walletAddress,
-      };
-      details = await GetMyNftList(searchParams);
+      details = await GetOwnedNftList(searchParams);
     }
 
     let d = [];

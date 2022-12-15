@@ -1996,6 +1996,7 @@ const ItemDetails = function (props) {
 
                               setMarketplacePopup(false);
                               setPutOnMarketplaceLoader(true);
+                              console.log(nftDetails);
                               let orderData = {
                                 nftId: nftDetails._id,
                                 collection: nftDetails.nCollection,
@@ -2011,6 +2012,7 @@ const ItemDetails = function (props) {
                                 tokenId: nftDetails.nTokenID,
                                 erc721: nftDetails.nType === 1,
                               };
+                              console.log(orderData);
                               let res = await putOnMarketplace(
                                 currentUser ? currentUser : '',
                                 orderData,
