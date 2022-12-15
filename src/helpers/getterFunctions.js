@@ -47,7 +47,7 @@ const toTypedOrder = (
     chainId: 80001,
     name: 'LNMarketplace',
     verifyingContract: contracts.MARKETPLACE,
-    version: '1',
+    version: 'V1',
   };
   const types = {
     Order: [
