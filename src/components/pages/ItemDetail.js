@@ -399,6 +399,7 @@ const ItemDetails = function (props) {
             let _orderState = [];
             for (let i = 0; i < d?.length; i++) {
               _orderState[i] = false;
+              console.log(d[i]._id, data._id);
 
               let searchParams = {
                 nNFTId: data._id,
@@ -1028,9 +1029,9 @@ const ItemDetails = function (props) {
               className="btn-main content-btn1 mt-4 btn-placeABid"
               style={{ color: props.color }}
               onClick={async () => {
-                let res = await handleNetworkSwitch(currentUser);
-                setCookie('balance', res, { path: '/' });
-                if (res === false) return;
+                // let res = await handleNetworkSwitch(currentUser);
+                // setCookie('balance', res, { path: '/' });
+                // if (res === false) return;
                 setIsPlaceABidPopup(false);
                 if (!bidPrice) return;
                 if (Number(bidQty) < 1) {
@@ -1048,6 +1049,7 @@ const ItemDetails = function (props) {
                   setPlaceBidLoader(false);
                   return;
                 }
+
                 if (nftDetails && currentOrderId && currentUser && currentOrderSeller) {
                   await createBid(
                     nftDetails._id,
