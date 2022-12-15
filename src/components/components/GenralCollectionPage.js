@@ -31,6 +31,7 @@ const CollectionsList = (props) => {
   };
 
   useEffect(() => {
+    console.log(props);
     setIsAllCollections(props.isAllCollections);
   }, []);
 
@@ -49,10 +50,14 @@ const CollectionsList = (props) => {
         setLoading(false);
       } else if (props && props.userId) {
         _collections = await getCollections(currPage, perPageCount, props.userId, false);
-        if (_collections && _collections.length > 0) {
+        console.log(_collections[0]);
+        if (_collections) {
+          console.log(_collections[0]);
           setTotalPages(Math.ceil(_collections[0]?.count / perPageCount));
         }
-        setCollections(_collections);
+
+        setCollections(_collections[0]);
+        console.log(collections);
         setLoading(false);
       }
     }

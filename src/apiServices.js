@@ -214,6 +214,7 @@ export const GetIndividualAuthorDetail = async (data) => {
 };
 
 export const getUsersCollections = async () => {
+  console.log(localStorage.getItem('Authorization'));
   const requestOptions = {
     method: 'GET',
     headers: {
@@ -225,6 +226,7 @@ export const getUsersCollections = async () => {
 
     const isJson = response.headers.get('content-type')?.includes('application/json');
     const datas = isJson && (await response.json());
+    console.log(datas.results[0]);
     if (datas) return datas;
     return [];
   } catch (err) {

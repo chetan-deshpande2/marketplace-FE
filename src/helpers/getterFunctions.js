@@ -427,6 +427,7 @@ export const getCollections = async (
         sortType: -1,
       };
       result = await GetHotCollections(reqParams);
+      console.log(GetHotCollections);
       if (!result) return [];
     } else {
       result = await getUsersCollections(reqParams);
