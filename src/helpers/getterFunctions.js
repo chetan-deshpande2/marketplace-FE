@@ -45,7 +45,7 @@ const toTypedOrder = (
 ) => {
   const domain = {
     chainId: 80001,
-    name: 'LN Marketplace',
+    name: 'LNMarketplace',
     verifyingContract: contracts.MARKETPLACE,
     version: '1',
   };

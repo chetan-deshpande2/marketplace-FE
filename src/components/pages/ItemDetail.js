@@ -586,20 +586,27 @@ const ItemDetails = function (props) {
                 ? authorDetails.sUserName
                   ? authorDetails.sUserName
                   : authorDetails.sWalletAddress
-                    ? authorDetails.sWalletAddress.slice(0, 11) + '...' + authorDetails.sWalletAddress.slice(38, 42)
-                    : ''
+                  ? authorDetails.sWalletAddress.slice(0, 11) + '...' + authorDetails.sWalletAddress.slice(38, 42)
+                  : ''
                 : ''}
             </strong>
           </p>
           <div className="bid_user_details d-flex justify-content-center align-items-center">
-            <div className='d-flex align-items-center c-buy-items'>
+            <div className="d-flex align-items-center c-buy-items">
               <div className="polygonLogo pe-3">
                 <img src={PolygonLogo} />
               </div>
               <div className="bid_user_address mb-2">
                 <div>
-                  <span className="adr me-2 d-color">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
-                  <span className="badge badge-success" style={{ color: 'green', background: 'rgb(198, 253, 207)', padding: '10px', borderRadius: '25px' }}>Connected</span>
+                  <span className="adr me-2 d-color">{`${
+                    currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)
+                  }`}</span>
+                  <span
+                    className="badge badge-success"
+                    style={{ color: 'green', background: 'rgb(198, 253, 207)', padding: '10px', borderRadius: '25px' }}
+                  >
+                    Connected
+                  </span>
                 </div>
                 <span className="pgn d-token">Polygon</span>
               </div>
@@ -649,7 +656,7 @@ const ItemDetails = function (props) {
           ) : Number(willPay) > Number(userBalance) ? (
             <p className="disabled_text">Insufficient Balance in {CURRENCY}</p>
           ) : (
-            <div className='d-flex justify-content-center'>
+            <div className="d-flex justify-content-center">
               <button
                 disabled={loading}
                 className="btn-main btn-buyNow content-btn1 mt-4"
@@ -711,8 +718,9 @@ const ItemDetails = function (props) {
                       userId: nftDetails.nCreater._id,
                       action: 'Purchase',
                       actionMeta: 'Default',
-                      message: `${buyQuantity} Quantity For ${currentOrderMinBid} ${CURRENCY} by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
-                        }`,
+                      message: `${buyQuantity} Quantity For ${currentOrderMinBid} ${CURRENCY} by ${
+                        currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                      }`,
                       created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                     };
 
@@ -727,7 +735,6 @@ const ItemDetails = function (props) {
                 Buy Now
               </button>
             </div>
-
           )}
         </div>
       }
