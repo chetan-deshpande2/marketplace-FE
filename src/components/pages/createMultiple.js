@@ -477,12 +477,98 @@ const CreateMultiple = (props) => {
 
   //*======================
 
+  // const handleCollectionCreate = async () => {
+  //   console.log(props);
+  //   let res = await handleNetworkSwitch(currentUser);
+  //   setCookie('balance', res, { path: '/' });
+  //   if (res === false) return;
+  //   setIsPopup(false);
+  //   setCollectionCreation(true);
+  //   if (!currentUser && profile) {
+  //     NotificationManager.error('Please Connect Your Wallet', '', 800);
+  //     return;
+  //   }
+
+  //   try {
+  //     let _title = title.replace(/^\s+|\s+$/g, '');
+  //     if (_title === '' || _title === undefined) {
+  //       NotificationManager.error('Please Enter Title', '', 800);
+  //       setCollectionCreation(false);
+  //       return;
+  //     }
+  //     if (image === undefined) {
+  //       NotificationManager.error('Please Upload Image', '', 800);
+  //       setCollectionCreation(false);
+  //       return;
+  //     }
+  //     if (symbol === '') {
+  //       NotificationManager.error('Please Enter symbol', '', 800);
+  //       setCollectionCreation(false);
+  //       return;
+  //     }
+  //     // let res = await checkIfCollectionNameAlreadyTaken(_title);
+  //     // if (res === true) {
+  //     //   NotificationManager.error('Collection Name Already Taken', '', 800);
+  //     //   setCollectionCreation(false);
+  //     //   return;
+  //     // }
+  //     if (files && files.length > 0) {
+  //       if (files[0].size / 1000000 > MAX_FILE_SIZE) {
+  //         NotificationManager.error(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
+  //         return;
+  //       }
+  //     }
+  //     setCollectionCreation(true);
+  //     let collectionData = {
+  //       sName: _title,
+  //       sDescription: description,
+  //       nftFile: image,
+  //       erc721: JSON.stringify(false),
+  //       sRoyaltyPercentage: Number(royalty) * 100,
+
+  //       symbol: symbol,
+  //     };
+  //     let collectionsList = '';
+  //     try {
+  //       let ress = await handleCollectionCreation(false, collectionData, currentUser);
+  //       collectionsList = await getUsersCollections({
+  //         page: 1,
+  //         limit: 100,
+  //         userId: profile._id,
+  //       });
+  //       if (collectionsList && collectionsList?.results?.length > 0) {
+  //         collectionsList.results = collectionsList?.results?.filter((collection) => {
+  //           return collection.erc721 === false;
+  //         });
+  //         setCollections(collectionsList?.results);
+
+  //         // window.location.reload();
+  //       }
+  //       if (ress === false) {
+  //         setCollectionCreation(false);
+  //         // window.location.reload();
+  //       }
+  //     } catch (e) {
+  //       setCollectionCreation(false);
+  //       return;
+  //     }
+
+  //     setCollectionCreation(false);
+  //     togglePopup();
+  //     window.location.reload();
+  //   } catch (e) {
+  //     setCollectionCreation(false);
+  //     togglePopup();
+  //     console.log(e);
+  //   }
+  // };
+
   const handleCollectionCreate = async () => {
     console.log(props);
-    let res = await handleNetworkSwitch(currentUser);
-    setCookie('balance', res, { path: '/' });
-    if (res === false) return;
-    setIsPopup(false);
+    // let res = await handleNetworkSwitch(currentUser);
+    // setCookie('balance', res, { path: '/' });
+    // if (res === false) return;
+    // setIsPopup(false);
     setCollectionCreation(true);
     if (!currentUser && profile) {
       NotificationManager.error('Please Connect Your Wallet', '', 800);
@@ -523,9 +609,9 @@ const CreateMultiple = (props) => {
         sName: _title,
         sDescription: description,
         nftFile: image,
-        erc721: JSON.stringify(false),
+        erc721: JSON.stringify(true),
+        quantity: 1,
         sRoyaltyPercentage: Number(royalty) * 100,
-
         symbol: symbol,
       };
       let collectionsList = '';
@@ -548,6 +634,7 @@ const CreateMultiple = (props) => {
           setCollectionCreation(false);
           // window.location.reload();
         }
+        setCollectionCreation(false);
       } catch (e) {
         setCollectionCreation(false);
         return;
@@ -560,6 +647,7 @@ const CreateMultiple = (props) => {
       setCollectionCreation(false);
       togglePopup();
       console.log(e);
+      // window.location.reload();
     }
   };
 
