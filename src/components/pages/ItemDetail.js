@@ -536,7 +536,7 @@ const ItemDetails = function (props) {
       console.log(nftDetails.nHash, nftDetails.nNftImage);
       if (nftDetails && nftDetails._id) {
         let data = await getAllBidsByNftId(nftDetails._id);
-        console.log(data.data.length);
+        console.log(data.data);
         let _highestBid = {};
         _highestBid = data?.highestBid;
 
@@ -2204,14 +2204,14 @@ const ItemDetails = function (props) {
                                       <div className="row">
                                         <div className="col vCenter bidsText">
                                           Bid by{' '}
-                                          {/* <b>
+                                          <b>
                                             {bid.bidder.length > 20
                                               ? bid.bidder.slice(0, 6) +
                                                 '....' +
                                                 bid.bidder.slice(bid.bidder.length - 6, bid.bidder.length)
                                               : bid.bidder}
                                             &nbsp; at
-                                          </b> */}
+                                          </b>
                                           <br></br> Bid Price &nbsp;
                                           {convertToEth(bid.bidPrice ? +' ' + bid.bidPrice + ' ' : ' 0 ')}
                                           &nbsp;
@@ -2221,7 +2221,8 @@ const ItemDetails = function (props) {
                                         <div className="col vCenter">
                                           <div className="customCol centerAlign">
                                             <div className="button_section">
-                                              {true ? (
+                                              {currentUser?.toLowerCase() !== bid?.bidder?.toLowerCase() &&
+                                              currentUser?.toLowerCase() === bid?.seller?.toLowerCase() ? (
                                                 <>
                                                   <button
                                                     className="accept_btn mybtn"

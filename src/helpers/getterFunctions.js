@@ -13,7 +13,7 @@ import {
   GetOwnedNftList,
   getAllCollections,
   GetHotCollections,
-  getUserById
+  getUserById,
 } from '../apiServices';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
@@ -155,8 +155,9 @@ export const getAllBidsByNftId = async (nftId) => {
   let highestBid = 0;
   let highestBidData = {};
   let orderPaymentToken = [];
-  let getSellerAddress
-  
+  let getSellerAddress;
+  let getBuyerAddress;
+
   console.log(dummyData?.data?.length);
   for (let i = 0; i < dummyData?.data?.length; i++) {
     console.log(dummyData.data[i]);
@@ -166,18 +167,24 @@ export const getAllBidsByNftId = async (nftId) => {
     });
 
     orderPaymentToken.push(_orderPaymentToken.oPaymentToken);
+    console.log(dummyData.data[i].oBidder);
+    console.log(dummyData.data[i].oOwner);
 
-     getSellerAddress = await getUserById({
-       ownerId:  dummyData.data[i].oOwner
-    })
+    getSellerAddress = await getUserById({
+      sellerId: dummyData.data[i].oBidder,
+    });
 
-    console.log(getSellerAddress)
+    getBuyerAddress = await getUserById({
+      sellerId: dummyData.data[i].oOwner,
+    });
+
+    console.log(getSellerAddress);
+    console.log(getBuyerAddress);
   }
 
   console.log('dummyData---', dummyData.data);
-
-
-
+  console.log(getSellerAddress.userAddress);
+  console.log(getBuyerAddress.userAddress);
 
   dummyData?.data
     ? // eslint-disable-next-line array-callback-return
@@ -192,16 +199,14 @@ export const getAllBidsByNftId = async (nftId) => {
           highestBidData = d;
           highestBidData.paymentSymbol = paymentSymbol;
         }
-       
-        
 
         data.push({
           bidId: d._id,
           bidQuantity: d.oBidQuantity,
           bidPrice: d.oBidPrice.$numberDecimal,
-          seller: d.oOwner.sWalletAddress,
+          seller: getBuyerAddress.userAddress,
           orderId: d.oOrderId,
-          bidder: d.oBidder.sWalletAddress,
+          bidder: getSellerAddress.userAddress,
           bidderProfile: d.oBidder.sProfilePicUrl,
           buyerSignature: d.oBuyerSignature,
           bidderFullName: d.oBidder.oName

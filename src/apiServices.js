@@ -102,13 +102,17 @@ export const getProfile = async () => {
   return data;
 };
 
-export const getUserById = async (ownerId) => {
+export const getUserById = async (id) => {
+  console.log(id);
   const requestOptions = {
-    method: 'GET',
-
-    body: JSON.stringify(ownerId),
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(id),
   };
-  const response  =await fetch(REACT_APP_API_BASE_URL + '/user/getAddressById',requestOptions)
+
+  let response = await fetch(REACT_APP_API_BASE_URL + '/user/getAddressById', requestOptions);
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson && (await response.json());
   console.log(data);
