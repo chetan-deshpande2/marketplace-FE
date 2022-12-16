@@ -1252,7 +1252,7 @@ const ItemDetails = function (props) {
                 <div className="d-flex flex-wrap">
                   <div className="vCenter itemDet-btn">
                     <span
-                      className={loading ? 'spn-disabled btn-removefromauction' : 'btn-main btn-removefromauction'}
+                      className={loading ? 'spn-disabled btn-removefromauction' : 'btn-main btn-removefromauction me-3'}
                       onClick={async () => {
                         // let res1 = await handleNetworkSwitch(currentUser);
                         // setCookie('balance', res1, { path: '/' });
@@ -2220,12 +2220,12 @@ const ItemDetails = function (props) {
                                         </div>
                                         <div className="col vCenter">
                                           <div className="customCol centerAlign">
-                                            <div className="button_section">
+                                            <div className="button_section d-flex">
                                               {currentUser?.toLowerCase() !== bid?.bidder?.toLowerCase() &&
                                               currentUser?.toLowerCase() === bid?.seller?.toLowerCase() ? (
                                                 <>
                                                   <button
-                                                    className="accept_btn mybtn"
+                                                    className="accept_btn mybtn btn-main c-p-10 me-2"
                                                     onClick={async () => {
                                                       let res1 = await handleNetworkSwitch(currentUser);
                                                       setCookie('balance', res1, { path: '/' });
@@ -2261,7 +2261,7 @@ const ItemDetails = function (props) {
                                                     Accept
                                                   </button>
                                                   <button
-                                                    className="reject_btn mybtn"
+                                                    className="reject_btn mybtn btn-main c-p-10"
                                                     onClick={async () => {
                                                       let res1 = await handleNetworkSwitch(currentUser);
                                                       setCookie('balance', res1, { path: '/' });
@@ -2288,7 +2288,7 @@ const ItemDetails = function (props) {
                                                 currentUser?.toLowerCase() !== bid?.seller?.toLowerCase() ? (
                                                 <>
                                                   <button
-                                                    className="cancel_btn mybtn"
+                                                    className="cancel_btn mybtn  btn-main c-p-10"
                                                     onClick={async () => {
                                                       let res1 = await handleNetworkSwitch(currentUser);
                                                       setCookie('balance', res1, { path: '/' });

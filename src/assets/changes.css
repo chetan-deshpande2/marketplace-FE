@@ -51,6 +51,9 @@ iframe {
 .pl-60 {
   padding-left: 60px;
 }
+.c-p-10 {
+  padding: 10px;
+}
 .custom-popup-box .add-collection-box {
   scrollbar-width: thin;
   /* border-radius: 0px; */
@@ -74,7 +77,7 @@ iframe {
   width: 100%;
   border-radius: 0px;
 }
-.custom-popup-box .collection-field-set span{
+.custom-popup-box .collection-field-set span {
   color: #000;
   font-weight: 400;
 }
@@ -133,7 +136,7 @@ iframe {
   box-shadow: 2px 2px 20px 0px rgba(131, 100, 226, 0);
   transition: all 0.3s ease;
 }
-.c-button input[type="file"] {
+.c-button input[type='file'] {
   display: none;
 }
 .modal-file-upload {
@@ -178,18 +181,18 @@ iframe {
 .c-popup-box .close-icon {
   background: #8364e2;
 }
-.c-popup-box .add-collection-box{
+.c-popup-box .add-collection-box {
   padding: 35px;
   width: 35%;
 }
-.c-popup-box .c-buy-box h2{
+.c-popup-box .c-buy-box h2 {
   font-weight: 500;
 }
-.c-popup-box .c-buy-items .d-color{
-  color:#000;
+.c-popup-box .c-buy-items .d-color {
+  color: #000;
   font-weight: 600;
 }
-.c-popup-box .c-buy-items .d-token{
+.c-popup-box .c-buy-items .d-token {
   font-weight: 600;
 }
 @media (max-width: 1199px) {
