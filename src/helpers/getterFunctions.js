@@ -13,6 +13,7 @@ import {
   GetOwnedNftList,
   getAllCollections,
   GetHotCollections,
+  getUserById
 } from '../apiServices';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
@@ -154,6 +155,8 @@ export const getAllBidsByNftId = async (nftId) => {
   let highestBid = 0;
   let highestBidData = {};
   let orderPaymentToken = [];
+  let getSellerAddress
+  
   console.log(dummyData?.data?.length);
   for (let i = 0; i < dummyData?.data?.length; i++) {
     console.log(dummyData.data[i]);
@@ -163,9 +166,18 @@ export const getAllBidsByNftId = async (nftId) => {
     });
 
     orderPaymentToken.push(_orderPaymentToken.oPaymentToken);
+
+     getSellerAddress = await getUserById({
+       ownerId:  dummyData.data[i].oOwner
+    })
+
+    console.log(getSellerAddress)
   }
 
   console.log('dummyData---', dummyData.data);
+
+
+
 
   dummyData?.data
     ? // eslint-disable-next-line array-callback-return
@@ -180,7 +192,8 @@ export const getAllBidsByNftId = async (nftId) => {
           highestBidData = d;
           highestBidData.paymentSymbol = paymentSymbol;
         }
-        console.log(d.oBidder.sWalletAddress);
+       
+        
 
         data.push({
           bidId: d._id,
