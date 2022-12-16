@@ -864,6 +864,7 @@ export const handleApproveToken = async (userAddress, tokenAddress) => {
 };
 
 export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTitle, LazyMintingStatus) => {
+  console.log(bidData, isERC721, sellerUsername, nftTitle, LazyMintingStatus);
   let order;
   let details;
   let options;

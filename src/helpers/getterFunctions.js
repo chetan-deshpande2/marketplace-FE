@@ -23,6 +23,7 @@ import erc1155Abi from '../Config/abis/simpleERC1155.json';
 import { GENERAL_DATE, GENERAL_TIMESTAMP, ZERO_ADDRESS } from './constants';
 import Avatar from './../assets/react.svg';
 import NotificationManager from 'react-notifications/lib/NotificationManager';
+import { getTokenSymbolByAddress } from './utils';
 
 const ipfsAPI = require('ipfs-api');
 const ipfs = ipfsAPI('ipfs.infura.io', '5001', {
@@ -150,11 +151,37 @@ export const getAllBidsByNftId = async (nftId) => {
   });
 
   let data = [];
-  console.log('dummyData---', dummyData);
+  let highestBid = 0;
+  let highestBidData = {};
+  let orderPaymentToken = [];
+  console.log(dummyData?.data?.length);
+  for (let i = 0; i < dummyData?.data?.length; i++) {
+    console.log(dummyData.data[i]);
+    console.log(dummyData.data[i].oOrderId);
+    let _orderPaymentToken = await getOrderDetails({
+      orderId: dummyData.data[i].oOrderId,
+    });
+
+    orderPaymentToken.push(_orderPaymentToken.oPaymentToken);
+  }
+
+  console.log('dummyData---', dummyData.data);
 
   dummyData?.data
     ? // eslint-disable-next-line array-callback-return
-      dummyData.data.map((d, i) => {
+      dummyData.data.map(async (d, i) => {
+        console.log(d);
+        let paymentSymbol = '';
+        if (orderPaymentToken[i] !== ZERO_ADDRESS) {
+          paymentSymbol = getTokenSymbolByAddress(orderPaymentToken[i]);
+        }
+        if (Number(d.oBidPrice.$numberDecimal) > Number(highestBid)) {
+          highestBid = Number(d.oBidPrice.$numberDecimal);
+          highestBidData = d;
+          highestBidData.paymentSymbol = paymentSymbol;
+        }
+        console.log(d.oBidder.sWalletAddress);
+
         data.push({
           bidId: d._id,
           bidQuantity: d.oBidQuantity,
@@ -171,12 +198,14 @@ export const getAllBidsByNftId = async (nftId) => {
             : 'Unnamed',
           nftId: d.oNFTId,
           owner: d.oSeller,
+          oBidDeadline: d.oBidDeadline,
+          paymentSymbol: paymentSymbol,
         });
       })
     : data.push([]);
-
   console.log('dummyData', data);
-  return data;
+
+  return { data: data, highestBid: highestBidData };
 };
 export const getMaxAllowedDate = () => {
   var dtToday = new Date();

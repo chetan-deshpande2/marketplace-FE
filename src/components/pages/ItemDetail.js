@@ -536,33 +536,31 @@ const ItemDetails = function (props) {
       console.log(nftDetails.nHash, nftDetails.nNftImage);
       if (nftDetails && nftDetails._id) {
         let data = await getAllBidsByNftId(nftDetails._id);
-        console.log(data);
+        console.log(data.data.length);
         let _highestBid = {};
         _highestBid = data?.highestBid;
-        console.log(data);
-        // data = data?.data;
 
-        if (data.length > 0 && isEmpty(data[0])) data = [];
-        setBids(data);
+        setBids(data.data);
         setHighestBid(_highestBid);
+        console.log(bids.length);
       }
       setLoading(false);
     };
     fetch();
   }, [nftDetails]);
 
-  useEffect(() => {
-    const fetch = async () => {
-      let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
-        new BigNumber(bidQty?.toString()),
-      );
-      let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
+  //       new BigNumber(bidQty?.toString()),
+  //     );
+  //     let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
 
-      setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
-    };
-    fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
+  //     setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
+  //   };
+  //   fetch();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
 
   //*======================= Popups ==========
 
@@ -2188,31 +2186,32 @@ const ItemDetails = function (props) {
                     <div className="tab-1 onStep fadeIn">
                       {bids && bids.length >= 1 && nftDetails
                         ? bids.map((bid, key) => {
+                            console.log(bid, key);
                             return (
                               <div className="row">
                                 <div className="col item_author">
                                   <div className="p_list">
                                     <div className="p_list_pp bidsList p-0">
                                       <span>
-                                        <img
+                                        {/* <img
                                           className="lazy"
                                           src={bid.bidderProfile ? bid.bidderProfile : Avatar}
                                           alt=""
-                                        />
+                                        /> */}
                                       </span>
                                     </div>
                                     <div className="p_list_info bidsList">
                                       <div className="row">
                                         <div className="col vCenter bidsText">
                                           Bid by{' '}
-                                          <b>
+                                          {/* <b>
                                             {bid.bidder.length > 20
                                               ? bid.bidder.slice(0, 6) +
                                                 '....' +
                                                 bid.bidder.slice(bid.bidder.length - 6, bid.bidder.length)
                                               : bid.bidder}
                                             &nbsp; at
-                                          </b>
+                                          </b> */}
                                           <br></br> Bid Price &nbsp;
                                           {convertToEth(bid.bidPrice ? +' ' + bid.bidPrice + ' ' : ' 0 ')}
                                           &nbsp;
@@ -2222,8 +2221,7 @@ const ItemDetails = function (props) {
                                         <div className="col vCenter">
                                           <div className="customCol centerAlign">
                                             <div className="button_section">
-                                              {currentUser?.toLowerCase() !== bid?.bidder?.toLowerCase() &&
-                                              currentUser?.toLowerCase() === bid?.seller?.toLowerCase() ? (
+                                              {true ? (
                                                 <>
                                                   <button
                                                     className="accept_btn mybtn"
@@ -2326,7 +2324,7 @@ const ItemDetails = function (props) {
                               </div>
                             );
                           })
-                        : ''}
+                        : null}
                     </div>
                   )}
 
