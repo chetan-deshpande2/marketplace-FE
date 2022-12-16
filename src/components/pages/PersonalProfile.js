@@ -301,7 +301,7 @@ const PersonalProfile = function (props) {
         )}
         {openMenu4 && (
           <div id="zero5" className="onStep fadeIn">
-            <GeneralCollectionsPage userId={profileData?._id} isAllCollections={false} />
+            <GeneralCollectionsPage userId={profileData?.user._id} isAllCollections={false} />
           </div>
         )}
       </section>

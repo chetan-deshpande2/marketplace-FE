@@ -13,6 +13,7 @@ import {
   GetOwnedNftList,
   getAllCollections,
   GetHotCollections,
+  getUserById
 } from '../apiServices';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
@@ -23,6 +24,7 @@ import erc1155Abi from '../Config/abis/simpleERC1155.json';
 import { GENERAL_DATE, GENERAL_TIMESTAMP, ZERO_ADDRESS } from './constants';
 import Avatar from './../assets/react.svg';
 import NotificationManager from 'react-notifications/lib/NotificationManager';
+import { getTokenSymbolByAddress } from './utils';
 
 const ipfsAPI = require('ipfs-api');
 const ipfs = ipfsAPI('ipfs.infura.io', '5001', {
@@ -45,9 +47,9 @@ const toTypedOrder = (
 ) => {
   const domain = {
     chainId: 80001,
-    name: 'LN Marketplace',
+    name: 'LNMarketplace',
     verifyingContract: contracts.MARKETPLACE,
-    version: '1',
+    version: 'V1',
   };
   const types = {
     Order: [
@@ -150,11 +152,49 @@ export const getAllBidsByNftId = async (nftId) => {
   });
 
   let data = [];
-  console.log('dummyData---', dummyData);
+  let highestBid = 0;
+  let highestBidData = {};
+  let orderPaymentToken = [];
+  let getSellerAddress
+  
+  console.log(dummyData?.data?.length);
+  for (let i = 0; i < dummyData?.data?.length; i++) {
+    console.log(dummyData.data[i]);
+    console.log(dummyData.data[i].oOrderId);
+    let _orderPaymentToken = await getOrderDetails({
+      orderId: dummyData.data[i].oOrderId,
+    });
+
+    orderPaymentToken.push(_orderPaymentToken.oPaymentToken);
+
+     getSellerAddress = await getUserById({
+       ownerId:  dummyData.data[i].oOwner
+    })
+
+    console.log(getSellerAddress)
+  }
+
+  console.log('dummyData---', dummyData.data);
+
+
+
 
   dummyData?.data
     ? // eslint-disable-next-line array-callback-return
-      dummyData.data.map((d, i) => {
+      dummyData.data.map(async (d, i) => {
+        console.log(d);
+        let paymentSymbol = '';
+        if (orderPaymentToken[i] !== ZERO_ADDRESS) {
+          paymentSymbol = getTokenSymbolByAddress(orderPaymentToken[i]);
+        }
+        if (Number(d.oBidPrice.$numberDecimal) > Number(highestBid)) {
+          highestBid = Number(d.oBidPrice.$numberDecimal);
+          highestBidData = d;
+          highestBidData.paymentSymbol = paymentSymbol;
+        }
+       
+        
+
         data.push({
           bidId: d._id,
           bidQuantity: d.oBidQuantity,
@@ -171,12 +211,14 @@ export const getAllBidsByNftId = async (nftId) => {
             : 'Unnamed',
           nftId: d.oNFTId,
           owner: d.oSeller,
+          oBidDeadline: d.oBidDeadline,
+          paymentSymbol: paymentSymbol,
         });
       })
     : data.push([]);
-
   console.log('dummyData', data);
-  return data;
+
+  return { data: data, highestBid: highestBidData };
 };
 export const getMaxAllowedDate = () => {
   var dtToday = new Date();
@@ -261,10 +303,11 @@ export const buildSellOrder = async (id) => {
       details.oBundleTokensQuantities,
       details.oSalt,
     ];
+    console.log(order);
 
     return order;
   } catch (e) {
-    console.log('error in api', e);
+    console.log('error in api=====>', e);
   }
 };
 
@@ -318,14 +361,14 @@ export const getUsersNFTs = async (currPage, perPageCount, paramType, walletAddr
       details = await GetMyLikedNft(searchParams);
     } else if (paramType === 3) {
       searchParams = {
-        nOwnedBy: walletAddress,
+        sortType: -1,
+        sortKey: 'nTitle',
+        page: currPage,
+        searchType: 'owned',
+        limit: perPageCount,
+        userWalletAddress: walletAddress,
       };
-      details = await GetMyNftList(searchParams);
-    } else if (paramType === 5) {
-      searchParams = {
-        nOwnedBy: walletAddress,
-      };
-      details = await GetMyNftList(searchParams);
+      details = await GetOwnedNftList(searchParams);
     }
 
     let d = [];
@@ -426,6 +469,7 @@ export const getCollections = async (
         sortType: -1,
       };
       result = await GetHotCollections(reqParams);
+      console.log(GetHotCollections);
       if (!result) return [];
     } else {
       result = await getUsersCollections(reqParams);
