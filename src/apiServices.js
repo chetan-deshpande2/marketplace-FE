@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-const REACT_APP_API_BASE_URL = 'http://192.168.1.11:3000/api/v1';
+const REACT_APP_API_BASE_URL = 'http://192.168.1.48:3000/api/v1';
 // const REACT_APP_API_BASE_URL = "http://localhost:3000/api/v1";
 
 export const exportInstance = async (SCAddress, ABI) => {
@@ -24,9 +24,14 @@ export const Register = async (account) => {
     }),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/auth/register', requestOptions);
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/auth/register',
+      requestOptions
+    );
 
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const data = isJson && (await response.json());
     console.log(data);
 
@@ -53,9 +58,14 @@ export const Login = async (account) => {
     }),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/auth/login', requestOptions);
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/auth/login',
+      requestOptions
+    );
 
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const data = isJson && (await response.json());
     console.log(data);
     // check for error response
@@ -82,9 +92,14 @@ export const Logout = async () => {
       Authorization: getHeaders(),
     },
   };
-  const response = await fetch(REACT_APP_API_BASE_URL + '/auth/Logout', requestOptions);
+  const response = await fetch(
+    REACT_APP_API_BASE_URL + '/auth/Logout',
+    requestOptions
+  );
 
-  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const isJson = response.headers
+    .get('content-type')
+    ?.includes('application/json');
 
   const data = isJson && (await response.json());
   console.log(data);
@@ -96,7 +111,9 @@ export const getProfile = async () => {
   const response = await fetch(REACT_APP_API_BASE_URL + '/user/profile', {
     headers: { Authorization: getHeaders() },
   });
-  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const isJson = response.headers
+    .get('content-type')
+    ?.includes('application/json');
   const data = isJson && (await response.json());
   console.log(data);
   return data;
@@ -112,8 +129,13 @@ export const getUserById = async (id) => {
     body: JSON.stringify(id),
   };
 
-  let response = await fetch(REACT_APP_API_BASE_URL + '/user/getAddressById', requestOptions);
-  const isJson = response.headers.get('content-type')?.includes('application/json');
+  let response = await fetch(
+    REACT_APP_API_BASE_URL + '/user/getAddressById',
+    requestOptions
+  );
+  const isJson = response.headers
+    .get('content-type')
+    ?.includes('application/json');
   const data = isJson && (await response.json());
   console.log(data);
   return data;
@@ -133,8 +155,13 @@ export const checkuseraddress = async (account) => {
     }),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/auth/checkuseraddress', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/auth/checkuseraddress',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const data = isJson && (await response.json());
     console.log(data.message);
     return data;
@@ -153,8 +180,13 @@ export const updateProfile = async (account, data) => {
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/user/updateProfile', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/user/updateProfile',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.message;
@@ -173,8 +205,13 @@ export const Follow = async (data) => {
     body: JSON.stringify({ id: data }),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/user/follow', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/user/follow',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.message;
   } catch (err) {
@@ -199,8 +236,13 @@ export const GetAllUserDetails = async () => {
     body: JSON.stringify(searchData),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/user/allDetails', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/user/allDetails',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -218,8 +260,13 @@ export const GetIndividualAuthorDetail = async (data) => {
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/user/profileDetail', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/user/profileDetail',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
 
@@ -239,9 +286,14 @@ export const getUsersCollections = async () => {
     },
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/collection/collectionList', requestOptions);
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/collection/collectionList',
+      requestOptions
+    );
 
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas.results[0]);
     if (datas) return datas;
@@ -271,8 +323,13 @@ export const getNFTList = async () => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getAllNfts', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/getAllNfts',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -290,9 +347,14 @@ export const createCollection = async (data) => {
     body: data,
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/collection/createCollection', requestOptions);
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/collection/createCollection',
+      requestOptions
+    );
     console.log('response', response);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.message;
@@ -306,8 +368,13 @@ export const getAllCollections = async () => {
     method: 'GET',
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getCollections', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/getCollections',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -322,8 +389,13 @@ export const getCollectionWiseList = async (data) => {
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/allCollectionWiseList', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/allCollectionWiseList',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -343,8 +415,13 @@ export const getOrderDetails = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/order/getOrder', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/order/getOrder',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log('get order data is--->', datas);
     return datas.order;
@@ -363,8 +440,13 @@ export const GetOnSaleItems = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getOnSaleItems', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/getOnSaleItems',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas.results);
     return datas.results;
@@ -383,9 +465,14 @@ export const GetNftDetails = async (id) => {
 
   try {
     console.log(id);
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/viewnft/' + id, requestOptions);
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/viewnft/' + id,
+      requestOptions
+    );
 
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas;
@@ -406,9 +493,14 @@ export const SetNFTOrder = async (data) => {
       body: JSON.stringify(data),
     };
 
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/setNFTOrder', requestOptions);
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/setNFTOrder',
+      requestOptions
+    );
     console.log('record updated', response);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -429,8 +521,13 @@ export const UpdateOrderStatus = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/order/updateOrder', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/order/updateOrder',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -450,8 +547,13 @@ export const LikeNft = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/like', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/like',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -469,8 +571,13 @@ export const GetCollectionsByAddress = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/collection/getCollectionDetailsByAddress/', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/collection/getCollectionDetailsByAddress/',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(data);
     return datas.collection;
@@ -489,8 +596,13 @@ export const GetCollectionsById = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getCollectionDetailsById/', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/getCollectionDetailsById/',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -508,8 +620,13 @@ export const GetMyNftList = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getNFTList', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/getNFTList',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -529,8 +646,13 @@ export const GetMyCollectionsList = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/myCollectionList', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/myCollectionList',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -548,8 +670,13 @@ export const GetMyLikedNft = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getUserLikedNfts', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/getUserLikedNfts',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.results;
@@ -568,8 +695,13 @@ export const GetMyOnSaleNft = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getUserOnSaleNfts', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/getUserOnSaleNfts',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log('dataaasss on sale', datas);
     return datas.results;
@@ -590,10 +722,14 @@ export const GetCollectionsNftList = async (data, owned = false) => {
   };
   try {
     let response = await fetch(
-      owned ? REACT_APP_API_BASE_URL + '/nft/getCollectionNFT' : REACT_APP_API_BASE_URL + '/nft/getCollectionNFTOwned',
-      requestOptions,
+      owned
+        ? REACT_APP_API_BASE_URL + '/nft/getCollectionNFT'
+        : REACT_APP_API_BASE_URL + '/nft/getCollectionNFTOwned',
+      requestOptions
     );
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -611,8 +747,13 @@ export const GetSearchedNft = async (data, owned = false) => {
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/getSearchedNft', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/getSearchedNft',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -631,8 +772,13 @@ export const updateBidNft = async (data) => {
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/bid/updateBidNft', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/bid/updateBidNft',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas;
   } catch (err) {
@@ -651,8 +797,13 @@ export const fetchBidNft = async (data) => {
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/bid/fetchBidNft', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/bid/fetchBidNft',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas;
@@ -679,8 +830,13 @@ export const GetOrdersByNftId = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/order/getOrdersByNftId', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/order/getOrdersByNftId',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas.AllOrders);
     return datas.AllOrders;
@@ -703,8 +859,13 @@ export const createNft = async (data) => {
     //   console.log(value);
     // }
 
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/create', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/create',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
 
@@ -727,9 +888,14 @@ export const createOrder = async (data) => {
   try {
     console.log('put on marketplace');
 
-    let response = await fetch(REACT_APP_API_BASE_URL + '/order/createOrder', requestOptions);
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/order/createOrder',
+      requestOptions
+    );
 
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
 
@@ -752,8 +918,13 @@ export const DeleteOrder = async (data) => {
   try {
     console.log('remove');
 
-    let response = await fetch(REACT_APP_API_BASE_URL + '/order/deleteOrder', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/order/deleteOrder',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -781,8 +952,13 @@ export const TransferNfts = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/nft/transferNfts', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/nft/transferNfts',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     return datas.data;
   } catch (err) {
@@ -802,8 +978,13 @@ export const createBidNft = async (data) => {
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/bid/createBidNft', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/bid/createBidNft',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(data);
     return datas.result;
@@ -824,8 +1005,13 @@ export const acceptBid = async (data) => {
     body: JSON.stringify(data),
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/bid/acceptBidNft', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/bid/acceptBidNft',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -844,8 +1030,13 @@ export const InsertHistory = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/history/insert', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/history/insert',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.results;
@@ -865,8 +1056,13 @@ export const GetHistory = async (data) => {
   };
 
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + '/history/fetchHistory', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + '/history/fetchHistory',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas.results);
     return datas.results;
@@ -885,8 +1081,13 @@ export const GetHotCollections = async (data) => {
   };
 
   try {
-    let response = await fetch(process.env.REACT_APP_API_BASE_URL + '/nft/getHotCollections', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      process.env.REACT_APP_API_BASE_URL + '/nft/getHotCollections',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -904,8 +1105,13 @@ export const UpdateTokenCount = async (data) => {
     },
   };
   try {
-    let response = await fetch(REACT_APP_API_BASE_URL + `/collection/updateCollectionToken/${data}`, requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      REACT_APP_API_BASE_URL + `/collection/updateCollectionToken/${data}`,
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.data;
@@ -924,8 +1130,13 @@ export const GetOwnedNftList = async (data) => {
   };
 
   try {
-    let response = await fetch(process.env.REACT_APP_API_BASE_URL + '/nft/getOwnedNFTList', requestOptions);
-    const isJson = response.headers.get('content-type')?.includes('application/json');
+    let response = await fetch(
+      process.env.REACT_APP_API_BASE_URL + '/nft/getOwnedNFTList',
+      requestOptions
+    );
+    const isJson = response.headers
+      .get('content-type')
+      ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
     return datas.results;
