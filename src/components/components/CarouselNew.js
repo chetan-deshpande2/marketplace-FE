@@ -33,7 +33,6 @@ class CustomSlide extends Component {
   }
 }
 
-
 const CarouselNew = (props) => {
   const [height, setHeight] = useState('0');
   const [items, setItems] = useState([]);
@@ -56,6 +55,7 @@ const CarouselNew = (props) => {
   }, [items]);
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_API_BASE_URL);
     console.log(props.newItemFilter);
 
     async function fetchData() {
@@ -159,20 +159,23 @@ const CarouselNew = (props) => {
   return loading ? (
     <Loader />
   ) : (
-    <div className="row items-cards">
+    <div className='row items-cards'>
       {/* <Slider {...settings}> */}
       {items
         ? items.map((nft, index) => {
             return (
-              <div key={index} className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4">
-                <div className="nft__item m-0">
+              <div
+                key={index}
+                className='d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 mb-4'
+              >
+                <div className='nft__item m-0'>
                   {' '}
                   {nft.deadline && (
-                    <div className="de_countdown">
+                    <div className='de_countdown'>
                       <Clock deadline={nft.nOrders.oValidUpto} />
                     </div>
                   )}
-                  <div className="author_list_pp_explore_page">
+                  <div className='author_list_pp_explore_page'>
                     <span
                       onClick={() => {
                         navigate(`/itemDetail/${nft._id}`);
@@ -180,9 +183,9 @@ const CarouselNew = (props) => {
                     >
                       <img
                         style={NftPreview}
-                        className="lazy "
+                        className='lazy '
                         src={`http://${nft.nHash}.ipfs.w3s.link/${nft.nNftImage}`}
-                        alt=""
+                        alt=''
                       />
                     </span>
                   </div>
@@ -203,13 +206,18 @@ const CarouselNew = (props) => {
                       </span>
                     </Outer>
                   </div> */}
-                  <div className="nft__item_info mt-3">
-                    <span className="text-center" onClick={() => navigate(`/itemDetail/${nft._id}`)}>
+                  <div className='nft__item_info mt-3'>
+                    <span
+                      className='text-center'
+                      onClick={() => navigate(`/itemDetail/${nft._id}`)}
+                    >
                       <h4>{nft.nTitle}</h4>
                     </span>
 
-                    <div className="nft__item_action">
-                      <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>View Item</span>
+                    <div className='nft__item_action'>
+                      <span onClick={() => navigate(`/itemDetail/${nft._id}`)}>
+                        View Item
+                      </span>
                     </div>
                   </div>
                 </div>
