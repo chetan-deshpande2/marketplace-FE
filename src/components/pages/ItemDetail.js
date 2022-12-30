@@ -63,6 +63,7 @@ import { isEmptyObject } from 'jquery';
 // import CheckoutModal from "../components/Modals/CheckoutModal";
 import moment from 'moment';
 
+
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
     background: #403f83;
@@ -582,18 +583,18 @@ const ItemDetails = function (props) {
     fetch();
   }, [nftDetails]);
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
-  //       new BigNumber(bidQty?.toString()),
-  //     );
-  //     let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
+  useEffect(() => {
+    const fetch = async () => {
+      let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
+        new BigNumber(bidQty?.toString()),
+      );
+      let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
 
-  //     setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
-  //   };
-  //   fetch();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
+      setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
+    };
+    fetch();
+   
+  }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
 
   //*======================= Popups ==========
 
@@ -895,6 +896,7 @@ const ItemDetails = function (props) {
                 let res;
                 let haveOrder = true;
                 if (haveOrder === true) {
+                  console.log(nftDetails)
                   console.log(
                     nftDetails.nCollection,
                     currentUser,
