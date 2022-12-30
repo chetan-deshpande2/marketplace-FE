@@ -28,7 +28,12 @@ import PopupModal from '../menu/AccountModal/popupModal';
 import { putOnMarketplace } from '../../helpers/sendFunctions';
 import './../../assets/images/avatar5.jpg';
 import { NotificationManager } from 'react-notifications';
-import { CURRENCY, GENERAL_DATE, GENERAL_TIMESTAMP, ZERO_ADDRESS } from '../../helpers/constants';
+import {
+  CURRENCY,
+  GENERAL_DATE,
+  GENERAL_TIMESTAMP,
+  ZERO_ADDRESS,
+} from '../../helpers/constants';
 import BigNumber from 'bignumber.js';
 import {
   // checkIfLiked,
@@ -123,13 +128,18 @@ const ItemDetails = function (props) {
   const [ownedQuantity, setOwnedQuantity] = useState();
   const [minimumBid, setMinimumBid] = useState('');
   const [endTime, setEndTime] = useState();
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState(contracts.USDT);
-  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState(options[0].title);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState(
+    contracts.USDT
+  );
+  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState(
+    options[0].title
+  );
   const [beneficiary, setBeneficiary] = useState('');
   const [transferQuantity, setTransferQuantity] = useState(1);
   const [isTransferPopup, setIsTransferPopup] = useState(false);
   const [isPlaceABidPopup, setIsPlaceABidPopup] = useState(false);
-  const [selectedOrderPaymentTokenData, setSelectedOrderPaymentTokenData] = useState();
+  const [selectedOrderPaymentTokenData, setSelectedOrderPaymentTokenData] =
+    useState();
   const [bidQty, setBidQty] = useState(1);
   const [bidPrice, setBidPrice] = useState('');
   const [currentOrderId, setCurrentOrderId] = useState();
@@ -144,7 +154,10 @@ const ItemDetails = function (props) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [history, setHistory] = useState([]);
   const [profile, setProfile] = useState();
-  const [cookies, setCookie] = useCookies(['selected_account', 'Authorization']);
+  const [cookies, setCookie] = useCookies([
+    'selected_account',
+    'Authorization',
+  ]);
   const [currOrderType, setCurrOrderType] = useState();
   const [currPage, setCurrPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -413,22 +426,34 @@ const ItemDetails = function (props) {
               console.log(d[i].oPaymentToken);
               if (data && currentUser) {
                 if (d[i].oPaymentToken !== ZERO_ADDRESS) {
-                  let paymentData = await getPaymentTokenInfo(currentUser, d[i].oPaymentToken);
+                  let paymentData = await getPaymentTokenInfo(
+                    currentUser,
+                    d[i].oPaymentToken
+                  );
 
                   if (currOrderType !== 0) {
-                    setUserBalance(Number(convertToEth(paymentData?.balance)).toFixed(4));
+                    setUserBalance(
+                      Number(convertToEth(paymentData?.balance)).toFixed(4)
+                    );
                   }
                   paymentData.paymentToken = d[i].oPaymentToken;
 
                   d[i].paymentTokenData = paymentData;
                 } else {
                   if (currOrderType === 0) {
-                    setUserBalance(Number(convertToEth(cookies.balance ? cookies.balance : 0)).toFixed(4));
+                    setUserBalance(
+                      Number(
+                        convertToEth(cookies.balance ? cookies.balance : 0)
+                      ).toFixed(4)
+                    );
                   }
                 }
 
                 for (let j = 0; j < _data.data?.length; j++) {
-                  if (_data.data[j]?.oBidder?.sWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
+                  if (
+                    _data.data[j]?.oBidder?.sWalletAddress?.toLowerCase() ===
+                    currentUser?.toLowerCase()
+                  ) {
                     d[i].isUserHaveActiveBid = true;
                     break;
                   } else {
@@ -436,7 +461,10 @@ const ItemDetails = function (props) {
                   }
                 }
               } else {
-                let paymentData = await getPaymentTokenInfo('', d[i].oPaymentToken);
+                let paymentData = await getPaymentTokenInfo(
+                  '',
+                  d[i].oPaymentToken
+                );
                 paymentData.paymentToken = d[i].oPaymentToken;
                 d[i].paymentTokenData = paymentData;
                 console.log(d[i].paymentTokenData);
@@ -449,7 +477,10 @@ const ItemDetails = function (props) {
             if (_orders.length >= 1 && !isEmpty(_orders[0]) && currentUser) {
               console.log(_orders[0]);
               let datas = _orders.filter((data, key) => {
-                return data.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase();
+                return (
+                  data.oSellerWalletAddress?.toLowerCase() ===
+                  currentUser?.toLowerCase()
+                );
               });
               console.log(datas);
               if (datas.length > 0) {
@@ -476,7 +507,7 @@ const ItemDetails = function (props) {
       fetch();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [profile, id, currentUser, currOrderType],
+    [profile, id, currentUser, currOrderType]
   );
 
   useEffect(() => {
@@ -506,7 +537,9 @@ const ItemDetails = function (props) {
     console.log(nftDetails);
     const fetchData = async () => {
       if (nftDetails && nftDetails.nHash) {
-        let resp = await fetch(process.env.REACT_APP_IPFS_URL + nftDetails.nHash);
+        let resp = await fetch(
+          process.env.REACT_APP_IPFS_URL + nftDetails.nHash
+        );
         resp = await resp.json();
 
         setMetaData(eval(resp.attributes));
@@ -568,9 +601,9 @@ const ItemDetails = function (props) {
   const modal = (
     <PopupModal
       content={
-        <div className="popup-content1 c-buy-box">
-          <h2 className="modal_heading mb-3">Checkout</h2>
-          <p className="bid_buy_text mb-2">
+        <div className='popup-content1 c-buy-box'>
+          <h2 className='modal_heading mb-3'>Checkout</h2>
+          <p className='bid_buy_text mb-2'>
             You are about to purchase a{' '}
             <strong>
               {nftDetails
@@ -585,47 +618,63 @@ const ItemDetails = function (props) {
                 ? authorDetails.sUserName
                   ? authorDetails.sUserName
                   : authorDetails.sWalletAddress
-                  ? authorDetails.sWalletAddress.slice(0, 11) + '...' + authorDetails.sWalletAddress.slice(38, 42)
+                  ? authorDetails.sWalletAddress.slice(0, 11) +
+                    '...' +
+                    authorDetails.sWalletAddress.slice(38, 42)
                   : ''
                 : ''}
             </strong>
           </p>
-          <div className="bid_user_details d-flex justify-content-center align-items-center">
-            <div className="d-flex align-items-center c-buy-items">
-              <div className="polygonLogo pe-3">
+          <div className='bid_user_details d-flex justify-content-center align-items-center'>
+            <div className='d-flex align-items-center c-buy-items'>
+              <div className='polygonLogo pe-3'>
                 <img src={PolygonLogo} />
               </div>
-              <div className="bid_user_address mb-2">
+              <div className='bid_user_address mb-2'>
                 <div>
-                  <span className="adr me-2 d-color">{`${
-                    currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)
+                  <span className='adr me-2 d-color'>{`${
+                    currentUser?.slice(0, 11) +
+                    '...' +
+                    currentUser?.slice(38, 42)
                   }`}</span>
                   <span
-                    className="badge badge-success"
-                    style={{ color: 'green', background: 'rgb(198, 253, 207)', padding: '10px', borderRadius: '25px' }}
+                    className='badge badge-success'
+                    style={{
+                      color: 'green',
+                      background: 'rgb(198, 253, 207)',
+                      padding: '10px',
+                      borderRadius: '25px',
+                    }}
                   >
                     Connected
                   </span>
                 </div>
-                <span className="pgn d-token">Polygon</span>
+                <span className='pgn d-token'>Polygon</span>
               </div>
             </div>
           </div>
           {nftDetails.nType !== 1 ? (
             <>
-              <h6 className="enter_quantity_heading required mt-2"> Please Enter the Quantity</h6>
+              <h6 className='enter_quantity_heading required mt-2'>
+                {' '}
+                Please Enter the Quantity
+              </h6>
               <input
-                className="form-control quantity-input-fields"
-                type="text"
-                placeholder="0"
-                min="1"
+                className='form-control quantity-input-fields'
+                type='text'
+                placeholder='0'
+                min='1'
                 value={buyQuantity}
                 onKeyPress={(e) => {
                   if (!/^\d*$/.test(e.key)) e.preventDefault();
                 }}
                 onChange={(e) => {
                   if (Number(e.target.value) > Number(currOrderLeftQty)) {
-                    NotificationManager.error('Quantity should be less than order quantity', '', 800);
+                    NotificationManager.error(
+                      'Quantity should be less than order quantity',
+                      '',
+                      800
+                    );
                     return;
                   }
                   setBuyQuantity(e.target.value);
@@ -637,12 +686,14 @@ const ItemDetails = function (props) {
             ''
           )}
 
-          <div className="bid_user_calculations mb-2 mt-2">
+          <div className='bid_user_calculations mb-2 mt-2'>
             {placeBidCal?.map(({ key, value }) => {
               return (
-                <div className="cal_div d-flex justify-content-between">
-                  <span style={{ color: '#000', fontWeight: '600' }}>{key}:</span>
-                  <span className="cal_div_value">
+                <div className='cal_div d-flex justify-content-between'>
+                  <span style={{ color: '#000', fontWeight: '600' }}>
+                    {key}:
+                  </span>
+                  <span className='cal_div_value'>
                     {value} {CURRENCY}
                   </span>
                 </div>
@@ -653,14 +704,14 @@ const ItemDetails = function (props) {
           {Number(willPay) === 0 ? (
             ''
           ) : Number(willPay) > Number(userBalance) ? (
-            <p className="disabled_text">Insufficient Balance in {CURRENCY}</p>
+            <p className='disabled_text'>Insufficient Balance in {CURRENCY}</p>
           ) : (
-            <div className="d-flex justify-content-center">
+            <div className='d-flex justify-content-center'>
               <button
                 disabled={loading}
-                className="btn-main btn-buyNow content-btn1 mt-4"
+                className='btn-main btn-buyNow content-btn1 mt-4'
                 // style={{ color: props.color }}
-                min="1"
+                min='1'
                 onClick={async () => {
                   let res1 = await handleNetworkSwitch(currentUser);
                   setCookie('balance', res1, { path: '/' });
@@ -668,7 +719,11 @@ const ItemDetails = function (props) {
                   setIsPopup(false);
                   setCheckoutLoader(true);
                   if (!currentUser) {
-                    NotificationManager.error('Please try to reconnect wallet', '', 800);
+                    NotificationManager.error(
+                      'Please try to reconnect wallet',
+                      '',
+                      800
+                    );
                     setLoading(false);
                     return;
                   }
@@ -676,8 +731,13 @@ const ItemDetails = function (props) {
                   let bal = new BigNumber(convertToEth(cookies.balance));
                   let payableAmount;
                   if (nftDetails && nftDetails.nType === 1)
-                    payableAmount = new BigNumber(1).multipliedBy(new BigNumber(currentBuyPrice));
-                  else payableAmount = new BigNumber(buyQuantity).multipliedBy(new BigNumber(currentBuyPrice));
+                    payableAmount = new BigNumber(1).multipliedBy(
+                      new BigNumber(currentBuyPrice)
+                    );
+                  else
+                    payableAmount = new BigNumber(buyQuantity).multipliedBy(
+                      new BigNumber(currentBuyPrice)
+                    );
 
                   if (payableAmount.isGreaterThan(bal)) {
                     NotificationManager.error('Not enough balance', '', 800);
@@ -685,7 +745,11 @@ const ItemDetails = function (props) {
                     return;
                   }
                   if (Number(buyQuantity) < 1) {
-                    NotificationManager.error("Quantity can't be zero", '', 800);
+                    NotificationManager.error(
+                      "Quantity can't be zero",
+                      '',
+                      800
+                    );
                     setLoading(false);
                     return;
                   }
@@ -704,7 +768,7 @@ const ItemDetails = function (props) {
                     cookies.balance ? cookies.balance : 0,
                     // window.sessionStorage.getItem("balance"),
                     buyQuantity,
-                    nftDetails.nLazyMintingStatus,
+                    nftDetails.nLazyMintingStatus
                   );
                   if (res === false) {
                     setLoading(false);
@@ -718,9 +782,13 @@ const ItemDetails = function (props) {
                       action: 'Purchase',
                       actionMeta: 'Default',
                       message: `${buyQuantity} Quantity For ${currentOrderMinBid} ${CURRENCY} by ${
-                        currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                        currentUser.slice(0, 3) +
+                        '...' +
+                        currentUser.slice(39, 42)
                       }`,
-                      created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                      created_ts: moment(new Date()).format(
+                        'YYYY-MM-DD HH:mm:ss'
+                      ),
                     };
 
                     await InsertHistory(historyMetaData);
@@ -750,31 +818,41 @@ const ItemDetails = function (props) {
   const transferModal = (
     <PopupModal
       content={
-        <div className="popup-content1">
-          <h3 className="enter_quantity_heading required"> Please Enter the Beneficiary</h3>
+        <div className='popup-content1'>
+          <h3 className='enter_quantity_heading required'>
+            {' '}
+            Please Enter the Beneficiary
+          </h3>
           <input
-            className="form-control quantity-input-fields"
-            type="text"
-            placeholder="Please enter the address"
+            className='form-control quantity-input-fields'
+            type='text'
+            placeholder='Please enter the address'
             value={beneficiary}
             onChange={(e) => setBeneficiary(e.target.value)}
             required
           ></input>
-          <h3 className="enter_quantity_heading required"> Please Enter the Quantity</h3>
+          <h3 className='enter_quantity_heading required'>
+            {' '}
+            Please Enter the Quantity
+          </h3>
           <input
-            className="form-control quantity-input-fields"
-            type="text"
-            min="1"
-            step="1"
+            className='form-control quantity-input-fields'
+            type='text'
+            min='1'
+            step='1'
             disabled={nftDetails ? nftDetails.nType === 1 : false}
-            placeholder="Please enter quantity like 1,2.."
+            placeholder='Please enter quantity like 1,2..'
             value={transferQuantity}
             onKeyPress={(e) => {
               if (!/^\d*$/.test(e.key)) e.preventDefault();
             }}
             onChange={(e) => {
               if (Number(e.target.value) > Number(ownedQuantity)) {
-                NotificationManager.error('Transfer quantity should be less than owned quantity', '', 800);
+                NotificationManager.error(
+                  'Transfer quantity should be less than owned quantity',
+                  '',
+                  800
+                );
 
                 setTransferLoader(false);
                 return;
@@ -784,7 +862,7 @@ const ItemDetails = function (props) {
             }}
           ></input>
           <button
-            className="btn-main content-btn1 mt-4 btn-btnTransfer"
+            className='btn-main content-btn1 mt-4 btn-btnTransfer'
             style={{ color: 'blanchedalmond' }}
             onClick={async () => {
               // let res1 = await handleNetworkSwitch(currentUser);
@@ -799,7 +877,11 @@ const ItemDetails = function (props) {
                 return;
               }
               if (currentUser.toLowerCase() === beneficiary.toLowerCase()) {
-                NotificationManager.error('Transfer to your wallet is not permitted', '', 800);
+                NotificationManager.error(
+                  'Transfer to your wallet is not permitted',
+                  '',
+                  800
+                );
                 setTransferLoader(false);
                 return;
               }
@@ -813,6 +895,16 @@ const ItemDetails = function (props) {
                 let res;
                 let haveOrder = true;
                 if (haveOrder === true) {
+                  console.log(
+                    nftDetails.nCollection,
+                    currentUser,
+                    beneficiary,
+                    transferQuantity,
+                    nftDetails.nTokenID,
+                    nftDetails.nType === 1,
+                    nftDetails._id,
+                    connectedUserOrderId
+                  );
                   res = await handleNftTransfer(
                     nftDetails.nCollection,
                     currentUser,
@@ -821,7 +913,7 @@ const ItemDetails = function (props) {
                     nftDetails.nTokenID,
                     nftDetails.nType === 1,
                     nftDetails._id,
-                    connectedUserOrderId,
+                    connectedUserOrderId
                   );
                 } else {
                   res = await handleNftTransfer(
@@ -831,7 +923,7 @@ const ItemDetails = function (props) {
                     transferQuantity,
                     nftDetails.nTokenID,
                     nftDetails.nType === 1,
-                    nftDetails._id,
+                    nftDetails._id
                   );
                 }
 
@@ -848,9 +940,17 @@ const ItemDetails = function (props) {
                     action: 'Transfer',
                     actionMeta: 'Default',
                     message: `${transferQuantity} Quantity to ${
-                      beneficiary.slice(0, 3) + '...' + beneficiary.slice(39, 42)
-                    } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)}`,
-                    created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                      beneficiary.slice(0, 3) +
+                      '...' +
+                      beneficiary.slice(39, 42)
+                    } by ${
+                      currentUser.slice(0, 3) +
+                      '...' +
+                      currentUser.slice(39, 42)
+                    }`,
+                    created_ts: moment(new Date()).format(
+                      'YYYY-MM-DD HH:mm:ss'
+                    ),
                   };
 
                   await InsertHistory(historyMetaData);
@@ -876,19 +976,25 @@ const ItemDetails = function (props) {
   const hiddenContentModal = (
     <PopupModal
       content={
-        <div className="popup-content1">
+        <div className='popup-content1'>
           {loading ? <Loader /> : ''}
           <h3 style={{ 'font-size': 'x-large' }}>Hidden Content</h3>
-          <h5 style={{ color: 'lightslategrey' }}>Hidden content is some secret information from seller to you</h5>
+          <h5 style={{ color: 'lightslategrey' }}>
+            Hidden content is some secret information from seller to you
+          </h5>
           <h4 style={{ color: '#53a0b5' }}>
             {isOwned && nftDetails ? (
               nftDetails.nLockedContent ? (
-                <div className="show-hidden-content">{nftDetails.nLockedContent}</div>
+                <div className='show-hidden-content'>
+                  {nftDetails.nLockedContent}
+                </div>
               ) : (
-                <div className="not-authorized">No Content!!</div>
+                <div className='not-authorized'>No Content!!</div>
               )
             ) : (
-              <div className="not-authorized">You don't have Authorization!!</div>
+              <div className='not-authorized'>
+                You don't have Authorization!!
+              </div>
             )}
           </h4>
         </div>
@@ -902,9 +1008,9 @@ const ItemDetails = function (props) {
   const placeBidModal = (
     <PopupModal
       content={
-        <div className="popup-content1">
-          <h3 className="modal_heading">Checkout</h3>
-          <p className="bid_buy_text">
+        <div className='popup-content1'>
+          <h3 className='modal_heading'>Checkout</h3>
+          <p className='bid_buy_text'>
             You are about to place a bid for{' '}
             <strong>
               {nftDetails
@@ -919,30 +1025,36 @@ const ItemDetails = function (props) {
                 ? authorDetails.sUserName
                   ? authorDetails.sUserName
                   : authorDetails.sWalletAddress
-                  ? authorDetails.sWalletAddress.slice(0, 11) + '...' + authorDetails.sWalletAddress.slice(38, 42)
+                  ? authorDetails.sWalletAddress.slice(0, 11) +
+                    '...' +
+                    authorDetails.sWalletAddress.slice(38, 42)
                   : ''
                 : ''}
             </strong>
           </p>
-          <div className="bid_user_details">
-            <div className="polygonLogo">
+          <div className='bid_user_details'>
+            <div className='polygonLogo'>
               <img src={PolygonLogo} />
             </div>
-            <div className="bid_user_address">
+            <div className='bid_user_address'>
               <div>
-                <span className="adr">{`${currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)}`}</span>
-                <span className="badge badge-success">Connected</span>
+                <span className='adr'>{`${
+                  currentUser?.slice(0, 11) + '...' + currentUser?.slice(38, 42)
+                }`}</span>
+                <span className='badge badge-success'>Connected</span>
               </div>
-              <span className="pgn mb-2">Polygon</span>
+              <span className='pgn mb-2'>Polygon</span>
             </div>
           </div>
-          <h6 className="enter_quantity_heading required">Please Enter the Bid Quantity</h6>
+          <h6 className='enter_quantity_heading required'>
+            Please Enter the Bid Quantity
+          </h6>
           <input
-            className="form-control quantity-input-fields"
-            type="text"
-            min="1"
-            step="1"
-            placeholder="Please Enter the Quantity"
+            className='form-control quantity-input-fields'
+            type='text'
+            min='1'
+            step='1'
+            placeholder='Please Enter the Quantity'
             disabled={nftDetails ? nftDetails.nType === 1 : false}
             value={bidQty}
             onKeyPress={(e) => {
@@ -950,7 +1062,11 @@ const ItemDetails = function (props) {
             }}
             onChange={(e) => {
               if (Number(e.target.value) > Number(currOrderLeftQty)) {
-                NotificationManager.error("Quantity should be less than seller's order", '', 800);
+                NotificationManager.error(
+                  "Quantity should be less than seller's order",
+                  '',
+                  800
+                );
 
                 setPlaceBidLoader(false);
                 return;
@@ -960,13 +1076,15 @@ const ItemDetails = function (props) {
               setWillPay((e.target.value * bidPrice).toFixed(4));
             }}
           ></input>
-          <h6 className="enter_price_heading required">Please Enter the Bid Price</h6>
+          <h6 className='enter_price_heading required'>
+            Please Enter the Bid Price
+          </h6>
 
           <input
-            className="form-control price-input-fields"
-            type="text"
-            min="1"
-            placeholder="Please Enter Price"
+            className='form-control price-input-fields'
+            type='text'
+            min='1'
+            placeholder='Please Enter Price'
             value={bidPrice}
             onKeyPress={(e) => {
               if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
@@ -1005,12 +1123,12 @@ const ItemDetails = function (props) {
             }}
           ></input>
 
-          <div className="bid_user_calculations">
+          <div className='bid_user_calculations'>
             {placeBidCal?.map(({ key, value }) => {
               return (
-                <div className="cal_div">
+                <div className='cal_div'>
                   <span>{key}</span>
-                  <span className="cal_div_value">
+                  <span className='cal_div_value'>
                     {value} {selectedTokenSymbol}
                   </span>
                 </div>
@@ -1021,10 +1139,12 @@ const ItemDetails = function (props) {
           {Number(willPay) === 0 ? (
             ''
           ) : Number(willPay) > Number(userBalance) ? (
-            <p className="disabled_text">Insufficient Balance in {selectedTokenSymbol}</p>
+            <p className='disabled_text'>
+              Insufficient Balance in {selectedTokenSymbol}
+            </p>
           ) : (
             <button
-              className="btn-main content-btn1 mt-4 btn-placeABid"
+              className='btn-main content-btn1 mt-4 btn-placeABid'
               style={{ color: props.color }}
               onClick={async () => {
                 // let res = await handleNetworkSwitch(currentUser);
@@ -1033,7 +1153,11 @@ const ItemDetails = function (props) {
                 setIsPlaceABidPopup(false);
                 if (!bidPrice) return;
                 if (Number(bidQty) < 1) {
-                  NotificationManager.error("Quantity can't be less than or equal to zero", '', 800);
+                  NotificationManager.error(
+                    "Quantity can't be less than or equal to zero",
+                    '',
+                    800
+                  );
                   setPlaceBidLoader(false);
                   return;
                 }
@@ -1042,13 +1166,18 @@ const ItemDetails = function (props) {
                   NotificationManager.error(
                     `Price should be more than ${currentOrderMinBid} ${selectedOrderPaymentTokenData?.symbol}`,
                     '',
-                    800,
+                    800
                   );
                   setPlaceBidLoader(false);
                   return;
                 }
 
-                if (nftDetails && currentOrderId && currentUser && currentOrderSeller) {
+                if (
+                  nftDetails &&
+                  currentOrderId &&
+                  currentUser &&
+                  currentOrderSeller
+                ) {
                   await createBid(
                     nftDetails._id,
                     currentOrderId,
@@ -1057,7 +1186,7 @@ const ItemDetails = function (props) {
                     nftDetails.nType === 1,
                     bidQty,
                     bidPrice ? bidPrice : 0,
-                    nftDetails.nLazyMintingStatus,
+                    nftDetails.nLazyMintingStatus
                   );
                   setIsPlaceABidPopup(false);
                   setPlaceBidLoader(false);
@@ -1080,37 +1209,63 @@ const ItemDetails = function (props) {
 
   //*======================= Render Functions ==============
 
-  const RemoveFromSale = (seller, price, orderId, oCreated, deadline, key, qty, qtySold) => (
-    <div className="de_tab">
-      {removeFromSaleLoader ? showProcessingModal(`Removing ${qty} qty from sale. Please do not refresh...`) : ''}
+  const RemoveFromSale = (
+    seller,
+    price,
+    orderId,
+    oCreated,
+    deadline,
+    key,
+    qty,
+    qtySold
+  ) => (
+    <div className='de_tab'>
+      {removeFromSaleLoader
+        ? showProcessingModal(
+            `Removing ${qty} qty from sale. Please do not refresh...`
+          )
+        : ''}
 
-      <div className="row">
-        <div className="col item_author">
-          <div className="p_list">
-            <div className="p_list_pp">
+      <div className='row'>
+        <div className='col item_author'>
+          <div className='p_list'>
+            <div className='p_list_pp'>
               <span>
-                <img className="lazy" src={seller && seller.sProfilePicUrl ? seller.sProfilePicUrl : Avatar} alt="" />
+                <img
+                  className='lazy'
+                  src={
+                    seller && seller.sProfilePicUrl
+                      ? seller.sProfilePicUrl
+                      : Avatar
+                  }
+                  alt=''
+                />
               </span>
             </div>
-            <div className="p_list_info bidsList pl-60">
-              <div className="row">
-                <div className="col vCenter bidsText mb-3">
+            <div className='p_list_info bidsList pl-60'>
+              <div className='row'>
+                <div className='col vCenter bidsText mb-3'>
                   <b>
                     {seller.length > 20
-                      ? seller.slice(0, 6) + '....' + seller.slice(seller.length - 6, seller.length)
+                      ? seller.slice(0, 6) +
+                        '....' +
+                        seller.slice(seller.length - 6, seller.length)
                       : seller}
                   </b>
                   <span>
                     {qty - qtySold} / {nftDetails.nQuantity}{' '}
-                    {qty - qtySold / nftDetails.nQuantity > 1 ? 'editions' : 'edition'} for{' '}
+                    {qty - qtySold / nftDetails.nQuantity > 1
+                      ? 'editions'
+                      : 'edition'}{' '}
+                    for{' '}
                     <b>
                       {price} {CURRENCY}
                     </b>{' '}
                     each on sale
                   </span>
                 </div>
-                <div className="d-flex flex-wrap">
-                  <div className="vCenter itemDet-btn me-3">
+                <div className='d-flex flex-wrap'>
+                  <div className='vCenter itemDet-btn me-3'>
                     <span
                       className={
                         removeFromSaleLoader
@@ -1118,7 +1273,16 @@ const ItemDetails = function (props) {
                           : 'btn-main btn-removefromsale'
                       }
                       onClick={async () => {
-                        console.log(seller, price, orderId, oCreated, deadline, key, qty, qtySold);
+                        console.log(
+                          seller,
+                          price,
+                          orderId,
+                          oCreated,
+                          deadline,
+                          key,
+                          qty,
+                          qtySold
+                        );
                         // let res1 = await handleNetworkSwitch(currentUser);
                         // setCookie('balance', res1, { path: '/' });
                         // if (res1 === false) return;
@@ -1129,7 +1293,10 @@ const ItemDetails = function (props) {
                           return;
                         }
                         setRemoveFromSaleLoader(true);
-                        let res = await handleRemoveFromSale(orderId, currentUser?.toLowerCase());
+                        let res = await handleRemoveFromSale(
+                          orderId,
+                          currentUser?.toLowerCase()
+                        );
                         if (res === false) {
                           setRemoveFromSaleLoader(false);
                           return;
@@ -1141,9 +1308,13 @@ const ItemDetails = function (props) {
                             action: 'Marketplace',
                             actionMeta: 'Unlisted',
                             message: `${qty} editions by ${
-                              currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                              currentUser.slice(0, 3) +
+                              '...' +
+                              currentUser.slice(39, 42)
                             }`,
-                            created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                            created_ts: moment(new Date()).format(
+                              'YYYY-MM-DD HH:mm:ss'
+                            ),
                           };
 
                           await InsertHistory(historyMetaData);
@@ -1158,10 +1329,12 @@ const ItemDetails = function (props) {
                     </span>
                   </div>
                   {nftDetails?.nLazyMintingStatus?.toString() !== '1' ? (
-                    <div className="vCenter itemDet-btn">
+                    <div className='vCenter itemDet-btn'>
                       <span
                         className={
-                          transferLoader ? 'spn-disabled btn-main btn-btnTransfer' : 'btn-main btn-btnTransfer'
+                          transferLoader
+                            ? 'spn-disabled btn-main btn-btnTransfer'
+                            : 'btn-main btn-btnTransfer'
                         }
                         onClick={async () => {
                           // let res1 = await handleNetworkSwitch(currentUser);
@@ -1201,45 +1374,65 @@ const ItemDetails = function (props) {
     deadline,
     qtySold,
     paymentTokenData,
-    timestamp,
+    timestamp
   ) => (
-    <div className="de_tab">
-      <div className="row">
-        <div className="col item_author">
-          <div className="p_list">
-            <div className="p_list_pp">
+    <div className='de_tab'>
+      <div className='row'>
+        <div className='col item_author'>
+          <div className='p_list'>
+            <div className='p_list_pp'>
               <span>
-                <img className="lazy" src={seller && seller.sProfilePicUrl ? seller.sProfilePicUrl : Avatar} alt="" />
+                <img
+                  className='lazy'
+                  src={
+                    seller && seller.sProfilePicUrl
+                      ? seller.sProfilePicUrl
+                      : Avatar
+                  }
+                  alt=''
+                />
               </span>
             </div>
-            <div className="p_list_info bidsList">
-              <div className="row">
-                <div className="col vCenter bidsText">
+            <div className='p_list_info bidsList'>
+              <div className='row'>
+                <div className='col vCenter bidsText'>
                   <b>
                     {seller.length > 20
-                      ? seller.slice(0, 6) + '....' + seller.slice(seller.length - 6, seller.length)
+                      ? seller.slice(0, 6) +
+                        '....' +
+                        seller.slice(seller.length - 6, seller.length)
                       : seller}{' '}
                   </b>
                   <br></br>
-                  {timestamp !== GENERAL_TIMESTAMP ? 'Put on Timed Auction ' : 'Open for Bids '} with minimum bid of{' '}
+                  {timestamp !== GENERAL_TIMESTAMP
+                    ? 'Put on Timed Auction '
+                    : 'Open for Bids '}{' '}
+                  with minimum bid of{' '}
                   <b>
                     {price} {paymentTokenData ? paymentTokenData.symbol : ''}
                   </b>
                   <span>
                     at {qty - qtySold}/{nftDetails ? nftDetails.nQuantity : 0}{' '}
-                    {qty - qtySold / (nftDetails ? nftDetails.nQuantity : 0) > 1 ? 'editions' : 'edition'} for{' '}
+                    {qty - qtySold / (nftDetails ? nftDetails.nQuantity : 0) > 1
+                      ? 'editions'
+                      : 'edition'}{' '}
+                    for{' '}
                     <b>
                       {price} {paymentTokenData?.symbol}
                     </b>{' '}
                     each
                   </span>
-                  <div className="spacer-10"></div>
+                  <div className='spacer-10'></div>
                   {timestamp !== GENERAL_TIMESTAMP ? (
                     !orderState[key] ? (
                       <>
                         Auctions ends in
-                        <div className="de_countdown">
-                          <Clock deadline={deadline} onAuctionEnd={onAuctionEnd} index={key} />
+                        <div className='de_countdown'>
+                          <Clock
+                            deadline={deadline}
+                            onAuctionEnd={onAuctionEnd}
+                            index={key}
+                          />
                         </div>
                       </>
                     ) : (
@@ -1249,10 +1442,14 @@ const ItemDetails = function (props) {
                     ''
                   )}
                 </div>
-                <div className="d-flex flex-wrap">
-                  <div className="vCenter itemDet-btn">
+                <div className='d-flex flex-wrap'>
+                  <div className='vCenter itemDet-btn'>
                     <span
-                      className={loading ? 'spn-disabled btn-removefromauction' : 'btn-main btn-removefromauction me-3'}
+                      className={
+                        loading
+                          ? 'spn-disabled btn-removefromauction'
+                          : 'btn-main btn-removefromauction me-3'
+                      }
                       onClick={async () => {
                         // let res1 = await handleNetworkSwitch(currentUser);
                         // setCookie('balance', res1, { path: '/' });
@@ -1266,7 +1463,10 @@ const ItemDetails = function (props) {
                         setRemoveFromSaleLoader(true);
                         // nftDetails.nType === 1
                         // ?
-                        let res = await handleRemoveFromAuction(orderId, currentUser?.toLowerCase());
+                        let res = await handleRemoveFromAuction(
+                          orderId,
+                          currentUser?.toLowerCase()
+                        );
                         if (res === false) {
                           setRemoveFromSaleLoader(false);
                           return;
@@ -1278,9 +1478,13 @@ const ItemDetails = function (props) {
                             action: 'Marketplace',
                             actionMeta: 'Unlisted',
                             message: `${qty} editions by ${
-                              currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                              currentUser.slice(0, 3) +
+                              '...' +
+                              currentUser.slice(39, 42)
                             }`,
-                            created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                            created_ts: moment(new Date()).format(
+                              'YYYY-MM-DD HH:mm:ss'
+                            ),
                           };
 
                           await InsertHistory(historyMetaData);
@@ -1299,10 +1503,12 @@ const ItemDetails = function (props) {
                     </span>
                   </div>
                   {nftDetails?.nLazyMintingStatus?.toString() !== '1' ? (
-                    <div className="vCenter itemDet-btn">
+                    <div className='vCenter itemDet-btn'>
                       <span
                         className={
-                          transferLoader ? 'spn-disabled btn-main btn-btnTransfer' : 'btn-main btn-btnTransfer'
+                          transferLoader
+                            ? 'spn-disabled btn-main btn-btnTransfer'
+                            : 'btn-main btn-btnTransfer'
                         }
                         onClick={async () => {
                           // let res1 = await handleNetworkSwitch(currentUser);
@@ -1345,51 +1551,72 @@ const ItemDetails = function (props) {
     paymentTokenData,
     sellerId,
     qtySold,
-    isUserHaveActiveBid,
+    isUserHaveActiveBid
   ) => {
     return (
-      <div className="de_tab" key={key}>
+      <div className='de_tab' key={key}>
         {/* <div className="p_list_pp">
           <span>
             <img className="lazy" src="/img/author/author-5.jpg" alt="" />
           </span>
         </div> */}
-        <div className="row">
-          <div className="col item_author">
-            <div className="p_list">
-              <div className="p_list_pp">
+        <div className='row'>
+          <div className='col item_author'>
+            <div className='p_list'>
+              <div className='p_list_pp'>
                 <span>
-                  <img className="lazy" src={seller && seller.sProfilePicUrl ? seller.sProfilePicUrl : Avatar} alt="" />
+                  <img
+                    className='lazy'
+                    src={
+                      seller && seller.sProfilePicUrl
+                        ? seller.sProfilePicUrl
+                        : Avatar
+                    }
+                    alt=''
+                  />
                 </span>
               </div>
-              <div className="p_list_info">
-                <div className="row">
-                  <div className="col vCenter bidsText">
+              <div className='p_list_info'>
+                <div className='row'>
+                  <div className='col vCenter bidsText'>
                     <b>
                       {seller.length > 20
-                        ? seller.slice(0, 6) + '....' + seller.slice(seller.length - 6, seller.length)
+                        ? seller.slice(0, 6) +
+                          '....' +
+                          seller.slice(seller.length - 6, seller.length)
                         : seller}
                     </b>
                     <br></br>
-                    {timestamp !== GENERAL_TIMESTAMP ? 'Put on Timed Auction' : 'Open for Bids'} with minimum bid of{' '}
+                    {timestamp !== GENERAL_TIMESTAMP
+                      ? 'Put on Timed Auction'
+                      : 'Open for Bids'}{' '}
+                    with minimum bid of{' '}
                     <b>
                       {price} {paymentTokenData ? paymentTokenData.symbol : ''}
                     </b>
                     <span>
                       at {qty - qtySold}/{nftDetails ? nftDetails.nQuantity : 0}{' '}
-                      {qty - qtySold / (nftDetails ? nftDetails.nQuantity : 0) > 1 ? 'editions' : 'edition'} for{' '}
+                      {qty - qtySold / (nftDetails ? nftDetails.nQuantity : 0) >
+                      1
+                        ? 'editions'
+                        : 'edition'}{' '}
+                      for{' '}
                       <b>
                         {price} {paymentTokenData?.symbol}
                       </b>{' '}
                       each
                     </span>
-                    <div className="spacer-10"></div>
+                    <div className='spacer-10'></div>
                     {timestamp !== GENERAL_TIMESTAMP ? (
                       !orderState[key] ? (
                         <>
                           Auctions ends in
-                          <div className="de_countdown">
-                            <Clock deadline={auctionEndDate} onAuctionEnd={onAuctionEnd} index={key} />
+                          <div className='de_countdown'>
+                            <Clock
+                              deadline={auctionEndDate}
+                              onAuctionEnd={onAuctionEnd}
+                              index={key}
+                            />
                           </div>
                         </>
                       ) : (
@@ -1399,10 +1626,12 @@ const ItemDetails = function (props) {
                       ''
                     )}
                   </div>
-                  <div className="vCenter itemDet-btn">
+                  <div className='vCenter itemDet-btn'>
                     <span
                       className={
-                        new Date(auctionEndDate) < new Date() ? 'spn-disabled  btn-placeABid' : 'btn-main btn-placeABid'
+                        new Date(auctionEndDate) < new Date()
+                          ? 'spn-disabled  btn-placeABid'
+                          : 'btn-main btn-placeABid'
                       }
                       onClick={async () => {
                         let res = await handleNetworkSwitch(currentUser);
@@ -1426,7 +1655,8 @@ const ItemDetails = function (props) {
                         setIsPlaceABidPopup(true);
                       }}
                     >
-                      {new Date(auctionEndDate) >= new Date() && !orderState[key]
+                      {new Date(auctionEndDate) >= new Date() &&
+                      !orderState[key]
                         ? isUserHaveActiveBid
                           ? 'Update Bid'
                           : 'Place A Bid'
@@ -1436,7 +1666,7 @@ const ItemDetails = function (props) {
                 </div>
               </div>
 
-              <div className="spacer-10"></div>
+              <div className='spacer-10'></div>
             </div>
           </div>
         </div>
@@ -1444,35 +1674,55 @@ const ItemDetails = function (props) {
     );
   };
 
-  const buyNow = (seller, price, orderId, oCreated, key, qtyLeft, qty, orderType) => (
-    <div className="de_tab">
-      <div className="row">
-        <div className="col item_author">
-          <div className="p_list">
-            <div className="p_list_pp">
+  const buyNow = (
+    seller,
+    price,
+    orderId,
+    oCreated,
+    key,
+    qtyLeft,
+    qty,
+    orderType
+  ) => (
+    <div className='de_tab'>
+      <div className='row'>
+        <div className='col item_author'>
+          <div className='p_list'>
+            <div className='p_list_pp'>
               <span>
-                <img className="lazy" src={seller && seller.sProfilePicUrl ? seller.sProfilePicUrl : Avatar} alt="" />
+                <img
+                  className='lazy'
+                  src={
+                    seller && seller.sProfilePicUrl
+                      ? seller.sProfilePicUrl
+                      : Avatar
+                  }
+                  alt=''
+                />
               </span>
             </div>
-            <div className="p_list_info">
-              <div className="row">
-                <div className="col vCenter bidsText">
+            <div className='p_list_info'>
+              <div className='row'>
+                <div className='col vCenter bidsText'>
                   <b>
                     {seller.length > 20
-                      ? seller.slice(0, 6) + '....' + seller.slice(seller.length - 6, seller.length)
+                      ? seller.slice(0, 6) +
+                        '....' +
+                        seller.slice(seller.length - 6, seller.length)
                       : seller}
                   </b>
                   <span>
-                    {qtyLeft} / {qty} {qtyLeft / qty > 1 ? 'editions' : 'edition'} for{' '}
+                    {qtyLeft} / {qty}{' '}
+                    {qtyLeft / qty > 1 ? 'editions' : 'edition'} for{' '}
                     <b>
                       {price} {CURRENCY}
                     </b>{' '}
                     each
                   </span>
                 </div>
-                <div className="vCenter itemDet-btn mt-3">
+                <div className='vCenter itemDet-btn mt-3'>
                   <span
-                    className="btn-main btn-buyNow"
+                    className='btn-main btn-buyNow'
                     onClick={async () => {
                       let res = await handleNetworkSwitch(currentUser);
                       setCookie('balance', res, { path: '/' });
@@ -1505,17 +1755,20 @@ const ItemDetails = function (props) {
   );
 
   const NotForSale = (key) => (
-    <div className="row">
-      <div className="col-md-12">
-        <div className="p_list">
-          <ul className="de_nav">
-            <li id="Mainbtn" className="active">
+    <div className='row'>
+      <div className='col-md-12'>
+        <div className='p_list'>
+          <ul className='de_nav'>
+            <li id='Mainbtn' className='active'>
               Not For Sale
             </li>
           </ul>
-          <div className="c-p_list_pp">
-            <span className="text-break">
-              Created by: {nftDetails && nftDetails.nCreater ? nftDetails.nCreater.sWalletAddress : '0x00..'}
+          <div className='c-p_list_pp'>
+            <span className='text-break'>
+              Created by:{' '}
+              {nftDetails && nftDetails.nCreater
+                ? nftDetails.nCreater.sWalletAddress
+                : '0x00..'}
             </span>
           </div>
         </div>
@@ -1524,21 +1777,25 @@ const ItemDetails = function (props) {
   );
 
   const PutOnMarketPlace = (qty) => (
-    <div className="row">
-      <div className="col item_author">
-        <div className="p_list">
-          <div className="p_list_pp">
+    <div className='row'>
+      <div className='col item_author'>
+        <div className='p_list'>
+          <div className='p_list_pp'>
             <span>
               <img
-                className="lazy"
-                src={authorDetails && authorDetails.sProfilePicUrl ? authorDetails.sProfilePicUrl : Avatar}
-                alt=""
+                className='lazy'
+                src={
+                  authorDetails && authorDetails.sProfilePicUrl
+                    ? authorDetails.sProfilePicUrl
+                    : Avatar
+                }
+                alt=''
               />
             </span>
           </div>
-          <div className="p_list_info bidsList">
-            <div className="row">
-              <div className="col-md-12 vCenter bidsText mb-3">
+          <div className='p_list_info bidsList'>
+            <div className='row'>
+              <div className='col-md-12 vCenter bidsText mb-3'>
                 <b>
                   Created by{' '}
                   {authorDetails?.sWalletAddress?.length > 20
@@ -1546,22 +1803,33 @@ const ItemDetails = function (props) {
                       '....' +
                       authorDetails?.sWalletAddress.slice(
                         authorDetails?.sWalletAddress?.length - 6,
-                        authorDetails?.sWalletAddress?.length,
+                        authorDetails?.sWalletAddress?.length
                       )
                     : authorDetails?.sWalletAddress}
                 </b>
                 <br></br> at {qty}/{nftDetails ? nftDetails.nQuantity : 0}{' '}
-                {qty / (nftDetails ? nftDetails.nQuantity : 0) > 1 ? 'editions' : 'edition'} each
+                {qty / (nftDetails ? nftDetails.nQuantity : 0) > 1
+                  ? 'editions'
+                  : 'edition'}{' '}
+                each
               </div>
-              <div className="col-md-10">
-                <div className="d-flex flex-wrap modal-buttons">
-                  <div className="vCenter itemDet-btn mb-10 mr-48">
+              <div className='col-md-10'>
+                <div className='d-flex flex-wrap modal-buttons'>
+                  <div className='vCenter itemDet-btn mb-10 mr-48'>
                     <button
-                      className={loading ? 'spn-disabled btn-main btn-putonMarket' : 'btn-main btn-putonMarket'}
+                      className={
+                        loading
+                          ? 'spn-disabled btn-main btn-putonMarket'
+                          : 'btn-main btn-putonMarket'
+                      }
                       onClick={() => {
                         if (!currentUser) {
                           setNotConnectedModal(true);
-                          NotificationManager.error('Please connect your wallet', '', 800);
+                          NotificationManager.error(
+                            'Please connect your wallet',
+                            '',
+                            800
+                          );
                           setPutOnMarketplaceLoader(false);
                           return;
                         }
@@ -1572,10 +1840,12 @@ const ItemDetails = function (props) {
                     </button>
                   </div>
                   {nftDetails?.nLazyMintingStatus?.toString() !== '1' ? (
-                    <div className="vCenter itemDet-btn">
+                    <div className='vCenter itemDet-btn'>
                       <button
                         className={
-                          putOnMarketplaceLoader ? 'spn-disabled btn-main btn-btnTransfer' : 'btn-main btn-btnTransfer'
+                          putOnMarketplaceLoader
+                            ? 'spn-disabled btn-main btn-btnTransfer'
+                            : 'btn-main btn-btnTransfer'
                         }
                         onClick={async () => {
                           console.log(nftDetails);
@@ -1584,7 +1854,11 @@ const ItemDetails = function (props) {
                           if (res1 === false) return;
                           if (!currentUser) {
                             setNotConnectedModal(true);
-                            NotificationManager.error('Please connect your wallet', '', 800);
+                            NotificationManager.error(
+                              'Please connect your wallet',
+                              '',
+                              800
+                            );
                             setPutOnMarketplaceLoader(false);
                             return;
                           }
@@ -1599,7 +1873,7 @@ const ItemDetails = function (props) {
                   )}
                 </div>
               </div>
-              <div className="col-md-2"></div>
+              <div className='col-md-2'></div>
             </div>
           </div>
         </div>
@@ -1635,44 +1909,60 @@ const ItemDetails = function (props) {
       {loading ? showProcessingModal('Loading') : ''}
       {isPopup ? modal : ''}
 
-      {checkoutLoader ? showProcessingModal('Transaction is in progress. Please do not refresh...') : ''}
-      {putOnMarketplaceLoader ? showProcessingModal(`Placing on marketplace. Please do not refresh...`) : ''}
+      {checkoutLoader
+        ? showProcessingModal(
+            'Transaction is in progress. Please do not refresh...'
+          )
+        : ''}
+      {putOnMarketplaceLoader
+        ? showProcessingModal(
+            `Placing on marketplace. Please do not refresh...`
+          )
+        : ''}
       {transferLoader
         ? showProcessingModal(
             `Transferring ${transferQuantity} qty to ${
               beneficiary.slice(0, 3) + '...' + beneficiary.slice(39, 42)
-            }. Please do not refresh...`,
+            }. Please do not refresh...`
           )
         : ''}
-      {placeBidLoader ? showProcessingModal('Placing bid. Please do not refresh...') : ''}
+      {placeBidLoader
+        ? showProcessingModal('Placing bid. Please do not refresh...')
+        : ''}
 
-      {removeFromSaleLoader ? showProcessingModal('Removing NFT from sale. Please do not refresh...') : ''}
+      {removeFromSaleLoader
+        ? showProcessingModal(
+            'Removing NFT from sale. Please do not refresh...'
+          )
+        : ''}
 
       {isTransferPopup ? transferModal : ''}
       {isPlaceABidPopup ? placeBidModal : ''}
       {isUnlocked ? hiddenContentModal : ''}
       {showNotConnectedModal ? (
         <ConnectWallet
-          content={'Get started with your wallet to sign messages and send transactions to Polygon blockchain'}
+          content={
+            'Get started with your wallet to sign messages and send transactions to Polygon blockchain'
+          }
           handleClose={() => setNotConnectedModal(false)}
         />
       ) : (
         ''
       )}
       <GlobalStyles />
-      <section className="container">
-        <div className="row mt-md-5 pt-md-4">
-          <div className="col-md-6 text-center nft_image_box">
-            <div className="c-nft-img-box">
+      <section className='container'>
+        <div className='row mt-md-5 pt-md-4'>
+          <div className='col-md-6 text-center nft_image_box'>
+            <div className='c-nft-img-box'>
               <img
                 src={`http://${nftDetails.nHash}.ipfs.w3s.link/${nftDetails.nNftImage}`}
-                className="img-fluid img-rounded explore_item_img_col nft_image mb-sm-30"
-                alt=""
+                className='img-fluid img-rounded explore_item_img_col nft_image mb-sm-30'
+                alt=''
               />
             </div>
           </div>
-          <div className="col-md-6">
-            <div className="item_info">
+          <div className='col-md-6'>
+            <div className='item_info'>
               <h2>
                 {nftDetails ? nftDetails.nTitle : ''}
                 {/* ({nftDetails?.nType === 1 ? "Single" : "Multiple"}) */}
@@ -1709,11 +1999,11 @@ const ItemDetails = function (props) {
 
               <p>{nftDetails ? nftDetails.nDescription : ''}</p>
 
-              <div className="de_tab">
-                <div className="row">
-                  <div className="item_author col-md-6">
+              <div className='de_tab'>
+                <div className='row'>
+                  <div className='item_author col-md-6'>
                     <h6>Creator</h6>
-                    <div className="author_list_pp">
+                    <div className='author_list_pp'>
                       {/* <a href={`/author/${nftDetails?.nCreater?._id}`}> */}
                       <span>
                         <img
@@ -1724,15 +2014,19 @@ const ItemDetails = function (props) {
                                 nftDetails.nCreater.sWalletAddress.slice(39, 42)
                               : ''
                           }
-                          className="lazy"
+                          className='lazy'
                           v
-                          src={authorDetails && authorDetails.sProfilePicUrl ? authorDetails.sProfilePicUrl : Avatar}
-                          alt=""
+                          src={
+                            authorDetails && authorDetails.sProfilePicUrl
+                              ? authorDetails.sProfilePicUrl
+                              : Avatar
+                          }
+                          alt=''
                         />
                       </span>
                       {/* </a> */}
                     </div>
-                    <div className="author_list_info">
+                    <div className='author_list_info'>
                       <span>
                         {authorDetails && authorDetails.sWalletAddress
                           ? authorDetails.sUserName
@@ -1745,24 +2039,30 @@ const ItemDetails = function (props) {
                     </div>
                   </div>
 
-                  <div className="item_collection item_author col-md-6 mt-30">
+                  <div className='item_collection item_author col-md-6 mt-30'>
                     <h6>Collection</h6>
                     <div>
-                      <div className="author_list_pp">
+                      <div className='author_list_pp'>
                         {/* <a href={`/collection/${nftDetails.nCollection}`}> */}
                         <span>
                           <img
-                            className="lazy"
-                            src={nftDetails && nftDetails.nCollectionsProfile ? nftDetails.nCollectionsProfile : Avatar}
-                            alt=""
+                            className='lazy'
+                            src={
+                              nftDetails && nftDetails.nCollectionsProfile
+                                ? nftDetails.nCollectionsProfile
+                                : Avatar
+                            }
+                            alt=''
                           />
                         </span>
                         {/* </a> */}
                       </div>
-                      <div className="author_list_info">
+                      <div className='author_list_info'>
                         <span>
                           {nftDetails && nftDetails.nCollection
-                            ? nftDetails.nCollection.slice(0, 3) + '...' + nftDetails.nCollection.slice(39, 42)
+                            ? nftDetails.nCollection.slice(0, 3) +
+                              '...' +
+                              nftDetails.nCollection.slice(39, 42)
                             : ''}
                         </span>
                       </div>
@@ -1771,21 +2071,21 @@ const ItemDetails = function (props) {
                 </div>
               </div>
 
-              <div className="spacer-40"></div>
-              <div className="spacer-10"></div>
-              <div className="de_tab">
-                <div className="c-tabs overflow-auto">
-                  <ul className="de_nav c-de_nav">
-                    <li id="Mainbtn1" className="active">
+              <div className='spacer-40'></div>
+              <div className='spacer-10'></div>
+              <div className='de_tab'>
+                <div className='c-tabs overflow-auto'>
+                  <ul className='de_nav c-de_nav'>
+                    <li id='Mainbtn1' className='active'>
                       <span onClick={handleBtnClick1}>Action</span>
                     </li>
-                    <li id="Mainbtn" className="">
+                    <li id='Mainbtn' className=''>
                       <span onClick={handleBtnClick}>History</span>
                     </li>
-                    <li id="Mainbtn2" className="">
+                    <li id='Mainbtn2' className=''>
                       <span onClick={handleBtnClick2}>Active Bids</span>
                     </li>
-                    <li id="Mainbtn3" className="">
+                    <li id='Mainbtn3' className=''>
                       <span onClick={handleBtnClick3}>Details</span>
                     </li>
                   </ul>
@@ -1795,123 +2095,150 @@ const ItemDetails = function (props) {
                   <>
                     <PopupModal
                       content={
-                        <div className="popup-content1 text-start">
-                          <h3 className="modal_headeing">Put on Marketplace</h3>
-                          <h6 className="formlabel">Select method</h6>
-                          <div className="de_tab tab_methods">
-                            <ul className="de_nav text-center">
-                              <li id="btn1" className="active" onClick={handleMpShow}>
+                        <div className='popup-content1 text-start'>
+                          <h3 className='modal_headeing'>Put on Marketplace</h3>
+                          <h6 className='formlabel'>Select method</h6>
+                          <div className='de_tab tab_methods'>
+                            <ul className='de_nav text-center'>
+                              <li
+                                id='btn1'
+                                className='active'
+                                onClick={handleMpShow}
+                              >
                                 <span>
-                                  <i className="fa fa-tag"></i>Fixed price
+                                  <i className='fa fa-tag'></i>Fixed price
                                 </span>
                               </li>
-                              <li id="btn2" onClick={handleMpShow1}>
+                              <li id='btn2' onClick={handleMpShow1}>
                                 <span>
-                                  <i className="fa fa-hourglass-1"></i>Timed auction
+                                  <i className='fa fa-hourglass-1'></i>Timed
+                                  auction
                                 </span>
                               </li>
-                              <li id="btn3" onClick={handleMpShow2}>
+                              <li id='btn3' onClick={handleMpShow2}>
                                 <span>
-                                  <i className="fa fa-users"></i>Open for bids
+                                  <i className='fa fa-users'></i>Open for bids
                                 </span>
                               </li>
                             </ul>
 
-                            <div className="de_tab_content pt-3">
-                              <div id="tab_opt_1">
-                                <h5 className="required">Price</h5>
+                            <div className='de_tab_content pt-3'>
+                              <div id='tab_opt_1'>
+                                <h5 className='required'>Price</h5>
                                 <input
-                                  type="text"
-                                  name="item_price"
-                                  id="item_price"
-                                  min="0"
-                                  max="18"
+                                  type='text'
+                                  name='item_price'
+                                  id='item_price'
+                                  min='0'
+                                  max='18'
                                   value={marketplacePrice}
                                   onKeyPress={(e) => {
-                                    if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
+                                    if (!/^\d*\.?\d*$/.test(e.key))
+                                      e.preventDefault();
                                   }}
                                   onChange={inputPrice}
-                                  className="form-control"
+                                  className='form-control'
                                   placeholder={`Please Enter Price (${CURRENCY})`}
                                 />
                               </div>
                             </div>
                           </div>
-                          <div id="tab_opt_1">
-                            <h5 className="formlabel required">Quantity</h5>
+                          <div id='tab_opt_1'>
+                            <h5 className='formlabel required'>Quantity</h5>
                             <input
-                              type="text"
-                              name="item_price"
-                              id="item_price"
-                              min="1"
+                              type='text'
+                              name='item_price'
+                              id='item_price'
+                              min='1'
                               disabled={nftDetails.nType === 1}
                               value={marketplaceQuantity}
                               onKeyPress={(e) => {
                                 if (!/^\d*$/.test(e.key)) e.preventDefault();
                               }}
                               onChange={(e) => {
-                                if (Number(e.target.value) > Number(ownedQuantity)) {
-                                  NotificationManager.error('Quantity should be less than owned quantity', '', 800);
+                                if (
+                                  Number(e.target.value) > Number(ownedQuantity)
+                                ) {
+                                  NotificationManager.error(
+                                    'Quantity should be less than owned quantity',
+                                    '',
+                                    800
+                                  );
 
                                   setLoading(false);
                                   return;
                                 }
                                 setMarketplaceQuantity(e.target.value);
                               }}
-                              className="form-control"
+                              className='form-control'
                               placeholder={`Please Enter Quantity`}
                             />
                           </div>
-                          <div className="de_tab_content pt-3">
-                            <div id="tab_opt_2" className="hide">
-                              <h5 className="formlabel required">Minimum bid</h5>
+                          <div className='de_tab_content pt-3'>
+                            <div id='tab_opt_2' className='hide'>
+                              <h5 className='formlabel required'>
+                                Minimum bid
+                              </h5>
                               <input
-                                type="text"
-                                name="item_price_bid"
-                                id="item_price_bid"
-                                min="0"
-                                max="18"
-                                className="form-control"
+                                type='text'
+                                name='item_price_bid'
+                                id='item_price_bid'
+                                min='0'
+                                max='18'
+                                className='form-control'
                                 value={minimumBid}
                                 onKeyPress={(e) => {
-                                  if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
+                                  if (!/^\d*\.?\d*$/.test(e.key))
+                                    e.preventDefault();
                                 }}
                                 onChange={(e) => {
-                                  if (Number(e.target.value) > 100000000000000) {
+                                  if (
+                                    Number(e.target.value) > 100000000000000
+                                  ) {
                                     return;
                                   }
                                   inputPriceAuction(e);
                                 }}
-                                placeholder="Enter Minimum Bid"
+                                placeholder='Enter Minimum Bid'
                               />
 
-                              <div className="spacer-20"></div>
+                              <div className='spacer-20'></div>
 
-                              <div className="row">
-                                <div className="col-md-6">
-                                  <h5 className="formlabel required">Payment Token</h5>
+                              <div className='row'>
+                                <div className='col-md-6'>
+                                  <h5 className='formlabel required'>
+                                    Payment Token
+                                  </h5>
                                   <select
-                                    className="form-control selectOpt"
+                                    className='form-control selectOpt'
                                     onChange={(e) => {
                                       setSelectedTokenAddress(e.target.value);
-                                      setSelectedTokenSymbol(getTokenSymbolByAddress(e.target.value));
+                                      setSelectedTokenSymbol(
+                                        getTokenSymbolByAddress(e.target.value)
+                                      );
                                     }}
                                   >
                                     {options
                                       ? options.map((option, key) => {
-                                          return <option value={option.value}>{option.title}</option>;
+                                          return (
+                                            <option value={option.value}>
+                                              {option.title}
+                                            </option>
+                                          );
                                         })
                                       : ''}
                                   </select>
                                 </div>
-                                <div className="col-md-6">
-                                  <h5 className="formlabel required">Expiration date</h5>
+                                <div className='col-md-6'>
+                                  <h5 className='formlabel required'>
+                                    Expiration date
+                                  </h5>
                                   <input
-                                    type="datetime-local"
-                                    id="meeting-time"
-                                    name="meeting-time"
+                                    type='datetime-local'
+                                    id='meeting-time'
+                                    name='meeting-time'
                                     min={getMaxAllowedDate()}
-                                    className="form-control"
+                                    className='form-control'
                                     onChange={(e) => {
                                       setEndTime(new Date(e.target.value));
                                     }}
@@ -1921,42 +2248,55 @@ const ItemDetails = function (props) {
                                 </div>
                               </div>
                             </div>
-                            <div id="tab_opt_3" className="hide">
-                              <h5 className="formlabel required">Minimum bid</h5>
+                            <div id='tab_opt_3' className='hide'>
+                              <h5 className='formlabel required'>
+                                Minimum bid
+                              </h5>
                               <input
-                                type="text"
-                                name="item_price_bid"
-                                min="0"
-                                id="item_price_bid"
-                                className="form-control"
+                                type='text'
+                                name='item_price_bid'
+                                min='0'
+                                id='item_price_bid'
+                                className='form-control'
                                 value={minimumBid}
                                 onChange={(e) => {
-                                  if (Number(e.target.value) > 100000000000000) {
+                                  if (
+                                    Number(e.target.value) > 100000000000000
+                                  ) {
                                     return;
                                   }
                                   setMinimumBid(e.target.value);
                                 }}
                                 onKeyPress={(e) => {
-                                  if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
+                                  if (!/^\d*\.?\d*$/.test(e.key))
+                                    e.preventDefault();
                                 }}
-                                placeholder="Enter Minimum Bid"
+                                placeholder='Enter Minimum Bid'
                               />
 
-                              <div className="spacer-20"></div>
+                              <div className='spacer-20'></div>
 
-                              <div className="row">
-                                <div className="col-md-6">
-                                  <h5 className="formlabel required">Payment Token</h5>
+                              <div className='row'>
+                                <div className='col-md-6'>
+                                  <h5 className='formlabel required'>
+                                    Payment Token
+                                  </h5>
                                   <select
-                                    className="form-control selectOpt"
+                                    className='form-control selectOpt'
                                     onChange={(e) => {
                                       setSelectedTokenAddress(e.target.value);
-                                      setSelectedTokenSymbol(getTokenSymbolByAddress(e.target.value));
+                                      setSelectedTokenSymbol(
+                                        getTokenSymbolByAddress(e.target.value)
+                                      );
                                     }}
                                   >
                                     {options
                                       ? options.map((option, key) => {
-                                          return <option value={option.value}>{option.title}</option>;
+                                          return (
+                                            <option value={option.value}>
+                                              {option.title}
+                                            </option>
+                                          );
                                         })
                                       : ''}
                                   </select>
@@ -1964,33 +2304,53 @@ const ItemDetails = function (props) {
                               </div>
                             </div>
                           </div>
-                          <div className="spacer-single"></div>
+                          <div className='spacer-single'></div>
                           <button
-                            id="submit"
-                            className="btn-main btn-putonMarket"
+                            id='submit'
+                            className='btn-main btn-putonMarket'
                             onClick={async () => {
                               if (!currentUser) {
                                 setNotConnectedModal(true);
-                                NotificationManager.error('Please connect your wallet', '', 800);
+                                NotificationManager.error(
+                                  'Please connect your wallet',
+                                  '',
+                                  800
+                                );
 
                                 return;
                               }
 
                               if (
-                                parseInt(marketplaceQuantity) > parseInt(nftDetails.nQuantity) ||
+                                parseInt(marketplaceQuantity) >
+                                  parseInt(nftDetails.nQuantity) ||
                                 parseInt(marketplaceQuantity) < 1
                               ) {
-                                NotificationManager.error('Incorrect Quantity Amount', '', 800);
+                                NotificationManager.error(
+                                  'Incorrect Quantity Amount',
+                                  '',
+                                  800
+                                );
 
                                 return;
                               }
-                              if (Number(marketplacePrice) <= 0 && Number(minimumBid) <= 0) {
-                                NotificationManager.error('Price should not be less than or equal to 0', '', 800);
+                              if (
+                                Number(marketplacePrice) <= 0 &&
+                                Number(minimumBid) <= 0
+                              ) {
+                                NotificationManager.error(
+                                  'Price should not be less than or equal to 0',
+                                  '',
+                                  800
+                                );
 
                                 return;
                               }
                               if (isTimedAuction && endTime === undefined) {
-                                NotificationManager.error('Please Select an Expiration Date', '', 800);
+                                NotificationManager.error(
+                                  'Please Select an Expiration Date',
+                                  '',
+                                  800
+                                );
                                 return;
                               }
 
@@ -2000,15 +2360,26 @@ const ItemDetails = function (props) {
                               let orderData = {
                                 nftId: nftDetails._id,
                                 collection: nftDetails.nCollection,
-                                price: marketplacePrice ? marketplacePrice : '0',
+                                price: marketplacePrice
+                                  ? marketplacePrice
+                                  : '0',
                                 quantity: marketplaceQuantity,
-                                saleType: marketplaceSaleType === 1 || marketplaceSaleType === 2 ? 1 : 0,
+                                saleType:
+                                  marketplaceSaleType === 1 ||
+                                  marketplaceSaleType === 2
+                                    ? 1
+                                    : 0,
                                 salt: Math.round(Math.random() * 10000000),
                                 endTime: endTime ? endTime : GENERAL_TIMESTAMP,
                                 chosenType: marketplaceSaleType,
                                 minimumBid: minimumBid !== '' ? minimumBid : 0,
-                                auctionEndDate: endTime ? endTime : new Date(GENERAL_DATE),
-                                tokenAddress: marketplaceSaleType === 0 ? ZERO_ADDRESS : selectedTokenAddress,
+                                auctionEndDate: endTime
+                                  ? endTime
+                                  : new Date(GENERAL_DATE),
+                                tokenAddress:
+                                  marketplaceSaleType === 0
+                                    ? ZERO_ADDRESS
+                                    : selectedTokenAddress,
                                 tokenId: nftDetails.nTokenID,
                                 erc721: nftDetails.nType === 1,
                               };
@@ -2016,7 +2387,7 @@ const ItemDetails = function (props) {
                               let res = await putOnMarketplace(
                                 currentUser ? currentUser : '',
                                 orderData,
-                                nftDetails.nLazyMintingStatus,
+                                nftDetails.nLazyMintingStatus
                               );
 
                               if (res === false) {
@@ -2031,11 +2402,25 @@ const ItemDetails = function (props) {
                                   action: 'Marketplace',
                                   actionMeta: 'Listed',
                                   message: `${marketplaceQuantity} Quantity For ${
-                                    marketplacePrice ? marketplacePrice : minimumBid ? minimumBid : 0
+                                    marketplacePrice
+                                      ? marketplacePrice
+                                      : minimumBid
+                                      ? minimumBid
+                                      : 0
                                   } ${
-                                    marketplaceSaleType === 0 ? CURRENCY : getTokenSymbolByAddress(selectedTokenAddress)
-                                  } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)}`,
-                                  created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                                    marketplaceSaleType === 0
+                                      ? CURRENCY
+                                      : getTokenSymbolByAddress(
+                                          selectedTokenAddress
+                                        )
+                                  } by ${
+                                    currentUser.slice(0, 3) +
+                                    '...' +
+                                    currentUser.slice(39, 42)
+                                  }`,
+                                  created_ts: moment(new Date()).format(
+                                    'YYYY-MM-DD HH:mm:ss'
+                                  ),
                                 };
 
                                 await InsertHistory(historyMetaData);
@@ -2059,35 +2444,50 @@ const ItemDetails = function (props) {
                   ''
                 )}
 
-                <div className="de_tab_content">
+                <div className='de_tab_content'>
                   {openMenu && (
-                    <div className="tab-1 onStep fadeIn historyTab h-scrollable">
+                    <div className='tab-1 onStep fadeIn historyTab h-scrollable'>
                       {history && history?.length > 0
                         ? history.map((h, i) => {
                             console.log(
                               'history time',
-                              moment(h.sCreated, 'YYYY-MM-DD HH:mm:ss').add(5, 'hours').add(30, 'minutes').fromNow(),
+                              moment(h.sCreated, 'YYYY-MM-DD HH:mm:ss')
+                                .add(5, 'hours')
+                                .add(30, 'minutes')
+                                .fromNow()
                             );
 
                             return (
-                              <div className="row customRow position-relative">
-                                <div className="col-lg-12">
-                                  <div className="p_list">
-                                    <div className="p_list_pp">
+                              <div className='row customRow position-relative'>
+                                <div className='col-lg-12'>
+                                  <div className='p_list'>
+                                    <div className='p_list_pp'>
                                       <span>
                                         <img
-                                          className="lazy"
-                                          src={h && h.sProfilePicUrl ? h.sProfilePicUrl : Avatar}
-                                          alt=""
+                                          className='lazy'
+                                          src={
+                                            h && h.sProfilePicUrl
+                                              ? h.sProfilePicUrl
+                                              : Avatar
+                                          }
+                                          alt=''
                                         />
                                       </span>
                                     </div>
-                                    <div className="p_list_info">
+                                    <div className='p_list_info'>
                                       <b>
-                                        {getAction(h.action, h.actionMeta).toString().toUpperCase()} {'  '}
+                                        {getAction(h.action, h.actionMeta)
+                                          .toString()
+                                          .toUpperCase()}{' '}
+                                        {'  '}
                                       </b>
                                       {h.message}
-                                      <span>{moment(h.sCreated, 'YYYY-MM-DD HH:mm:ss').fromNow()}</span>
+                                      <span>
+                                        {moment(
+                                          h.sCreated,
+                                          'YYYY-MM-DD HH:mm:ss'
+                                        ).fromNow()}
+                                      </span>
                                     </div>
                                   </div>
                                 </div>
@@ -2095,14 +2495,16 @@ const ItemDetails = function (props) {
                             );
                           })
                         : ''}
-                      <div className="row customRow">
-                        <div className="col-lg-12">{totalPages > 1 ? null : ''}</div>
+                      <div className='row customRow'>
+                        <div className='col-lg-12'>
+                          {totalPages > 1 ? null : ''}
+                        </div>
                       </div>
                     </div>
                   )}
 
                   {openMenu1 && (
-                    <div className="tab-2 onStep fadeIn">
+                    <div className='tab-2 onStep fadeIn'>
                       {loading
                         ? showProcessingModal('Loading..')
                         : isOwned && haveOrder === false && orders !== null
@@ -2115,7 +2517,10 @@ const ItemDetails = function (props) {
                                   <p>dfdfsdfdsf</p>
                                   <h1>{JSON.stringify('yes')}</h1>;
                                 </>;
-                                if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
+                                if (
+                                  order?.oSellerWalletAddress?.toLowerCase() ===
+                                  currentUser?.toLowerCase()
+                                ) {
                                   return RemoveFromSale(
                                     order?.oSellerWalletAddress,
                                     convertToEth(order?.oPrice?.$numberDecimal),
@@ -2124,7 +2529,7 @@ const ItemDetails = function (props) {
                                     order.validUpto,
                                     key,
                                     order.oQuantity,
-                                    order.quantity_sold,
+                                    order.quantity_sold
                                   );
                                 } else {
                                   return buyNow(
@@ -2135,7 +2540,7 @@ const ItemDetails = function (props) {
                                     key,
                                     order.oQuantity - order.quantity_sold,
                                     order.oQuantity,
-                                    order.oType,
+                                    order.oType
                                   );
                                 }
                               } else if (order.oType === 1) {
@@ -2143,7 +2548,10 @@ const ItemDetails = function (props) {
                                   <p>another</p>
                                   <h1>{JSON.stringify('yes')}</h1>;
                                 </>;
-                                if (order?.oSellerWalletAddress?.toLowerCase() === currentUser?.toLowerCase()) {
+                                if (
+                                  order?.oSellerWalletAddress?.toLowerCase() ===
+                                  currentUser?.toLowerCase()
+                                ) {
                                   return RemoveFromAuction(
                                     order.oSellerWalletAddress,
                                     convertToEth(order.oPrice.$numberDecimal),
@@ -2154,7 +2562,7 @@ const ItemDetails = function (props) {
                                     order.auction_end_date,
                                     order.quantity_sold,
                                     order.paymentTokenData,
-                                    order.oValidUpto,
+                                    order.oValidUpto
                                   );
                                 } else {
                                   return placeABid(
@@ -2169,7 +2577,7 @@ const ItemDetails = function (props) {
                                     order.paymentTokenData,
                                     order.oSeller,
                                     order.quantity_sold,
-                                    order.isUserHaveActiveBid,
+                                    order.isUserHaveActiveBid
                                   );
                                 }
                               }
@@ -2183,15 +2591,15 @@ const ItemDetails = function (props) {
                   )}
 
                   {openMenu2 && (
-                    <div className="tab-1 onStep fadeIn">
+                    <div className='tab-1 onStep fadeIn'>
                       {bids && bids.length >= 1 && nftDetails
                         ? bids.map((bid, key) => {
                             console.log(bid, key);
                             return (
-                              <div className="row">
-                                <div className="col item_author">
-                                  <div className="p_list">
-                                    <div className="p_list_pp bidsList p-0">
+                              <div className='row'>
+                                <div className='col item_author'>
+                                  <div className='p_list'>
+                                    <div className='p_list_pp bidsList p-0'>
                                       <span>
                                         {/* <img
                                           className="lazy"
@@ -2200,57 +2608,89 @@ const ItemDetails = function (props) {
                                         /> */}
                                       </span>
                                     </div>
-                                    <div className="p_list_info bidsList">
-                                      <div className="row">
-                                        <div className="col vCenter bidsText">
+                                    <div className='p_list_info bidsList'>
+                                      <div className='row'>
+                                        <div className='col vCenter bidsText'>
                                           Bid by{' '}
                                           <b>
                                             {bid.bidder.length > 20
                                               ? bid.bidder.slice(0, 6) +
                                                 '....' +
-                                                bid.bidder.slice(bid.bidder.length - 6, bid.bidder.length)
+                                                bid.bidder.slice(
+                                                  bid.bidder.length - 6,
+                                                  bid.bidder.length
+                                                )
                                               : bid.bidder}
                                             &nbsp; at
                                           </b>
                                           <br></br> Bid Price &nbsp;
-                                          {convertToEth(bid.bidPrice ? +' ' + bid.bidPrice + ' ' : ' 0 ')}
+                                          {convertToEth(
+                                            bid.bidPrice
+                                              ? +' ' + bid.bidPrice + ' '
+                                              : ' 0 '
+                                          )}
                                           &nbsp;
-                                          {bid.paymentSymbol ? bid.paymentSymbol + ' ' : ' '}
-                                          For {bid.bidQuantity}/{nftDetails.nQuantity}
+                                          {bid.paymentSymbol
+                                            ? bid.paymentSymbol + ' '
+                                            : ' '}
+                                          For {bid.bidQuantity}/
+                                          {nftDetails.nQuantity}
                                         </div>
-                                        <div className="col vCenter">
-                                          <div className="customCol centerAlign">
-                                            <div className="button_section d-flex">
-                                              {currentUser?.toLowerCase() !== bid?.bidder?.toLowerCase() &&
-                                              currentUser?.toLowerCase() === bid?.seller?.toLowerCase() ? (
+                                        <div className='col vCenter'>
+                                          <div className='customCol centerAlign'>
+                                            <div className='button_section d-flex'>
+                                              {currentUser?.toLowerCase() !==
+                                                bid?.bidder?.toLowerCase() &&
+                                              currentUser?.toLowerCase() ===
+                                                bid?.seller?.toLowerCase() ? (
                                                 <>
                                                   <button
-                                                    className="accept_btn mybtn btn-main c-p-10 me-2"
+                                                    className='accept_btn mybtn btn-main c-p-10 me-2'
                                                     onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
+                                                      let res1 =
+                                                        await handleNetworkSwitch(
+                                                          currentUser
+                                                        );
+                                                      setCookie(
+                                                        'balance',
+                                                        res1,
+                                                        { path: '/' }
+                                                      );
+                                                      if (res1 === false)
+                                                        return;
                                                       if (!profile) {
                                                         return;
                                                       }
                                                       if (!currentUser) {
-                                                        setNotConnectedModal(true);
+                                                        setNotConnectedModal(
+                                                          true
+                                                        );
                                                         NotificationManager.error(
                                                           'Please connect your wallet',
                                                           '',
-                                                          800,
+                                                          800
                                                         );
                                                         setLoading(false);
                                                         return;
                                                       }
                                                       setLoading(true);
-                                                      let res = await handleAcceptBids(
-                                                        bid,
-                                                        nftDetails.nType === 1,
-                                                        currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42),
-                                                        nftDetails.nTitle,
-                                                        nftDetails.nLazyMintingStatus,
-                                                      );
+                                                      let res =
+                                                        await handleAcceptBids(
+                                                          bid,
+                                                          nftDetails.nType ===
+                                                            1,
+                                                          currentUser.slice(
+                                                            0,
+                                                            3
+                                                          ) +
+                                                            '...' +
+                                                            currentUser.slice(
+                                                              39,
+                                                              42
+                                                            ),
+                                                          nftDetails.nTitle,
+                                                          nftDetails.nLazyMintingStatus
+                                                        );
                                                       if (res === false) {
                                                         setLoading(false);
                                                         return;
@@ -2261,50 +2701,78 @@ const ItemDetails = function (props) {
                                                     Accept
                                                   </button>
                                                   <button
-                                                    className="reject_btn mybtn btn-main c-p-10"
+                                                    className='reject_btn mybtn btn-main c-p-10'
                                                     onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
+                                                      let res1 =
+                                                        await handleNetworkSwitch(
+                                                          currentUser
+                                                        );
+                                                      setCookie(
+                                                        'balance',
+                                                        res1,
+                                                        { path: '/' }
+                                                      );
+                                                      if (res1 === false)
+                                                        return;
                                                       if (!currentUser) {
-                                                        setNotConnectedModal(true);
+                                                        setNotConnectedModal(
+                                                          true
+                                                        );
                                                         NotificationManager.error(
                                                           'Please connect your wallet',
                                                           '',
-                                                          800,
+                                                          800
                                                         );
                                                         setLoading(false);
                                                         return;
                                                       }
                                                       setLoading(true);
-                                                      await handleUpdateBidStatus(bid.bidId, 'Rejected');
+                                                      await handleUpdateBidStatus(
+                                                        bid.bidId,
+                                                        'Rejected'
+                                                      );
                                                       setLoading(false);
                                                     }}
                                                   >
                                                     Reject
                                                   </button>
                                                 </>
-                                              ) : currentUser?.toLowerCase() === bid?.bidder?.toLowerCase() &&
-                                                currentUser?.toLowerCase() !== bid?.seller?.toLowerCase() ? (
+                                              ) : currentUser?.toLowerCase() ===
+                                                  bid?.bidder?.toLowerCase() &&
+                                                currentUser?.toLowerCase() !==
+                                                  bid?.seller?.toLowerCase() ? (
                                                 <>
                                                   <button
-                                                    className="cancel_btn mybtn  btn-main c-p-10"
+                                                    className='cancel_btn mybtn  btn-main c-p-10'
                                                     onClick={async () => {
-                                                      let res1 = await handleNetworkSwitch(currentUser);
-                                                      setCookie('balance', res1, { path: '/' });
-                                                      if (res1 === false) return;
+                                                      let res1 =
+                                                        await handleNetworkSwitch(
+                                                          currentUser
+                                                        );
+                                                      setCookie(
+                                                        'balance',
+                                                        res1,
+                                                        { path: '/' }
+                                                      );
+                                                      if (res1 === false)
+                                                        return;
                                                       if (!currentUser) {
-                                                        setNotConnectedModal(true);
+                                                        setNotConnectedModal(
+                                                          true
+                                                        );
                                                         NotificationManager.error(
                                                           'Please connect your wallet',
                                                           '',
-                                                          800,
+                                                          800
                                                         );
                                                         setLoading(false);
                                                         return;
                                                       }
                                                       setLoading(true);
-                                                      await handleUpdateBidStatus(bid.bidId, 'Cancelled');
+                                                      await handleUpdateBidStatus(
+                                                        bid.bidId,
+                                                        'Cancelled'
+                                                      );
                                                       setLoading(false);
                                                     }}
                                                   >
@@ -2321,7 +2789,7 @@ const ItemDetails = function (props) {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="spacer-10"></div>
+                                <div className='spacer-10'></div>
                               </div>
                             );
                           })
@@ -2330,7 +2798,7 @@ const ItemDetails = function (props) {
                   )}
 
                   {openMenu3 && (
-                    <div className="tab-1 onStep fadeIn">
+                    <div className='tab-1 onStep fadeIn'>
                       {loading ? showProcessingModal('Loading') : ''}
                       {/* {nftDetails.nType === 2 ? (
                         <div className="ownedQty">
@@ -2340,14 +2808,14 @@ const ItemDetails = function (props) {
                       ) : (
                         ""
                       )} */}
-                      <div className="spacer-20"></div>
-                      <div className="nft_attr_section">
-                        <div className="row gx-2">
+                      <div className='spacer-20'></div>
+                      <div className='nft_attr_section'>
+                        <div className='row gx-2'>
                           {metaData && metaData.length > 0
                             ? metaData.map((data, key) => {
                                 return (
-                                  <div className="col-lg-4 col-md-6 col-sm-6">
-                                    <div className="nft_attr">
+                                  <div className='col-lg-4 col-md-6 col-sm-6'>
+                                    <div className='nft_attr'>
                                       <h5>{data.trait_type}</h5>
                                       <h4>{data.value}</h4>
                                     </div>

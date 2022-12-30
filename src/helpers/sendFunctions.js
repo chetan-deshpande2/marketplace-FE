@@ -1,7 +1,11 @@
 import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
 import { NotificationManager } from 'react-notifications';
-import { GENERAL_DATE, GENERAL_TIMESTAMP, MAX_ALLOWANCE_AMOUNT } from './constants';
+import {
+  GENERAL_DATE,
+  GENERAL_TIMESTAMP,
+  MAX_ALLOWANCE_AMOUNT,
+} from './constants';
 import moment from 'moment';
 import extendedERC1155Abi from '../Config/abis/extendedERC1155Abi.json';
 import extendedERC721Abi from '../Config/abis/extendedERC721Abi.json';
@@ -38,7 +42,11 @@ import marketPlaceABI from '../Config/abis/marketplace.json';
 import Creator1 from '../Config/abis/creatorV1.json';
 import erc20Abi from '../Config/abis/erc20.json';
 
-export const handleCollectionCreation = async (isSingle, collectionData, account) => {
+export const handleCollectionCreation = async (
+  isSingle,
+  collectionData,
+  account
+) => {
   let creator = await exportInstance(contracts.CREATOR_PROXY, Creator1.abi);
 
   let res1;
@@ -72,7 +80,7 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
         collectionData.nftFile,
         collectionData.sRoyaltyPercentage,
         contracts.WETH,
-        options,
+        options
       );
 
       res1 = await creator.deployExtendedERC721(
@@ -80,7 +88,7 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
         collectionData.symbol,
         collectionData.nftFile,
         collectionData.sRoyaltyPercentage,
-        contracts.WETH,
+        contracts.WETH
       );
     } else {
       options = {
@@ -89,12 +97,16 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
         gasLimit: 9000000,
         value: 0,
       };
-      console.log(collectionData.nftFile, collectionData.sRoyaltyPercentage, contracts.WETH);
+      console.log(
+        collectionData.nftFile,
+        collectionData.sRoyaltyPercentage,
+        contracts.WETH
+      );
       res1 = await creator.deployExtendedERC1155(
         collectionData.nftFile,
         collectionData.sRoyaltyPercentage,
         contracts.WETH,
-        options,
+        options
       );
     }
 
@@ -106,7 +118,10 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
       return;
     }
     contractAddress = await readReceipt(hash);
-    let royalty = await exportInstance(contractAddress, isSingle ? extendedERC721Abi.abi : extendedERC1155Abi.abi);
+    let royalty = await exportInstance(
+      contractAddress,
+      isSingle ? extendedERC721Abi.abi : extendedERC1155Abi.abi
+    );
 
     if (collectionData.sRoyaltyPercentage > 0) {
       // let gasLimit = await royalty.estimateGas.setDefaultRoyaltyDistribution(
@@ -128,12 +143,16 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
       };
       console.log([account], [collectionData.sRoyaltyPercentage], options);
 
-      let res = await royalty.setDefaultRoyaltyDistribution([account], [collectionData.sRoyaltyPercentage], {
-        from: account,
-        gasPrice: 10000000000,
-        gasLimit: 9000000,
-        value: 0,
-      });
+      let res = await royalty.setDefaultRoyaltyDistribution(
+        [account],
+        [collectionData.sRoyaltyPercentage],
+        {
+          from: account,
+          gasPrice: 10000000000,
+          gasLimit: 9000000,
+          value: 0,
+        }
+      );
 
       res = await res.wait();
 
@@ -150,7 +169,10 @@ export const handleCollectionCreation = async (isSingle, collectionData, account
     fd.append('sDescription', collectionData.sDescription);
     fd.append('nftFile', collectionData.nftFile);
     fd.append('sContractAddress', contractAddress);
-    fd.append('erc721', isSingle ? JSON.stringify(true) : JSON.stringify(false));
+    fd.append(
+      'erc721',
+      isSingle ? JSON.stringify(true) : JSON.stringify(false)
+    );
     fd.append('sRoyaltyPercentage', collectionData.sRoyaltyPercentage);
     fd.append('quantity', collectionData.quantity);
 
@@ -192,11 +214,15 @@ export const handleBuyNft = async (id, isERC721, account, balance, qty = 1) => {
   console.log(details);
   console.log(order[6].toString(), qty);
 
-  let amount = new BigNumber(order[6].toString()).multipliedBy(new BigNumber(qty).toString()).toString();
+  let amount = new BigNumber(order[6].toString())
+    .multipliedBy(new BigNumber(qty).toString())
+    .toString();
   console.log(
     'price',
-    new BigNumber(order[6].toString()).multipliedBy(new BigNumber(order[3].toString())).toString(),
-    isERC721,
+    new BigNumber(order[6].toString())
+      .multipliedBy(new BigNumber(order[3].toString()))
+      .toString(),
+    isERC721
   );
   for (let key = 0; key < 11; key++) {
     switch (key) {
@@ -261,7 +287,7 @@ export const handleBuyNft = async (id, isERC721, account, balance, qty = 1) => {
     'buyer',
     account,
     'seller',
-    details.oSellerWalletAddress,
+    details.oSellerWalletAddress
   );
 
   console.log('seller and buyer order is', sellerOrder, buyerOrder);
@@ -269,12 +295,28 @@ export const handleBuyNft = async (id, isERC721, account, balance, qty = 1) => {
   // check if seller still owns that much quantity of current token id
   // check if seller still have approval for marketplace
   // check if buyer have sufficient matic or not (fixed sale)
-  let usrHaveQuantity = await GetOwnerOfToken(sellerOrder[1], sellerOrder[2], isERC721, sellerOrder[0]);
+  let usrHaveQuantity = await GetOwnerOfToken(
+    sellerOrder[1],
+    sellerOrder[2],
+    isERC721,
+    sellerOrder[0]
+  );
 
-  let NFTcontract = await exportInstance(sellerOrder[1], isERC721 ? erc721Abi.abi : erc1155Abi.abi);
-  console.log('NFTcontract', NFTcontract, sellerOrder[0], contracts.MARKETPLACE);
+  let NFTcontract = await exportInstance(
+    sellerOrder[1],
+    isERC721 ? erc721Abi.abi : erc1155Abi.abi
+  );
+  console.log(
+    'NFTcontract',
+    NFTcontract,
+    sellerOrder[0],
+    contracts.MARKETPLACE
+  );
 
-  let approval = await NFTcontract.isApprovedForAll(sellerOrder[0], contracts.MARKETPLACE);
+  let approval = await NFTcontract.isApprovedForAll(
+    sellerOrder[0],
+    contracts.MARKETPLACE
+  );
 
   console.log('usrHaveQuantity', usrHaveQuantity);
   // if (Number(usrHaveQuantity) < Number(qty)) {
@@ -289,7 +331,9 @@ export const handleBuyNft = async (id, isERC721, account, balance, qty = 1) => {
 
   if (
     new BigNumber(balance.toString()).isLessThan(
-      new BigNumber(order[6].toString()).multipliedBy(new BigNumber(qty.toString())),
+      new BigNumber(order[6].toString()).multipliedBy(
+        new BigNumber(qty.toString())
+      )
     )
   ) {
     NotificationManager.error("buyer don't have enough Matic");
@@ -300,14 +344,25 @@ export const handleBuyNft = async (id, isERC721, account, balance, qty = 1) => {
   const options = {
     from: account,
     gasLimit: 9000000,
-    value: new BigNumber(order[6].toString()).multipliedBy(new BigNumber(qty.toString())).toString(),
+    value: new BigNumber(order[6].toString())
+      .multipliedBy(new BigNumber(qty.toString()))
+      .toString(),
   };
 
   try {
-    marketplace = await exportInstance(contracts.MARKETPLACE, marketPlaceABI.abi);
+    marketplace = await exportInstance(
+      contracts.MARKETPLACE,
+      marketPlaceABI.abi
+    );
 
     console.log('Sit tight->', signature);
-    let completeOrder = await marketplace.completeOrder(sellerOrder, signature, buyerOrder, signature, options);
+    let completeOrder = await marketplace.completeOrder(
+      sellerOrder,
+      signature,
+      buyerOrder,
+      signature,
+      options
+    );
     let res = await completeOrder.wait();
     if (res.status === 0) {
       NotificationManager.error('Transaction failed');
@@ -395,7 +450,9 @@ export const putOnMarketplace = async (account, orderData) => {
       let endTime = new Date(orderData.endTime).valueOf() / 1000;
       _deadline = endTime;
       _auctionEndDate = orderData.auctionEndDate;
-      _price = ethers.utils.parseEther(orderData.minimumBid.toString()).toString();
+      _price = ethers.utils
+        .parseEther(orderData.minimumBid.toString())
+        .toString();
     } else if (orderData.chosenType === 2) {
       _deadline = new Date().valueOf() / 1000 + 31536000 * 10;
       _auctionEndDate = new Date(GENERAL_DATE);
@@ -407,7 +464,9 @@ export const putOnMarketplace = async (account, orderData) => {
       orderData.tokenId,
       orderData.quantity,
       orderData.saleType,
-      orderData.tokenAddress ? orderData.tokenAddress : '0x0000000000000000000000000000000000000000',
+      orderData.tokenAddress
+        ? orderData.tokenAddress
+        : '0x0000000000000000000000000000000000000000',
       _price,
       _deadline,
       [],
@@ -415,14 +474,22 @@ export const putOnMarketplace = async (account, orderData) => {
       orderData.salt,
     ];
 
-    let usrHaveQuantity = await GetOwnerOfToken(sellerOrder[1], sellerOrder[2], orderData.erc721, sellerOrder[0]);
+    let usrHaveQuantity = await GetOwnerOfToken(
+      sellerOrder[1],
+      sellerOrder[2],
+      orderData.erc721,
+      sellerOrder[0]
+    );
 
     console.log('usrHaveQuantity', usrHaveQuantity);
     console.log('sellerOrder is---->', sellerOrder);
     let NFTcontract = await exportInstance(orderData.collection, erc721Abi.abi);
     console.log('NFTcontract', NFTcontract);
 
-    let approval = await NFTcontract.isApprovedForAll(account, contracts.MARKETPLACE);
+    let approval = await NFTcontract.isApprovedForAll(
+      account,
+      contracts.MARKETPLACE
+    );
     let approvalres;
     const options = {
       from: account,
@@ -433,7 +500,11 @@ export const putOnMarketplace = async (account, orderData) => {
 
     console.log('approval', approval);
     if (!approval) {
-      approvalres = await NFTcontract.setApprovalForAll(contracts.MARKETPLACE, true, options);
+      approvalres = await NFTcontract.setApprovalForAll(
+        contracts.MARKETPLACE,
+        true,
+        options
+      );
       approvalres = await approvalres.wait();
       if (approvalres.status === 0) {
         NotificationManager.error('Transaction failed');
@@ -462,7 +533,9 @@ export const putOnMarketplace = async (account, orderData) => {
     let reqParams = {
       nftId: orderData.nftId,
       seller: account,
-      tokenAddress: orderData.tokenAddress ? orderData.tokenAddress : '0x0000000000000000000000000000000000000000',
+      tokenAddress: orderData.tokenAddress
+        ? orderData.tokenAddress
+        : '0x0000000000000000000000000000000000000000',
       collection: orderData.collection,
       price: _price,
       quantity: orderData.quantity,
@@ -497,7 +570,7 @@ export const putOnMarketplace = async (account, orderData) => {
 
 export const handleUpdateBidStatus = async (
   bidID,
-  action, //Delete, Cancelled, Rejected
+  action //Delete, Cancelled, Rejected
 ) => {
   try {
     let reqParams = {
@@ -517,7 +590,10 @@ export const handleRemoveFromAuction = async (orderId, account) => {
   let marketplace;
   let options;
   try {
-    marketplace = await exportInstance(contracts.MARKETPLACE, marketPlaceABI.abi);
+    marketplace = await exportInstance(
+      contracts.MARKETPLACE,
+      marketPlaceABI.abi
+    );
 
     let order = await buildSellOrder(orderId);
     console.log(order);
@@ -575,8 +651,17 @@ export const handleNftTransfer = async (
   tokenId,
   isERC721,
   nftId,
-  orderId = false,
+  orderId = false
 ) => {
+  console.log(
+    collection,
+    account,
+    beneficiary,
+    amount,
+    tokenId,
+    isERC721,
+    nftId
+  );
   let options;
   try {
     let nftContract;
@@ -624,7 +709,14 @@ export const handleNftTransfer = async (
         gasLimit: 9000000,
         value: 0,
       };
-      res = await nftContract.safeTransferFrom(account, beneficiary, tokenId, amount, [], options);
+      res = await nftContract.safeTransferFrom(
+        account,
+        beneficiary,
+        tokenId,
+        amount,
+        [],
+        options
+      );
     }
 
     res = await res.wait();
@@ -665,7 +757,10 @@ export const handleRemoveFromSale = async (orderId, account) => {
   let details;
   console.log(orderId, account);
   try {
-    marketplace = await exportInstance(contracts.MARKETPLACE, marketPlaceABI.abi);
+    marketplace = await exportInstance(
+      contracts.MARKETPLACE,
+      marketPlaceABI.abi
+    );
     const options = {
       from: account,
       gasLimit: 9000000,
@@ -704,7 +799,7 @@ export const handleRemoveFromSale = async (orderId, account) => {
         orderId: orderId,
         oNftId: details.oNftId,
       },
-      historyMetaData,
+      historyMetaData
     );
     NotificationManager.success('Removed from sale successfully');
     // window.location.href = "/profile";
@@ -723,7 +818,7 @@ export const createBid = async (
   erc721,
   qty = 1,
   bidPrice,
-  LazyMintingStatus,
+  LazyMintingStatus
 ) => {
   let SellerOrder;
   let sellerOrder = [];
@@ -752,9 +847,11 @@ export const createBid = async (
         case 6:
           sellerOrder.push(SellerOrder[index]);
           buyerOrder.push(
-            new BigNumber(ethers.utils.parseEther(bidPrice.toString()).toString())
+            new BigNumber(
+              ethers.utils.parseEther(bidPrice.toString()).toString()
+            )
               .multipliedBy(new BigNumber(qty.toString()))
-              .toString(),
+              .toString()
           );
 
           break;
@@ -787,7 +884,9 @@ export const createBid = async (
     // }
 
     if (
-      new BigNumber(bidPrice).multipliedBy(new BigNumber(qty.toString())).isGreaterThan(new BigNumber(userTokenBal))
+      new BigNumber(bidPrice)
+        .multipliedBy(new BigNumber(qty.toString()))
+        .isGreaterThan(new BigNumber(userTokenBal))
     ) {
       NotificationManager.error("User don't have sufficient token balance");
       return;
@@ -802,10 +901,13 @@ export const createBid = async (
         new BigNumber(allowance).isLessThan(
           new BigNumber(ethers.utils.parseEther(bidPrice.toString()).toString())
             .multipliedBy(new BigNumber(qty.toString()))
-            .toString(),
+            .toString()
         )
       ) {
-        let approvalRes = await handleApproveToken(buyerOrder[0], buyerOrder[5]);
+        let approvalRes = await handleApproveToken(
+          buyerOrder[0],
+          buyerOrder[5]
+        );
         if (approvalRes === false) return;
       }
 
@@ -846,7 +948,11 @@ export const handleApproveToken = async (userAddress, tokenAddress) => {
       gasLimit: 9000000,
       value: 0,
     };
-    let res = await token.approve(contracts.MARKETPLACE, MAX_ALLOWANCE_AMOUNT, options);
+    let res = await token.approve(
+      contracts.MARKETPLACE,
+      MAX_ALLOWANCE_AMOUNT,
+      options
+    );
     res = await res.wait();
     console.log(res);
     if (res.status === 1) {
@@ -863,7 +969,13 @@ export const handleApproveToken = async (userAddress, tokenAddress) => {
   }
 };
 
-export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTitle, LazyMintingStatus) => {
+export const handleAcceptBids = async (
+  bidData,
+  isERC721,
+  sellerUsername,
+  nftTitle,
+  LazyMintingStatus
+) => {
   console.log(bidData, isERC721, sellerUsername, nftTitle, LazyMintingStatus);
   let order;
   let details;
@@ -933,12 +1045,23 @@ export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTit
   let sellerSignature = details.oSignature;
   let buyerSignature = bidData.buyerSignature;
 
-  let NFTcontract = await exportInstance(sellerOrder[1], isERC721 ? erc721Abi.abi : erc1155Abi.abi);
+  let NFTcontract = await exportInstance(
+    sellerOrder[1],
+    isERC721 ? erc721Abi.abi : erc1155Abi.abi
+  );
 
-  let approval = await NFTcontract.isApprovedForAll(sellerOrder[0], contracts.MARKETPLACE);
+  let approval = await NFTcontract.isApprovedForAll(
+    sellerOrder[0],
+    contracts.MARKETPLACE
+  );
 
   if (!LazyMintingStatus) {
-    let usrHaveQuantity = await GetOwnerOfToken(sellerOrder[1], sellerOrder[2], isERC721, sellerOrder[0]);
+    let usrHaveQuantity = await GetOwnerOfToken(
+      sellerOrder[1],
+      sellerOrder[2],
+      isERC721,
+      sellerOrder[0]
+    );
     if (Number(usrHaveQuantity) < Number(buyerOrder[3])) {
       NotificationManager.error("Seller don't own that much quantity");
       return;
@@ -950,11 +1073,16 @@ export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTit
     return;
   }
 
-  let paymentTokenData = await getPaymentTokenInfo(buyerOrder[0], buyerOrder[5]);
+  let paymentTokenData = await getPaymentTokenInfo(
+    buyerOrder[0],
+    buyerOrder[5]
+  );
 
   if (
     new BigNumber(paymentTokenData.balance).isLessThan(
-      new BigNumber(order[6].toString()).multipliedBy(new BigNumber(buyerOrder[3].toString())),
+      new BigNumber(order[6].toString()).multipliedBy(
+        new BigNumber(buyerOrder[3].toString())
+      )
     )
   ) {
     NotificationManager.error("Buyer don't have enough Tokens");
@@ -962,7 +1090,10 @@ export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTit
   }
 
   try {
-    let marketplace = await exportInstance(contracts.MARKETPLACE, marketPlaceABI.abi);
+    let marketplace = await exportInstance(
+      contracts.MARKETPLACE,
+      marketPlaceABI.abi
+    );
     // console.log("Sit tight->");
     let completeOrder;
     try {
@@ -984,7 +1115,7 @@ export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTit
         sellerSignature,
         buyerOrder,
         buyerSignature,
-        options,
+        options
       );
       completeOrder = await completeOrder.wait();
       if (completeOrder.status === 0) {
@@ -1012,9 +1143,11 @@ export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTit
           userId: bidData.owner,
           action: 'Bids',
           actionMeta: 'Accept',
-          message: `bid for ${bidData.bidQuantity} of ${details.oQuantity} editions at ${convertToEth(
-            bidData.bidPrice,
-          )} ${paymentTokenData.symbol} by ${sellerUsername}`,
+          message: `bid for ${bidData.bidQuantity} of ${
+            details.oQuantity
+          } editions at ${convertToEth(bidData.bidPrice)} ${
+            paymentTokenData.symbol
+          } by ${sellerUsername}`,
           created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
         };
 
@@ -1026,7 +1159,8 @@ export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTit
               oNftId: details.oNftId, //to make sure we update the quantity left : NFTid
               oSeller: details.oSeller, //to make sure we update the quantity left : walletAddress
               oQtyBought: Number(bidData.bidQuantity),
-              qty_sold: Number(details.quantity_sold) + Number(bidData.bidQuantity),
+              qty_sold:
+                Number(details.quantity_sold) + Number(bidData.bidQuantity),
               oBuyer: buyerOrder[0].toLowerCase(),
               LazyMintingStatus: LazyMintingStatus,
             });
@@ -1038,12 +1172,16 @@ export const handleAcceptBids = async (bidData, isERC721, sellerUsername, nftTit
               oNftId: details.oNftId, //to make sure we update the quantity left : NFTid
               oSeller: details.oSeller, //to make sure we update the quantity left : walletAddress
               oQtyBought: Number(bidData.bidQuantity),
-              qty_sold: Number(details.quantity_sold) + Number(bidData.bidQuantity),
+              qty_sold:
+                Number(details.quantity_sold) + Number(bidData.bidQuantity),
               oBuyer: buyerOrder[0].toLowerCase(),
               LazyMintingStatus: LazyMintingStatus,
             });
 
-            if (Number(details.quantity_sold) + Number(bidData.bidQuantity) >= details.oQuantity) {
+            if (
+              Number(details.quantity_sold) + Number(bidData.bidQuantity) >=
+              details.oQuantity
+            ) {
               DeleteOrder({ orderId: bidData.orderId });
             }
           }
