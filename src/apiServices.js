@@ -1082,7 +1082,7 @@ export const GetHotCollections = async (data) => {
 
   try {
     let response = await fetch(
-      process.env.REACT_APP_API_BASE_URL + '/nft/getHotCollections',
+      REACT_APP_API_BASE_URL + '/nft/getHotCollections',
       requestOptions
     );
     const isJson = response.headers
