@@ -7,7 +7,6 @@ export const exportInstance = async (SCAddress, ABI) => {
   let provider = new ethers.providers.Web3Provider(window.ethereum);
   let signer = provider.getSigner();
   let a = new ethers.Contract(SCAddress, ABI, signer);
-  console.log(a);
   if (a) {
     return a;
   } else {

@@ -36,7 +36,7 @@ import {
 } from '../../helpers/constants';
 import BigNumber from 'bignumber.js';
 import {
-  // checkIfLiked,
+  checkIfLiked,
   getAllBidsByNftId,
   getPaymentTokenInfo,
 } from '../../helpers/getterFunctions';
@@ -62,7 +62,6 @@ import PolygonLogo from '../../assets/react.svg';
 import { isEmptyObject } from 'jquery';
 // import CheckoutModal from "../components/Modals/CheckoutModal";
 import moment from 'moment';
-
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
@@ -368,6 +367,7 @@ const ItemDetails = function (props) {
         setLoading(true);
         if (id) {
           let data = await GetNftDetails(id);
+          console.log(data);
           let authorData = [];
           console.log(data?.nCreater?._id);
           if (data && data.nCreater) {
@@ -394,7 +394,7 @@ const ItemDetails = function (props) {
               setOwnedQuantity(datas[0].quantity);
             }
           }
-
+          console.log(data._id);
           let searchParams = {
             nftId: data._id,
             // sortKey: 'oTokenId',
@@ -511,28 +511,7 @@ const ItemDetails = function (props) {
     [profile, id, currentUser, currOrderType]
   );
 
-  useEffect(() => {
-    console.log(nftDetails);
-    const fetch = async () => {
-      setLoading(true);
 
-      if (nftDetails && nftDetails._id) {
-        let history = await GetHistory({
-          nftId: nftDetails._id,
-          userId: 'All',
-          action: 'All',
-          actionMeta: 'All',
-          page: currPage,
-          limit: perPageCount,
-        });
-        console.log(history.count);
-        setHistory(history.results[0]);
-        setTotalPages(Math.ceil(history.count / perPageCount));
-      }
-      setLoading(false);
-    };
-    fetch();
-  }, [nftDetails, currPage]);
 
   useEffect(() => {
     console.log(nftDetails);
@@ -564,6 +543,7 @@ const ItemDetails = function (props) {
     checkIfOpenForSale();
   }, [orders]);
 
+
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
@@ -583,18 +563,61 @@ const ItemDetails = function (props) {
     fetch();
   }, [nftDetails]);
 
+
   useEffect(() => {
     const fetch = async () => {
-      let payableBidAmount = new BigNumber(ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()).multipliedBy(
-        new BigNumber(bidQty?.toString()),
-      );
+      let payableBidAmount = new BigNumber(
+        ethers.utils.parseEther(bidPrice ? bidPrice : '0').toString()
+      ).multipliedBy(new BigNumber(bidQty?.toString()));
       let allowance = new BigNumber(selectedOrderPaymentTokenData?.allowance);
 
       setIsApproved(allowance.isGreaterThanOrEqualTo(payableBidAmount));
     };
     fetch();
-   
   }, [currentOrderId, currentUser, selectedOrderPaymentTokenData, bidPrice]);
+
+  useEffect(() => {
+    console.log(nftDetails);
+    const fetch = async () => {
+      setLoading(true);
+
+      if (nftDetails && nftDetails._id) {
+        let history = await GetHistory({
+          nftId: nftDetails._id,
+          userId: 'All',
+          action: 'All',
+          actionMeta: 'All',
+          page: currPage,
+          limit: perPageCount,
+        });
+        console.log(history.count);
+        setHistory(history.results[0]);
+        setTotalPages(Math.ceil(history.count / perPageCount));
+      }
+      setLoading(false);
+    };
+    fetch();
+  }, [nftDetails, currPage]);
+
+  useEffect(() => {
+    async function fetch() {
+      setLoading(true);
+      if (profile) {
+        let data = await GetNftDetails(id);
+        let is_user_like = await checkIfLiked(data._id, profile._id);
+        // setIsLiked(is_user_like);
+        // setTotalLikes(data?.nUser_likes?.length);
+      }
+      setLoading(false);
+    }
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ profile, id]);
+
+
+
+
+
 
   //*======================= Popups ==========
 
@@ -896,7 +919,7 @@ const ItemDetails = function (props) {
                 let res;
                 let haveOrder = true;
                 if (haveOrder === true) {
-                  console.log(nftDetails)
+                  console.log(nftDetails);
                   console.log(
                     nftDetails.nCollection,
                     currentUser,
@@ -1285,9 +1308,9 @@ const ItemDetails = function (props) {
                           qty,
                           qtySold
                         );
-                        // let res1 = await handleNetworkSwitch(currentUser);
-                        // setCookie('balance', res1, { path: '/' });
-                        // if (res1 === false) return;
+                        let res1 = await handleNetworkSwitch(currentUser);
+                        setCookie('balance', res1, { path: '/' });
+                        if (res1 === false) return;
                         if (!currentUser) {
                           setNotConnectedModal(true);
 
