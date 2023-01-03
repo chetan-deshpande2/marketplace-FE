@@ -367,6 +367,8 @@ const ItemDetails = function (props) {
         setLoading(true);
         if (id) {
           let data = await GetNftDetails(id);
+
+          setNftDetails(data);
           console.log(data);
           let authorData = [];
           console.log(data?.nCreater?._id);
@@ -494,7 +496,7 @@ const ItemDetails = function (props) {
             console.log(haveOrder);
             setOrders(d);
 
-            setNftDetails(data);
+            // setNftDetails(data);
             console.log(orders, haveOrder);
             console.log(authorData);
             setAuthorDetails(authorData);
@@ -599,12 +601,14 @@ const ItemDetails = function (props) {
     fetch();
   }, [nftDetails, currPage]);
 
+
   useEffect(() => {
     async function fetch() {
       setLoading(true);
       if (profile) {
         let data = await GetNftDetails(id);
-        let is_user_like = await checkIfLiked(data._id, profile._id);
+        console.log(nftDetails.nHash, profile.user._id)
+        let is_user_like = await checkIfLiked(data._id, profile.user._id);
         // setIsLiked(is_user_like);
         // setTotalLikes(data?.nUser_likes?.length);
       }
