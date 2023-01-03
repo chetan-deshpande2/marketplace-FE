@@ -43,7 +43,7 @@ const toTypedOrder = (
   deadline,
   bundleTokens,
   bundleTokensQuantity,
-  salt,
+  salt
 ) => {
   const domain = {
     chainId: 80001,
@@ -104,8 +104,16 @@ export const getBalance = async (account) => {
   return bal.toString();
 };
 
-export const GetOwnerOfToken = async (collection, tokenId, isERC721, account) => {
-  let collectionInstance = await exportInstance(collection, isERC721 ? erc721Abi.abi : erc1155Abi.abi);
+export const GetOwnerOfToken = async (
+  collection,
+  tokenId,
+  isERC721,
+  account
+) => {
+  let collectionInstance = await exportInstance(
+    collection,
+    isERC721 ? erc721Abi.abi : erc1155Abi.abi
+  );
   console.log('collectionInsatnce', collectionInstance);
   let balance = 0;
   if (isERC721) {
@@ -125,7 +133,11 @@ export const getSignature = async (signer, ...args) => {
     console.log('order=>', order);
     let provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer1 = provider.getSigner();
-    const signedTypedHash = await signer1._signTypedData(order.domain, order.types, order.value);
+    const signedTypedHash = await signer1._signTypedData(
+      order.domain,
+      order.types,
+      order.value
+    );
     const sig = ethers.utils.splitSignature(signedTypedHash);
 
     return [sig.v, sig.r, sig.s];
@@ -158,17 +170,17 @@ export const getAllBidsByNftId = async (nftId) => {
   let getSellerAddress;
   let getBuyerAddress;
 
-  console.log(dummyData?.data?.length);
+  console.log(dummyData?.data);
   for (let i = 0; i < dummyData?.data?.length; i++) {
     console.log(dummyData.data[i]);
     console.log(dummyData.data[i].oOrderId);
+    console.log(dummyData.data[i].oBidder);
+    console.log(dummyData.data[i].oOwner);
     let _orderPaymentToken = await getOrderDetails({
       orderId: dummyData.data[i].oOrderId,
     });
-
+    console.log(_orderPaymentToken.oPaymentToken)
     orderPaymentToken.push(_orderPaymentToken.oPaymentToken);
-    console.log(dummyData.data[i].oBidder);
-    console.log(dummyData.data[i].oOwner);
 
     getSellerAddress = await getUserById({
       sellerId: dummyData.data[i].oBidder,
@@ -328,8 +340,25 @@ export const getNextId = async (collection) => {
   }
 };
 
-export const getUsersNFTs = async (currPage, perPageCount, paramType, walletAddress, userId, isAuthor) => {
-  console.log('here', 'paramType', paramType, 'walletAddress', walletAddress, 'userId', userId, 'isAuthor', isAuthor);
+export const getUsersNFTs = async (
+  currPage,
+  perPageCount,
+  paramType,
+  walletAddress,
+  userId,
+  isAuthor
+) => {
+  console.log(
+    'here',
+    'paramType',
+    paramType,
+    'walletAddress',
+    walletAddress,
+    'userId',
+    userId,
+    'isAuthor',
+    isAuthor
+  );
   let formattedData = [];
   let details = [];
   console.log('walletAddress', walletAddress);
@@ -436,7 +465,13 @@ export const getUsersTokenBalance = async (account, tokenAddress) => {
   addressofToken = await exportInstance(tokenAddress, erc20Abi.abi);
   console.log(addressofToken);
   let userBalance = await addressofToken.balanceOf(account);
-  console.log('token', addressofToken, 'userBalance', userBalance.toString(), account);
+  console.log(
+    'token',
+    addressofToken,
+    'userBalance',
+    userBalance.toString(),
+    account
+  );
   return userBalance.toString();
 };
 
@@ -458,7 +493,7 @@ export const getCollections = async (
   userId,
   isAllCollections = false,
   ERC721 = '',
-  searchedData = '',
+  searchedData = ''
 ) => {
   try {
     let result = [];
@@ -484,16 +519,23 @@ export const getCollections = async (
     arr
       ? arr.map((data, key) => {
           return formattedData.push({
-            collectionImage: data.collectionImage ? data.collectionImage : './img/author/author-7.jpg',
+            collectionImage: data.collectionImage
+              ? data.collectionImage
+              : './img/author/author-7.jpg',
             authorImage:
-              data.oUser.length > 0 ? (data.oUser[0].sProfilePicUrl ? data.oUser[0].sProfilePicUrl : Avatar) : Avatar,
+              data.oUser.length > 0
+                ? data.oUser[0].sProfilePicUrl
+                  ? data.oUser[0].sProfilePicUrl
+                  : Avatar
+                : Avatar,
             collectionName: data.sName,
             collectionType: data.erc721 ? 'ERC721' : 'ERC1155',
             collectionAddress: data.sContractAddress,
             createdBy: data.sCreatedBy,
             authorId: data.oUser.length > 0 ? data.oUser[0]._id : '',
             count: result.count,
-            authorAddress: data.oUser.length > 0 ? data.oUser[0].sWalletAddress : '',
+            authorAddress:
+              data.oUser.length > 0 ? data.oUser[0].sWalletAddress : '',
           });
         })
       : formattedData.push([]);

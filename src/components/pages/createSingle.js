@@ -589,14 +589,13 @@ const CreateSingle = (props) => {
             }
           );
           setCollections(collectionsList?.results);
-
-          window.location.reload();
         }
         if (ress === false) {
           setCollectionCreation(false);
           window.location.reload();
         }
         setCollectionCreation(false);
+        window.location.reload();
       } catch (e) {
         setCollectionCreation(false);
         return;
@@ -1934,101 +1933,101 @@ const CreateSingle = (props) => {
           </div>
         </div>
         {isShowPopup ? (
-          <div className='popup-bg' id='CreateNftLoader'>
-            <div className='loader_popup-box'>
-              <div className='row'>
-                <h2 className='col-12 d-flex justify-content-center mt-2 mb-3'>
+          <div className="popup-bg" id="CreateNftLoader">
+            <div className="loader_popup-box">
+              <div className="row">
+                <h2 className="col-12 d-flex justify-content-center mt-2 mb-3">
                   Follow Steps
                 </h2>
               </div>
 
-              <div className='row customDisplayPopup'>
-                <div className='col-3 icontxtDisplayPopup'>
+              <div className="row customDisplayPopup">
+                <div className="col-3 icontxtDisplayPopup">
                   <div className={isApprovePopupClass}></div>
                 </div>
-                <div className='col-8 icontxtDisplayPopup'>
-                  <h5 className='popupHeading'>Approve</h5>
-                  <span className='popupText'>
+                <div className="col-8 icontxtDisplayPopup">
+                  <h5 className="popupHeading">Approve</h5>
+                  <span className="popupText">
                     This transaction is conducted only once per collection
                   </span>
                 </div>
               </div>
-              <div className='row customDisplayPopup'>
-                <div className='col-3 icontxtDisplayPopup'>
+              <div className="row customDisplayPopup">
+                <div className="col-3 icontxtDisplayPopup">
                   <div className={isMintPopupClass}></div>
                 </div>
-                <div className='col-8 icontxtDisplayPopup'>
-                  <h5 className='popupHeading'>Mint</h5>
-                  <span className='popupText'>
+                <div className="col-8 icontxtDisplayPopup">
+                  <h5 className="popupHeading">Mint</h5>
+                  <span className="popupText">
                     Send transaction to create your NFT
                   </span>
                 </div>
               </div>
-              <div className='row customDisplayPopup'>
-                <div className='col-3 icontxtDisplayPopup'>
+              <div className="row customDisplayPopup">
+                <div className="col-3 icontxtDisplayPopup">
                   <div className={isRoyaltyPopupClass}></div>
                 </div>
-                <div className='col-8 icontxtDisplayPopup'>
-                  <h5 className='popupHeading'>Royalty</h5>
-                  <span className='popupText'>
+                <div className="col-8 icontxtDisplayPopup">
+                  <h5 className="popupHeading">Royalty</h5>
+                  <span className="popupText">
                     Setting Royalty % for your NFT
                   </span>
                 </div>
               </div>
-              <div className='row customDisplayPopup'>
-                <div className='col-3 icontxtDisplayPopup'>
+              <div className="row customDisplayPopup">
+                <div className="col-3 icontxtDisplayPopup">
                   <div className={isUploadPopupClass}></div>
                 </div>
-                <div className='col-8 icontxtDisplayPopup'>
-                  <h5 className='popupHeading'>Upload</h5>
-                  <span className='popupText'>
+                <div className="col-8 icontxtDisplayPopup">
+                  <h5 className="popupHeading">Upload</h5>
+                  <span className="popupText">
                     Uploading of all media assets and metadata to IPFS
                   </span>
                 </div>
               </div>
               {isPutOnMarketplace ? (
-                <div className='row customDisplayPopup'>
-                  <div className='col-3 icontxtDisplayPopup'>
+                <div className="row customDisplayPopup">
+                  <div className="col-3 icontxtDisplayPopup">
                     <div className={isPutOnSalePopupClass}></div>
                   </div>
-                  <div className='col-8 icontxtDisplayPopup'>
-                    <h5 className='popupHeading'>Put on sale</h5>
-                    <span className='popupText'>
+                  <div className="col-8 icontxtDisplayPopup">
+                    <h5 className="popupHeading">Put on sale</h5>
+                    <span className="popupText">
                       Sign message to set fixed price
                     </span>
                   </div>
                 </div>
               ) : (
-                ''
+                ""
               )}
-              <div className='row customDisplayPopup'>
+              <div className="row customDisplayPopup">
                 {hideClosePopup ? (
                   <button
-                    className='closeBtn btn-main'
+                    className="closeBtn btn-main"
                     disabled={ClosePopupDisabled}
                     onClick={closePopup}
                   >
                     Close
                   </button>
                 ) : (
-                  ''
+                  ""
                 )}
                 {hideRedirectPopup ? (
                   <button
-                    className='closeBtn btn-main'
+                    className="closeBtn btn-main"
                     disabled={RedirectPopupDisabled}
                     onClick={redirectCreateNFTPopup}
                   >
                     Close
                   </button>
                 ) : (
-                  ''
+                  ""
                 )}
               </div>
             </div>
           </div>
         ) : (
-          ''
+          ""
         )}
       </section>
 

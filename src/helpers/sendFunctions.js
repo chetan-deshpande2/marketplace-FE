@@ -177,7 +177,6 @@ export const handleCollectionCreation = async (
     fd.append('quantity', collectionData.quantity);
 
     await createCollection(fd);
-    console.log(await createCollection(fd));
 
     NotificationManager.success('Collection Created Successfully');
     return true;
@@ -187,7 +186,7 @@ export const handleCollectionCreation = async (
     console.log('error in contract function call', e);
     if (e.code === 4001) {
       NotificationManager.error('User denied ');
-      // window.location.reload();
+      window.location.reload();
       return false;
     }
   }
@@ -454,10 +453,25 @@ export const putOnMarketplace = async (account, orderData) => {
         .parseEther(orderData.minimumBid.toString())
         .toString();
     } else if (orderData.chosenType === 2) {
-      _deadline = new Date().valueOf() / 1000 + 31536000 * 10;
+      _deadline = GENERAL_TIMESTAMP;
       _auctionEndDate = new Date(GENERAL_DATE);
       _price = ethers.utils.parseEther(orderData.minimumBid).toString();
     }
+    console.log(
+      account,
+      orderData.collection,
+      orderData.tokenId,
+      orderData.quantity,
+      orderData.saleType,
+      orderData.tokenAddress
+        ? orderData.tokenAddress
+        : '0x0000000000000000000000000000000000000000',
+      _price,
+      _deadline,
+      [],
+      [],
+      orderData.salt
+    );
     sellerOrder = [
       account,
       orderData.collection,
@@ -780,9 +794,9 @@ export const handleRemoveFromSale = async (orderId, account) => {
       return false;
     }
   } catch (e) {
-    console.log("error in contract function call", e);
+    console.log('error in contract function call', e);
     if (e.code === 4001) {
-      NotificationManager.error("User denied ");
+      NotificationManager.error('User denied ');
       return false;
     }
     return;
@@ -792,15 +806,15 @@ export const handleRemoveFromSale = async (orderId, account) => {
       orderId: orderId,
       oNftId: details.oNftId,
     });
-    NotificationManager.success("Removed from sale successfully");
+    NotificationManager.success('Removed from sale successfully');
     // window.location.href = "/profile";
     // window.location.reload();
     // console.log("res", res);
     slowRefresh();
   } catch (e) {
-    console.log("error while updating database", e);
+    console.log('error while updating database', e);
     return;
-  } 
+  }
 };
 
 export const createBid = async (
@@ -962,7 +976,6 @@ export const handleApproveToken = async (userAddress, tokenAddress) => {
   }
 };
 
-
 export const handleAcceptBids = async (
   bidData,
   isERC721,
@@ -986,6 +999,7 @@ export const handleAcceptBids = async (
   let amount = new BigNumber(bidData.bidPrice.toString())
     .multipliedBy(new BigNumber(bidData.bidQuantity.toString()))
     .toString();
+    console.log(bidData.bidder)
 
   for (let key = 0; key < 11; key++) {
     switch (key) {

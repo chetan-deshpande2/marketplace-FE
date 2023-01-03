@@ -129,7 +129,7 @@ const ItemDetails = function (props) {
   const [minimumBid, setMinimumBid] = useState('');
   const [endTime, setEndTime] = useState();
   const [selectedTokenAddress, setSelectedTokenAddress] = useState(
-    contracts.USDT
+    contracts.WETH
   );
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState(
     options[0].title
@@ -495,8 +495,8 @@ const ItemDetails = function (props) {
             }
             console.log(haveOrder);
             setOrders(d);
-
-            // setNftDetails(data);
+            console.log(data);
+            setNftDetails(data);
             console.log(orders, haveOrder);
             console.log(authorData);
             setAuthorDetails(authorData);
@@ -513,23 +513,21 @@ const ItemDetails = function (props) {
     [profile, id, currentUser, currOrderType]
   );
 
+  // useEffect(() => {
+  //   console.log(nftDetails);
+  //   const fetchData = async () => {
+  //     if (nftDetails && nftDetails.nHash) {
+  //       let resp = await fetch(
+  //         process.env.REACT_APP_IPFS_URL + nftDetails.nHash
+  //       );
+  //       resp = await resp.json();
 
+  //       setMetaData(eval(resp.attributes));
+  //     }
+  //   };
 
-  useEffect(() => {
-    console.log(nftDetails);
-    const fetchData = async () => {
-      if (nftDetails && nftDetails.nHash) {
-        let resp = await fetch(
-          process.env.REACT_APP_IPFS_URL + nftDetails.nHash
-        );
-        resp = await resp.json();
-
-        setMetaData(eval(resp.attributes));
-      }
-    };
-
-    fetchData();
-  }, [nftDetails]);
+  //   fetchData();
+  // }, [nftDetails]);
 
   useEffect(() => {
     const checkIfOpenForSale = async () => {
@@ -545,11 +543,10 @@ const ItemDetails = function (props) {
     checkIfOpenForSale();
   }, [orders]);
 
-
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
-      console.log(nftDetails.nHash, nftDetails.nNftImage);
+      console.log(nftDetails._id);
       if (nftDetails && nftDetails._id) {
         let data = await getAllBidsByNftId(nftDetails._id);
         console.log(data.data);
@@ -564,7 +561,6 @@ const ItemDetails = function (props) {
     };
     fetch();
   }, [nftDetails]);
-
 
   useEffect(() => {
     const fetch = async () => {
@@ -601,13 +597,12 @@ const ItemDetails = function (props) {
     fetch();
   }, [nftDetails, currPage]);
 
-
   useEffect(() => {
     async function fetch() {
       setLoading(true);
       if (profile) {
         let data = await GetNftDetails(id);
-        console.log(nftDetails.nHash, profile.user._id)
+        console.log(nftDetails.nHash, profile.user._id);
         let is_user_like = await checkIfLiked(data._id, profile.user._id);
         // setIsLiked(is_user_like);
         // setTotalLikes(data?.nUser_likes?.length);
@@ -616,12 +611,7 @@ const ItemDetails = function (props) {
     }
     fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ profile, id]);
-
-
-
-
-
+  }, [profile, id]);
 
   //*======================= Popups ==========
 
