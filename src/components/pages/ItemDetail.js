@@ -418,13 +418,11 @@ const ItemDetails = function (props) {
               console.log(d[i]._id, data._id);
 
               let searchParams = {
-                nNFTId: data._id,
+                nftID: data._id,
                 orderID: d[i]._id,
                 buyerID: 'All',
                 bidStatus: 'All',
               };
-
-              let _data = await fetchBidNft(searchParams);
 
               console.log(d[i].oPaymentToken);
               if (data && currentUser) {
@@ -451,8 +449,10 @@ const ItemDetails = function (props) {
                     );
                   }
                 }
-
+                let _data = await fetchBidNft(searchParams);
+                console.log(_data.data);
                 for (let j = 0; j < _data.data?.length; j++) {
+                  
                   if (
                     _data.data[j]?.oBidder?.sWalletAddress?.toLowerCase() ===
                     currentUser?.toLowerCase()

@@ -155,13 +155,16 @@ export const isEmpty = (obj) => {
   console.log(Object.keys(obj).length === 0);
   return Object.keys(obj).length === 0;
 };
-export const getAllBidsByNftId = async (nftId) => {
+export const getAllBidsByNftId = async (nftID) => {
+
   let dummyData = await fetchBidNft({
-    nNFTId: nftId,
+    nftID: nftID,
     orderID: 'All',
     buyerID: 'All',
     bidStatus: 'All',
   });
+
+  console.log(dummyData.data.length);
 
   let data = [];
   let highestBid = 0;
@@ -170,7 +173,6 @@ export const getAllBidsByNftId = async (nftId) => {
   let getSellerAddress;
   let getBuyerAddress;
 
-  console.log(dummyData?.data);
   for (let i = 0; i < dummyData?.data?.length; i++) {
     console.log(dummyData.data[i]);
     console.log(dummyData.data[i].oOrderId);

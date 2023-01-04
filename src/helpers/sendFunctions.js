@@ -765,6 +765,58 @@ export const handleNftTransfer = async (
   }
 };
 
+// export const handleRemoveFromSale = async (orderId, account) => {
+//   let marketplace;
+//   let order;
+//   let details;
+//   console.log(orderId, account);
+//   try {
+//     marketplace = await exportInstance(
+//       contracts.MARKETPLACE,
+//       marketPlaceABI.abi
+//     );
+//     const options = {
+//       from: account,
+//       gasLimit: 9000000,
+//       value: '0',
+//     };
+//     order = await buildSellOrder(orderId);
+//     console.log(order);
+//     details = await getOrderDetails({ orderId: orderId });
+//     console.log('order and details are', order, details);
+
+//     console.log('details.signature', details.oSignature);
+//     let res = await marketplace.cancelOrder(order, details.oSignature, options);
+
+//     res = await res.wait();
+//     if (res.status === 0) {
+//       NotificationManager.error('Transaction failed');
+//       return false;
+//     }
+//   } catch (e) {
+//     console.log('error in contract function call', e);
+//     if (e.code === 4001) {
+//       NotificationManager.error('User denied ');
+//       return false;
+//     }
+//     return;
+//   }
+//   try {
+//     await DeleteOrder({
+//       orderId: orderId,
+//       oNftId: details.oNftId,
+//     });
+//     NotificationManager.success('Removed from sale successfully');
+//     // window.location.href = "/profile";
+//     // window.location.reload();
+//     // console.log("res", res);
+//     slowRefresh();
+//   } catch (e) {
+//     console.log('error while updating database', e);
+//     return;
+//   }
+// };
+
 export const handleRemoveFromSale = async (orderId, account) => {
   let marketplace;
   let order;
@@ -793,29 +845,30 @@ export const handleRemoveFromSale = async (orderId, account) => {
       NotificationManager.error('Transaction failed');
       return false;
     }
-  } catch (e) {
-    console.log('error in contract function call', e);
-    if (e.code === 4001) {
-      NotificationManager.error('User denied ');
-      return false;
+    } catch (e) {
+      console.log('error in contract function call', e);
+      if (e.code === 4001) {
+        NotificationManager.error('User denied ');
+        return false;
+      }
+      return;
     }
-    return;
-  }
   try {
     await DeleteOrder({
       orderId: orderId,
       oNftId: details.oNftId,
     });
-    NotificationManager.success('Removed from sale successfully');
+    NotificationManager.success("Removed from sale successfully");
     // window.location.href = "/profile";
     // window.location.reload();
     // console.log("res", res);
     slowRefresh();
   } catch (e) {
-    console.log('error while updating database', e);
+    console.log("error while updating database", e);
     return;
   }
 };
+
 
 export const createBid = async (
   nftID,
