@@ -91,6 +91,8 @@ export const handleCollectionCreation = async (
         contracts.WETH
       );
     } else {
+      console.log('Inside create Multiple');
+      console.log(false, collectionData, account);
       options = {
         from: account,
         gasPrice: 10000000000,
@@ -102,12 +104,15 @@ export const handleCollectionCreation = async (
         collectionData.sRoyaltyPercentage,
         contracts.WETH
       );
+
       res1 = await creator.deployExtendedERC1155(
         collectionData.nftFile,
         collectionData.sRoyaltyPercentage,
         contracts.WETH,
         options
       );
+      
+
     }
 
     let hash = res1;
@@ -115,7 +120,7 @@ export const handleCollectionCreation = async (
 
     if (res1.status === 0) {
       // NotificationManager.error("Transaction failed");
-      return;
+      // return;
     }
     contractAddress = await readReceipt(hash);
     let royalty = await exportInstance(
@@ -186,7 +191,7 @@ export const handleCollectionCreation = async (
     console.log('error in contract function call', e);
     if (e.code === 4001) {
       NotificationManager.error('User denied ');
-      window.location.reload();
+      // window.location.reload();
       return false;
     }
   }
@@ -586,6 +591,7 @@ export const handleUpdateBidStatus = async (
   bidID,
   action //Delete, Cancelled, Rejected
 ) => {
+  console.log(bidID, action);
   try {
     let reqParams = {
       bidID: bidID,
@@ -845,30 +851,29 @@ export const handleRemoveFromSale = async (orderId, account) => {
       NotificationManager.error('Transaction failed');
       return false;
     }
-    } catch (e) {
-      console.log('error in contract function call', e);
-      if (e.code === 4001) {
-        NotificationManager.error('User denied ');
-        return false;
-      }
-      return;
+  } catch (e) {
+    console.log('error in contract function call', e);
+    if (e.code === 4001) {
+      NotificationManager.error('User denied ');
+      return false;
     }
+    return;
+  }
   try {
     await DeleteOrder({
       orderId: orderId,
       oNftId: details.oNftId,
     });
-    NotificationManager.success("Removed from sale successfully");
+    NotificationManager.success('Removed from sale successfully');
     // window.location.href = "/profile";
     // window.location.reload();
     // console.log("res", res);
     slowRefresh();
   } catch (e) {
-    console.log("error while updating database", e);
+    console.log('error while updating database', e);
     return;
   }
 };
-
 
 export const createBid = async (
   nftID,
@@ -1052,7 +1057,7 @@ export const handleAcceptBids = async (
   let amount = new BigNumber(bidData.bidPrice.toString())
     .multipliedBy(new BigNumber(bidData.bidQuantity.toString()))
     .toString();
-    console.log(bidData.bidder)
+  console.log(bidData.bidder);
 
   for (let key = 0; key < 11; key++) {
     switch (key) {

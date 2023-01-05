@@ -609,9 +609,9 @@ const CreateMultiple = (props) => {
         sName: _title,
         sDescription: description,
         nftFile: image,
-        erc721: JSON.stringify(true),
-        quantity: 1,
+        erc721: JSON.stringify(false),
         sRoyaltyPercentage: Number(royalty) * 100,
+
         symbol: symbol,
       };
       let collectionsList = '';
@@ -782,7 +782,6 @@ const CreateMultiple = (props) => {
             res1 = await mintRes.wait();
             if (res1.status === 0) {
               stopCreateNFTPopup();
-              return;
               return;
             }
           } catch (minterr) {
