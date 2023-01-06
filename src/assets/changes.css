@@ -110,6 +110,21 @@ iframe {
   min-width: 170px;
   width: 170px;
 }
+.p-modal .popup-box .box.add-collection-box {
+  width: 45%;
+  top: 0%;
+  max-height: 100%;
+  padding: 30px;
+}
+.p-modal .popup-box .box.add-collection-box .de_tab.tab_methods ul {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.p-modal .popup-box .box.add-collection-box h3 {
+  margin-bottom: 10px;
+}
 .nft_image_box .c-nft-img-box {
   overflow: auto;
   max-height: 500px;
@@ -136,7 +151,7 @@ iframe {
   box-shadow: 2px 2px 20px 0px rgba(131, 100, 226, 0);
   transition: all 0.3s ease;
 }
-.c-button input[type='file'] {
+.c-button input[type="file"] {
   display: none;
 }
 .modal-file-upload {
@@ -195,9 +210,13 @@ iframe {
 .c-popup-box .c-buy-items .d-token {
   font-weight: 600;
 }
+
 @media (max-width: 1199px) {
   .navbar .nav-icon {
     top: 45px;
+  }
+  .p-modal .popup-box .box.add-collection-box {
+    width: 60%;
   }
 }
 @media (max-width: 991px) {
@@ -214,10 +233,13 @@ iframe {
     display: none;
   }
   .custom-popup-box .add-collection-box {
-    width: 75%;
+    width: 45%;
   }
   .mb-10 {
     margin-bottom: 10px;
+  }
+  .p-modal .popup-box .box.add-collection-box {
+    width: 70%;
   }
 }
 @media (max-width: 767px) {
@@ -304,6 +326,21 @@ iframe {
   }
   .mr-48 {
     margin-right: 5px;
+  }
+  .p-modal .popup-box .box.add-collection-box {
+    width: 75%;
+  }
+  .p-modal .popup-box .box.add-collection-box .de_tab.tab_methods ul {
+    justify-content: space-around;
+  }
+  .p-modal .popup-box .box.add-collection-box .de_tab.tab_methods ul li {
+    margin-bottom: 10px;
+  }
+  .p-modal .popup-box .box.add-collection-box .de_tab.tab_methods ul li span {
+    padding: 26px 4px;
+    width: 95px;
+    font-size: 11px;
+    min-width: auto;
   }
 }
 @media screen and (max-width: 350px) {
