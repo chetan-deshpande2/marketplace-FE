@@ -204,9 +204,9 @@ const PersonalProfile = function (props) {
           <div className='col-md-12'>
             <div className='d_profile de-flex'>
               <div className='de-flex-col'>
-                <div className='profile_avatar'>
-                  <img src={profilePic ? profilePic : ''} alt='' />
-                  <i className='fa fa-check'></i>
+                <div className='profile_avatar' >
+                  <img src={profilePic ? profilePic : ''} alt='' style={{width:'100px',height:"98px"}}/>
+                  <i className='fa fa-check' style={{margin: "80px 0 0 67px",padding: "4px"}}></i>
                   <div className='profile_name'>
                     <h4>
                       <div className='d-flex'>
