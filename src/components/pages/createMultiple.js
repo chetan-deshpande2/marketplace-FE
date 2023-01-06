@@ -20,11 +20,22 @@ import {
   exportInstance,
 } from '../../apiServices';
 import UploadImg from '../../assets/images/upload-image.jpg';
-import { handleCollectionCreation, handleBuyNft } from '../../helpers/sendFunctions';
+import {
+  handleCollectionCreation,
+  handleBuyNft,
+} from '../../helpers/sendFunctions';
 import { UpdateTokenCount } from '../../apiServices';
-import { getSignature, checkIfCollectionNameAlreadyTaken } from '../../helpers/getterFunctions';
+import {
+  getSignature,
+  checkIfCollectionNameAlreadyTaken,
+} from '../../helpers/getterFunctions';
 import { options } from '../../helpers/constants';
-import { CURRENCY, GENERAL_DATE, GENERAL_TIMESTAMP, MAX_FILE_SIZE } from '../../helpers/constants';
+import {
+  CURRENCY,
+  GENERAL_DATE,
+  GENERAL_TIMESTAMP,
+  MAX_FILE_SIZE,
+} from '../../helpers/constants';
 // import simplerERC1155ABI from '../../Config/abis/simpleERC1155.json';
 import extendedERC1155Abi from '../../Config/abis/extendedERC1155Abi.json';
 import contracts from '../../Config/contracts';
@@ -120,7 +131,9 @@ const CreateMultiple = (props) => {
   const [chosenType, setChosenType] = useState(0);
   const [minimumBid, setMinimumBid] = useState('');
   const [endTime, setEndTime] = useState();
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState(contracts.WETH);
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState(
+    contracts.WETH
+  );
   const [isAdvancedSetting, setIsAdvancedSetting] = useState(false);
   const [isPutOnMarketplace, setIsPutOnMarketPlace] = useState(true);
   const [onTimedAuction, setOnTimedAuction] = useState(false);
@@ -135,17 +148,24 @@ const CreateMultiple = (props) => {
 
   const [createdItemId, setCreatedItemId] = useState();
 
-  const [isUploadPopupClass, setisUploadPopupClass] = useState('checkiconDefault');
-  const [isApprovePopupClass, setisApprovePopupClass] = useState('checkiconDefault');
+  const [isUploadPopupClass, setisUploadPopupClass] =
+    useState('checkiconDefault');
+  const [isApprovePopupClass, setisApprovePopupClass] =
+    useState('checkiconDefault');
   const [isMintPopupClass, setisMintPopupClass] = useState('checkiconDefault');
-  const [isRoyaltyPopupClass, setisRoyaltyPopupClass] = useState('checkiconDefault');
-  const [isPutOnSalePopupClass, setisPutOnSalePopupClass] = useState('checkiconDefault');
+  const [isRoyaltyPopupClass, setisRoyaltyPopupClass] =
+    useState('checkiconDefault');
+  const [isPutOnSalePopupClass, setisPutOnSalePopupClass] =
+    useState('checkiconDefault');
   const [lockedContent, setLockedContent] = useState('');
   const [profile, setProfile] = useState();
   const [currentUser, setCurrentUser] = useState('');
   const [collectionCreation, setCollectionCreation] = useState(false);
   const [isLazyMinting, setIsLazyMinting] = useState(false);
-  const [cookies, setCookie] = useCookies(['selected_account', 'Authorization']);
+  const [cookies, setCookie] = useCookies([
+    'selected_account',
+    'Authorization',
+  ]);
 
   const myRef = React.createRef();
 
@@ -249,12 +269,16 @@ const CreateMultiple = (props) => {
     var nftFiles = e.target.files;
     var filesArr = Array.prototype.slice.call(nftFiles);
     var file = e.target.files[0];
-    if (!checkIfValidFileExtension(file, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
+    if (
+      !checkIfValidFileExtension(file, ['jpg', 'jpeg', 'gif', 'png', 'webp'])
+    ) {
       NotificationManager.error('This file type not supported', '', 800);
       return;
     }
     if (file.size / 1000000 > MAX_FILE_SIZE)
-      NotificationManager.warning(`File size should be less than ${MAX_FILE_SIZE} MB`);
+      NotificationManager.warning(
+        `File size should be less than ${MAX_FILE_SIZE} MB`
+      );
 
     document.getElementById('file_name').style.display = 'none';
     setNftFiles([...nftFiles, ...filesArr]);
@@ -284,12 +308,18 @@ const CreateMultiple = (props) => {
     var files = e.target.files;
     var filesArr = Array.prototype.slice.call(files);
     var file = e.target.files[0];
-    if (!checkIfValidFileExtension(file, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
+    if (
+      !checkIfValidFileExtension(file, ['jpg', 'jpeg', 'gif', 'png', 'webp'])
+    ) {
       NotificationManager.error('This file type not supported', '', 800);
       return;
     }
     if (file.size / 1000000 > MAX_FILE_SIZE)
-      NotificationManager.warning(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
+      NotificationManager.warning(
+        `File size should be less than ${MAX_FILE_SIZE} MB`,
+        '',
+        800
+      );
     document.getElementById('collection_file_name').style.display = 'none';
 
     setFiles([...files, ...filesArr]);
@@ -380,7 +410,11 @@ const CreateMultiple = (props) => {
   };
 
   const handleAddCollaborator = async () => {
-    console.log('currCollaborator,currCollaboratorPercent', currCollaborator, currCollaboratorPercent);
+    console.log(
+      'currCollaborator,currCollaboratorPercent',
+      currCollaborator,
+      currCollaboratorPercent
+    );
     if (currCollaborator === '' || currCollaboratorPercent === '') {
       NotificationManager.error('Invalid inputs');
       return;
@@ -459,7 +493,11 @@ const CreateMultiple = (props) => {
       sum = sum + Number(collaboratorPercents[i]);
     }
     if (sum > 100) {
-      NotificationManager.error('Total percentage should be less than 100', '', 800);
+      NotificationManager.error(
+        'Total percentage should be less than 100',
+        '',
+        800
+      );
       setLoading(false);
       return false;
     }
@@ -600,7 +638,11 @@ const CreateMultiple = (props) => {
       // }
       if (files && files.length > 0) {
         if (files[0].size / 1000000 > MAX_FILE_SIZE) {
-          NotificationManager.error(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
+          NotificationManager.error(
+            `File size should be less than ${MAX_FILE_SIZE} MB`,
+            '',
+            800
+          );
           return;
         }
       }
@@ -616,16 +658,22 @@ const CreateMultiple = (props) => {
       };
       let collectionsList = '';
       try {
-        let ress = await handleCollectionCreation(false, collectionData, currentUser);
+        let ress = await handleCollectionCreation(
+          false,
+          collectionData,
+          currentUser
+        );
         collectionsList = await getUsersCollections({
           page: 1,
           limit: 100,
           userId: profile._id,
         });
         if (collectionsList && collectionsList?.results?.length > 0) {
-          collectionsList.results = collectionsList?.results?.filter((collection) => {
-            return collection.erc721 === false;
-          });
+          collectionsList.results = collectionsList?.results?.filter(
+            (collection) => {
+              return collection.erc721 === false;
+            }
+          );
           setCollections(collectionsList?.results);
 
           // window.location.reload();
@@ -664,7 +712,9 @@ const CreateMultiple = (props) => {
     let _nftTitle = nftTitle.replace(/^\s+|\s+$/g, '');
     if (_nftTitle && _nftTitle.length > 0) {
       if (_nftTitle[0].size / 1000000 > MAX_FILE_SIZE) {
-        NotificationManager.error(`File size should be less than ${MAX_FILE_SIZE} MB`);
+        NotificationManager.error(
+          `File size should be less than ${MAX_FILE_SIZE} MB`
+        );
         return;
       }
     }
@@ -691,7 +741,11 @@ const CreateMultiple = (props) => {
         return;
       }
       if ((chosenType === 1 || chosenType === 2) && Number(minimumBid) <= 0) {
-        NotificationManager.error("minimum bid amount can't be less than zero", '', 800);
+        NotificationManager.error(
+          "minimum bid amount can't be less than zero",
+          '',
+          800
+        );
         return;
       }
     }
@@ -714,7 +768,10 @@ const CreateMultiple = (props) => {
         setisApprovePopupClass('clockloader');
         console.log(nftContractAddress);
 
-        const NFTcontract = await exportInstance(nftContractAddress, extendedERC1155Abi.abi);
+        const NFTcontract = await exportInstance(
+          nftContractAddress,
+          extendedERC1155Abi.abi
+        );
 
         try {
           // let gasLimit = await NFTcontract.estimateGas.isApprovedForAll(
@@ -733,14 +790,20 @@ const CreateMultiple = (props) => {
             gasLimit: 9000000,
             value: 0,
           };
-          let approval = await NFTcontract.isApprovedForAll(currentUser, contracts.MARKETPLACE);
+          let approval = await NFTcontract.isApprovedForAll(
+            currentUser,
+            contracts.MARKETPLACE
+          );
           let approvalRes;
 
           if (approval) {
             setisApprovePopupClass('checkiconCompleted');
           }
           if (!approval) {
-            approvalRes = await NFTcontract.setApprovalForAll(contracts.MARKETPLACE, true);
+            approvalRes = await NFTcontract.setApprovalForAll(
+              contracts.MARKETPLACE,
+              true
+            );
             approvalRes = await approvalRes.wait();
             if (approvalRes.status === 0) {
               NotificationManager.error('Transaction failed', '', 800);
@@ -811,7 +874,11 @@ const CreateMultiple = (props) => {
               gasLimit: 9000000,
               value: 0,
             };
-            let collaborator = await NFTcontract.setTokenRoyaltyDistribution(collaborators, localCollabPercent, nextId);
+            let collaborator = await NFTcontract.setTokenRoyaltyDistribution(
+              collaborators,
+              localCollabPercent,
+              nextId
+            );
             await collaborator.wait();
           } catch (Collerr) {
             setisRoyaltyPopupClass('errorIcon');
@@ -866,12 +933,15 @@ const CreateMultiple = (props) => {
             userId: res.result.nCreater,
             action: 'Creation',
             actionMeta: 'Default',
-            message: `${quantity} Quantity by ${profile && profile.sUserName
-              ? profile.user.sUserName
-              : profile.user.sWalletAddress
-                ? profile.user.sWalletAddress.slice(0, 3) + '...' + profile.user.sWalletAddress.slice(39, 42)
+            message: `${quantity} Quantity by ${
+              profile && profile.sUserName
+                ? profile.user.sUserName
+                : profile.user.sWalletAddress
+                ? profile.user.sWalletAddress.slice(0, 3) +
+                  '...' +
+                  profile.user.sWalletAddress.slice(39, 42)
                 : ''
-              }`,
+            }`,
 
             created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           };
@@ -899,7 +969,9 @@ const CreateMultiple = (props) => {
           _auctionEndDate = GENERAL_DATE;
           _price = ethers.utils.parseEther(price.toString()).toString();
         } else if (chosenType === 1) {
-          let _endTime = endTime ? new Date(endTime).valueOf() / 1000 : GENERAL_TIMESTAMP;
+          let _endTime = endTime
+            ? new Date(endTime).valueOf() / 1000
+            : GENERAL_TIMESTAMP;
           _auctionEndDate = endTime;
           _deadline = _endTime;
           _price = ethers.utils.parseEther(minimumBid.toString()).toString();
@@ -918,7 +990,9 @@ const CreateMultiple = (props) => {
             nextId,
             quantity,
             saleType,
-            saleType !== 0 ? selectedTokenAddress : '0x0000000000000000000000000000000000000000',
+            saleType !== 0
+              ? selectedTokenAddress
+              : '0x0000000000000000000000000000000000000000',
             _price,
             _deadline,
             [],
@@ -944,7 +1018,10 @@ const CreateMultiple = (props) => {
           let reqParams = {
             nftId: res.result._id,
             seller: currentUser.toLowerCase(),
-            tokenAddress: saleType !== 0 ? selectedTokenAddress : '0x0000000000000000000000000000000000000000',
+            tokenAddress:
+              saleType !== 0
+                ? selectedTokenAddress
+                : '0x0000000000000000000000000000000000000000',
             collection: nftContractAddress,
             price: _price,
             quantity: quantity,
@@ -965,8 +1042,11 @@ const CreateMultiple = (props) => {
                 userId: res.result.nCreater,
                 action: 'Marketplace',
                 actionMeta: 'Listed',
-                message: `${quantity} quantity For ${convertToEth(_price)} ${saleType === 0 ? CURRENCY : selectedTokenSymbol
-                  } by ${currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)} `,
+                message: `${quantity} quantity For ${convertToEth(_price)} ${
+                  saleType === 0 ? CURRENCY : selectedTokenSymbol
+                } by ${
+                  currentUser.slice(0, 3) + '...' + currentUser.slice(39, 42)
+                } `,
                 created_ts: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               };
 
@@ -1006,7 +1086,6 @@ const CreateMultiple = (props) => {
   };
 
   useEffect(() => {
-    console.log(cookies);
     setCurrentUser(cookies.selected_account);
   }, []);
 
@@ -1024,10 +1103,39 @@ const CreateMultiple = (props) => {
     setSalt(Math.round(Math.random() * 10000000));
   }, []);
 
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     setLoading(true);
+  //     let profile = await getProfile();
+  //     setProfile(profile);
+  //     let collectionsList = await getUsersCollections({
+  //       page: 1,
+  //       limit: 100,
+  //       userId: profile?._id,
+  //     });
+  //     if (collectionsList && collectionsList?.results?.length >= 1) {
+  //       collectionsList.results = collectionsList.results.filter((collection) => {
+  //         return collection.erc721 === false;
+  //       });
+  //       setCollections(collectionsList?.results);
+  //     }
+
+  //     if (profile && profile.sProfilePicUrl) {
+  //       setProfilePic(profile.sProfilePicUrl);
+  //     } else {
+  //       setProfilePic(Avatar);
+  //     }
+  //     setLoading(false);
+  //   }
+  //   fetchData();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [cookies.Authorization, cookies.selected_account, isPopup, currentUser]);
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       let profile = await getProfile();
+
       setProfile(profile);
       let collectionsList = await getUsersCollections({
         page: 1,
@@ -1035,9 +1143,11 @@ const CreateMultiple = (props) => {
         userId: profile?._id,
       });
       if (collectionsList && collectionsList?.results?.length >= 1) {
-        collectionsList.results = collectionsList.results.filter((collection) => {
-          return collection.erc721 === false;
-        });
+        collectionsList.results = collectionsList.results.filter(
+          (collection) => {
+            return collection.erc721 === false;
+          }
+        );
         setCollections(collectionsList?.results);
       }
 
@@ -1054,12 +1164,12 @@ const CreateMultiple = (props) => {
 
   const PropertiesSection = () => {
     return (
-      <Row className="property">
+      <Row className='property'>
         <Col>
           <input
-            type="text"
-            className="property-input property-key"
-            placeholder="eg. Background"
+            type='text'
+            className='property-input property-key'
+            placeholder='eg. Background'
             value={currPropertyKey}
             onChange={(e) => setCurrPropertyKey(e.target.value)}
           ></input>
@@ -1068,9 +1178,9 @@ const CreateMultiple = (props) => {
         <Col>
           {' '}
           <input
-            type="text"
-            className="property-input property-value"
-            placeholder="eg. Black"
+            type='text'
+            className='property-input property-value'
+            placeholder='eg. Black'
             value={currPropertyValue}
             onChange={(e) => setCurrPropertyValue(e.target.value)}
           ></input>
@@ -1086,89 +1196,112 @@ const CreateMultiple = (props) => {
       <GlobalStyles />
       {loading ? showProcessingModal('Loading') : ''}
       {collectionCreation ? (
-        showProcessingModal('Collection creation is under process. Please do not refresh the page')
+        showProcessingModal(
+          'Collection creation is under process. Please do not refresh the page'
+        )
       ) : (
         <></>
       )}
 
       <section
-        className="jumbotron breadcumb no-bg"
+        className='jumbotron breadcumb no-bg'
         style={{
           backgroundImage: `url(${'./img/background/subheader.jpg'})`,
         }}
       >
-        <div className="mainbreadcumb">
-          <div className="container">
-            <div className="row m-10-hor">
-              <div className="col-12">
-                <h1 className="text-center">Create Multiple NFT</h1>
+        <div className='mainbreadcumb'>
+          <div className='container'>
+            <div className='row m-10-hor'>
+              <div className='col-12'>
+                <h1 className='text-center'>Create Multiple NFT</h1>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="container">
-        <div className="row">
-          <div className="col-lg-9 mb-5">
-            <div id="form-create-item" className="form-border" action="#">
-              <div className="field-set">
-                <h5 className="required">Choose Collection</h5>
+      <section className='container'>
+        <div className='row'>
+          <div className='col-lg-9 mb-5'>
+            <div id='form-create-item' className='form-border' action='#'>
+              <div className='field-set'>
+                <h5 className='required'>Choose Collection</h5>
 
-                <div className="de_tab tab_methods">
-                  <div className="scrollable mb-5 c-collections">
-                    <ul className="de_nav">
-                      <li id="btn4" className="active" onClick={handleShow3}>
+                <div className='de_tab tab_methods'>
+                  <div className='scrollable mb-5 c-collections'>
+                    <ul className='de_nav'>
+                      <li id='btn4' className='active' onClick={handleShow3}>
                         <span onClick={togglePopup}>
-                          <i className="fa fa-plus"></i>Create New
+                          <i className='fa fa-plus'></i>Create New
                         </span>
                       </li>
 
                       {isPopup && (
-                        <div className="collection-popup-box custom-popup-box modal-dialog-centered">
+                        <div className='collection-popup-box custom-popup-box modal-dialog-centered'>
                           {/* {loading ? <Loader /> : <></>} */}
-                          <span className="close-icon" onClick={togglePopup}>
+                          <span className='close-icon' onClick={togglePopup}>
                             x
                           </span>
-                          <div className="add-collection-box">
-                            <div className="add-collection-popup-content text-center">
-                              <div className="CollectionPopupBox">
-                                <div className="row">
+                          <div className='add-collection-box'>
+                            <div className='add-collection-popup-content text-center'>
+                              <div className='CollectionPopupBox'>
+                                <div className='row'>
                                   <h2 className='mb-2'>Collections</h2>
-                                  <div id="form-create-item" className="form-border" action="#">
-                                    <div className="collection-field-set">
-                                      <span className="sub-heading">Upload Collection Cover</span>
-                                      <div className="fileUploader mt-3">
-                                        <div className="row align-items-center justify-content-center">
-                                          <div className="col-md-4 col-sm-12 uploadImg-container">
-                                            <div className="img-upload-box">
+                                  <div
+                                    id='form-create-item'
+                                    className='form-border'
+                                    action='#'
+                                  >
+                                    <div className='collection-field-set'>
+                                      <span className='sub-heading'>
+                                        Upload Collection Cover
+                                      </span>
+                                      <div className='fileUploader mt-3'>
+                                        <div className='row align-items-center justify-content-center'>
+                                          <div className='col-md-4 col-sm-12 uploadImg-container'>
+                                            <div className='img-upload-box'>
                                               {!image ? (
                                                 <img
-                                                  alt="upload image"
+                                                  alt='upload image'
                                                   src={UploadImg}
-                                                  className=""
-                                                  onClick={() => fileRefCollection.current.click()}
+                                                  className=''
+                                                  onClick={() =>
+                                                    fileRefCollection.current.click()
+                                                  }
                                                 />
                                               ) : (
                                                 <img
-                                                  src={URL.createObjectURL(image)}
-                                                  id="get_file_2"
-                                                  className="collection_cover_preview img-fluid"
-                                                  style={{ height: '100%', borderRadius: '8px' }}
-                                                  alt=""
-                                                  onClick={() => fileRefCollection.current.click()}
+                                                  src={URL.createObjectURL(
+                                                    image
+                                                  )}
+                                                  id='get_file_2'
+                                                  className='collection_cover_preview img-fluid'
+                                                  style={{
+                                                    height: '100%',
+                                                    borderRadius: '8px',
+                                                  }}
+                                                  alt=''
+                                                  onClick={() =>
+                                                    fileRefCollection.current.click()
+                                                  }
                                                 />
                                               )}
                                             </div>
                                           </div>
-                                          <div className=" col-md-8 uploadImg-right ">
+                                          <div className=' col-md-8 uploadImg-right '>
                                             <div className='modal-file-upload d-create-file'>
-                                              <p id="collection_file_name">
-                                                We recommend an image of at least 450x450. PNG, JPG, GIF, WEBP or MP4. Max
+                                              <p id='collection_file_name'>
+                                                We recommend an image of at
+                                                least 450x450. PNG, JPG, GIF,
+                                                WEBP or MP4. Max
                                                 {MAX_FILE_SIZE}mb.
                                               </p>
-                                              {files && files.length > 0 ? <p>{files[0].name}</p> : ''}
-                                              <div className="browse">
+                                              {files && files.length > 0 ? (
+                                                <p>{files[0].name}</p>
+                                              ) : (
+                                                ''
+                                              )}
+                                              <div className='browse'>
                                                 {/* <input
                                                 type="button"
                                                 id="get_file"
@@ -1176,94 +1309,108 @@ const CreateMultiple = (props) => {
                                                 value="Browse"
                                                 onClick={() => fileRefCollection.current.click()}
                                               /> */}
-                                                <label className="c-button btn-main">
+                                                <label className='c-button btn-main'>
                                                   Browse
                                                   <input
-                                                    id="upload_file_Upload_collection"
-                                                    type="file"
+                                                    id='upload_file_Upload_collection'
+                                                    type='file'
                                                     ref={fileRefCollection}
-                                                    className="btn-main browse-btn"
+                                                    className='btn-main browse-btn'
                                                     required
-                                                    onChange={(e) => onCollectionImgChange(e)}
+                                                    onChange={(e) =>
+                                                      onCollectionImgChange(e)
+                                                    }
                                                   />
                                                 </label>
                                               </div>
                                             </div>
-
                                           </div>
                                         </div>
                                       </div>
-                                      <h5 className="createColTitle m-0 required">Title</h5>
+                                      <h5 className='createColTitle m-0 required'>
+                                        Title
+                                      </h5>
                                       <input
-                                        type="text"
-                                        name="item_title"
+                                        type='text'
+                                        name='item_title'
                                         value={title}
                                         required
-                                        id="item_title"
-                                        className="form-control createColInput"
+                                        id='item_title'
+                                        className='form-control createColInput'
                                         placeholder="e.g. 'Crypto Funk"
                                         onChange={(e) => {
                                           setTitle(e.target.value);
                                         }}
                                       />
 
-                                      <h5 className="createColTitle m-0 required">Symbol</h5>
+                                      <h5 className='createColTitle m-0 required'>
+                                        Symbol
+                                      </h5>
 
                                       <input
-                                        type="text"
-                                        name="item_title"
+                                        type='text'
+                                        name='item_title'
                                         value={symbol}
                                         required
-                                        id="item_title"
-                                        className="form-control createColInput"
+                                        id='item_title'
+                                        className='form-control createColInput'
                                         placeholder="e.g. 'Crypto Funk"
                                         onChange={(e) => {
                                           setSymbol(e.target.value);
                                         }}
                                       />
 
-                                      <h5 className="createColTitle m-0">Description</h5>
+                                      <h5 className='createColTitle m-0'>
+                                        Description
+                                      </h5>
                                       <input
-                                        type="text"
+                                        type='text'
                                         data-autoresize
-                                        name="item_desc"
+                                        name='item_desc'
                                         required
-                                        id="item_desc"
+                                        id='item_desc'
                                         value={description}
-                                        className="form-control createColInput"
+                                        className='form-control createColInput'
                                         placeholder="e.g. 'This is very limited item'"
                                         onChange={(e) => {
                                           setDescription(e.target.value);
                                         }}
                                       ></input>
 
-                                      <h5 className="createColTitle m-0">Royalties</h5>
+                                      <h5 className='createColTitle m-0'>
+                                        Royalties
+                                      </h5>
                                       <input
-                                        type="Number"
-                                        name="item_royalties"
-                                        min="0"
+                                        type='Number'
+                                        name='item_royalties'
+                                        min='0'
                                         value={royalty}
                                         required
-                                        id="item_royalties"
-                                        className="form-control createColInput"
-                                        placeholder="suggested: 0, 10%, 20%, 30%. Maximum is 50%"
+                                        id='item_royalties'
+                                        className='form-control createColInput'
+                                        placeholder='suggested: 0, 10%, 20%, 30%. Maximum is 50%'
                                         onChange={(e) => {
                                           if (Number(e.target.value) > 50) {
-                                            NotificationManager.error('Percentage should be less than 50%', '', 800);
+                                            NotificationManager.error(
+                                              'Percentage should be less than 50%',
+                                              '',
+                                              800
+                                            );
                                             return;
                                           }
                                           var t = e.target.value;
                                           e.target.value =
                                             t.indexOf('.') >= 0
-                                              ? t.substr(0, t.indexOf('.')) + t.substr(t.indexOf('.'), 3)
+                                              ? t.substr(0, t.indexOf('.')) +
+                                                t.substr(t.indexOf('.'), 3)
                                               : t;
                                           setRoyalty(Number(e.target.value));
                                         }}
                                       />
                                       <div className='d-flex justify-content-center'>
                                         <button
-                                          id="submit"
-                                          className="btn-main create-collection-btn"
+                                          id='submit'
+                                          className='btn-main create-collection-btn'
                                           onClick={() => {
                                             handleCollectionCreate();
                                           }}
@@ -1281,41 +1428,47 @@ const CreateMultiple = (props) => {
                       )}
                       {collections && collections.length >= 1
                         ? collections.map((collection, index) => {
-                          return (
-                            <li
-                              key={index}
-                              id={`my_cus_btn${index}`}
-                              className="active"
-                              ref={myRef}
-                              onClick={(e) => {
-                                handleShow4(collection.sContractAddress, index);
-                                setNextId(collection.nextId);
-                              }}
-                            >
-                              <span className="span-border radio-img">
-                                <img
-                                  className="choose-collection-img image"
-                                  alt=""
-                                  height="10px"
-                                  width="10px"
-                                  src={`http://${collection.sHash}.ipfs.w3s.link/${collection.sImageName}`}
-                                ></img>
-                                <p className="mt-2 mb-0">{collection.sName}</p>
-                              </span>
-                            </li>
-                          );
-                        })
+                            return (
+                              <li
+                                key={index}
+                                id={`my_cus_btn${index}`}
+                                className='active'
+                                ref={myRef}
+                                onClick={(e) => {
+                                  handleShow4(
+                                    collection.sContractAddress,
+                                    index
+                                  );
+                                  setNextId(collection.nextId);
+                                }}
+                              >
+                                <span className='span-border radio-img'>
+                                  <img
+                                    className='choose-collection-img image'
+                                    alt=''
+                                    height='10px'
+                                    width='10px'
+                                    src={`http://${collection.sHash}.ipfs.w3s.link/${collection.sImageName}`}
+                                  ></img>
+                                  <p className='mt-2 mb-0'>
+                                    {collection.sName}
+                                  </p>
+                                </span>
+                              </li>
+                            );
+                          })
                         : ''}
                     </ul>
                   </div>
                 </div>
 
-                <h5 className="required">Upload file</h5>
-                <div className="d-create-file">
-                  <div className="uploadFile">
+                <h5 className='required'>Upload file</h5>
+                <div className='d-create-file'>
+                  <div className='uploadFile'>
                     {' '}
-                    <p id="file_name">
-                      We recommend an image of at least 450x450.&nbsp; PNG, JPG, GIF or WEBP.&nbsp; Max &nbsp;
+                    <p id='file_name'>
+                      We recommend an image of at least 450x450.&nbsp; PNG, JPG,
+                      GIF or WEBP.&nbsp; Max &nbsp;
                       {MAX_FILE_SIZE}
                       mb.
                     </p>
@@ -1326,14 +1479,17 @@ const CreateMultiple = (props) => {
                       <>
                         {nftFiles[0].name.length > 50
                           ? nftFiles[0].name.slice(0, 10) +
-                          nftFiles[0].name.slice(nftFiles[0].name.length - 4, nftFiles[0].name.length)
+                            nftFiles[0].name.slice(
+                              nftFiles[0].name.length - 4,
+                              nftFiles[0].name.length
+                            )
                           : nftFiles[0].name}
                       </>
                     ) : (
                       ''
                     )}
                   </p>
-                  <div className="browse">
+                  <div className='browse'>
                     {/* <input
                       type="button"
                       id="get_file"
@@ -1341,101 +1497,123 @@ const CreateMultiple = (props) => {
                       value="Browse"
                       onClick={() => fileRef.current.click()}
                     /> */}
-                    <label className="c-button btn-main">
+                    <label className='c-button btn-main'>
                       Browse
                       <input
-                        id="upload_file_Upload"
-                        type="file"
+                        id='upload_file_Upload'
+                        type='file'
                         ref={fileRef}
-                        className="nftFile"
+                        className='nftFile'
                         onChange={(e) => onChange(e)}
                       />
                     </label>
                   </div>
                 </div>
 
-                <div className="spacer-20"></div>
+                <div className='spacer-20'></div>
 
-                <div className="switch-with-title">
+                <div className='switch-with-title'>
                   <h5>
-                    <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
+                    <i className='fa fa- fa-unlock-alt id-color-2 mr10'></i>
                     Unlock Once Purchased
                   </h5>
-                  <div className="de-switch">
-                    <input type="checkbox" id="switch-unlock" className="checkbox" />
+                  <div className='de-switch'>
+                    <input
+                      type='checkbox'
+                      id='switch-unlock'
+                      className='checkbox'
+                    />
                     {isActive ? (
-                      <label htmlFor="switch-unlock" onClick={unlockHide}></label>
+                      <label
+                        htmlFor='switch-unlock'
+                        onClick={unlockHide}
+                      ></label>
                     ) : (
-                      <label htmlFor="switch-unlock" onClick={unlockClick}></label>
+                      <label
+                        htmlFor='switch-unlock'
+                        onClick={unlockClick}
+                      ></label>
                     )}
                   </div>
-                  <div className="clearfix"></div>
-                  <p className="p-info pb-3"> Unlock content after successful transaction.</p>
+                  <div className='clearfix'></div>
+                  <p className='p-info pb-3'>
+                    {' '}
+                    Unlock content after successful transaction.
+                  </p>
 
                   {isActive ? (
-                    <div id="unlockCtn" className="hide-content">
+                    <div id='unlockCtn' className='hide-content'>
                       <input
-                        type="text"
-                        name="item_unlock"
-                        id="item_unlock"
+                        type='text'
+                        name='item_unlock'
+                        id='item_unlock'
                         value={lockedContent}
-                        className="form-control"
+                        className='form-control'
                         onChange={(e) => setLockedContent(e.target.value)}
-                        placeholder="Access key, code to redeem or link to a file..."
+                        placeholder='Access key, code to redeem or link to a file...'
                       />
                     </div>
                   ) : null}
                 </div>
-                <div className="spacer-20"></div>
-                <div className="switch-with-title">
+                <div className='spacer-20'></div>
+                <div className='switch-with-title'>
                   <h5>
-                    <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
+                    <i className='fa fa- fa-unlock-alt id-color-2 mr10'></i>
                     Put on Marketplace
                   </h5>
 
-                  <div className="de-switch">
-                    <input type="checkbox" id="switch-unlock1" className="checkbox" checked={isUnlock} />
+                  <div className='de-switch'>
+                    <input
+                      type='checkbox'
+                      id='switch-unlock1'
+                      className='checkbox'
+                      checked={isUnlock}
+                    />
 
-                    <label htmlFor="switch-unlock1" onClick={clickToUnlock}></label>
+                    <label
+                      htmlFor='switch-unlock1'
+                      onClick={clickToUnlock}
+                    ></label>
                   </div>
                 </div>
 
-                <div className="spacer-20"></div>
+                <div className='spacer-20'></div>
                 {isUnlock ? (
                   <>
-                    <div className="spacer-20"></div>
+                    <div className='spacer-20'></div>
                     <h5>Select method</h5>
-                    <div className="de_tab tab_methods">
-                      <ul className="de_nav">
-                        <li id="btn1" className="active" onClick={handleShow}>
+                    <div className='de_tab tab_methods'>
+                      <ul className='de_nav'>
+                        <li id='btn1' className='active' onClick={handleShow}>
                           <span>
-                            <i className="fa fa-tag"></i>Fixed price
+                            <i className='fa fa-tag'></i>Fixed price
                           </span>
                         </li>
-                        <li id="btn2" onClick={handleShow1}>
+                        <li id='btn2' onClick={handleShow1}>
                           <span>
-                            <i className="fa fa-hourglass-1"></i>Timed auction
+                            <i className='fa fa-hourglass-1'></i>Timed auction
                           </span>
                         </li>
-                        <li id="btn3" onClick={handleShow2}>
+                        <li id='btn3' onClick={handleShow2}>
                           <span>
-                            <i className="fa fa-users"></i>Open for bids
+                            <i className='fa fa-users'></i>Open for bids
                           </span>
                         </li>
                       </ul>
 
-                      <div className="de_tab_content pt-3">
-                        <div id="tab_opt_1">
-                          <h5 className="required">Price</h5>
+                      <div className='de_tab_content pt-3'>
+                        <div id='tab_opt_1'>
+                          <h5 className='required'>Price</h5>
                           <input
-                            type="text"
-                            name="item_price"
-                            min="0"
-                            max="18"
-                            id="item_price"
+                            type='text'
+                            name='item_price'
+                            min='0'
+                            max='18'
+                            id='item_price'
                             value={price}
                             onKeyPress={(e) => {
-                              if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
+                              if (!/^\d*\.?\d*$/.test(e.key))
+                                e.preventDefault();
                             }}
                             onChange={(e) => {
                               if (Number(e.target.value) > 100000000000000) {
@@ -1443,7 +1621,7 @@ const CreateMultiple = (props) => {
                               }
                               inputPrice(e);
                             }}
-                            className="form-control"
+                            className='form-control'
                             placeholder={`0 (${CURRENCY})`}
                           />
                         </div>
@@ -1452,15 +1630,15 @@ const CreateMultiple = (props) => {
                   </>
                 ) : null}
 
-                <div className="de_tab_content">
-                  <div id="tab_opt_2" className="hide">
-                    <h5 className="required">Minimum bid</h5>
+                <div className='de_tab_content'>
+                  <div id='tab_opt_2' className='hide'>
+                    <h5 className='required'>Minimum bid</h5>
                     <input
-                      type="text"
-                      min="0"
-                      max="18"
-                      name="item_price_bid"
-                      id="item_price_bid"
+                      type='text'
+                      min='0'
+                      max='18'
+                      name='item_price_bid'
+                      id='item_price_bid'
                       value={minimumBid}
                       onKeyPress={(e) => {
                         if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
@@ -1471,39 +1649,45 @@ const CreateMultiple = (props) => {
                         }
                         inputPriceAuction(e);
                       }}
-                      className="form-control"
-                      placeholder="0"
+                      className='form-control'
+                      placeholder='0'
                     />
 
-                    <div className="spacer-20"></div>
+                    <div className='spacer-20'></div>
 
-                    <div className="row">
-                      <div className="col-md-6">
-                        <h5 className="required">Payment Token</h5>
+                    <div className='row'>
+                      <div className='col-md-6'>
+                        <h5 className='required'>Payment Token</h5>
                         <select
-                          className="form-control selectOpt"
+                          className='form-control selectOpt'
                           onChange={async (e) => {
                             setSelectedTokenAddress(e.target.value);
-                            let symbol = getTokenSymbolByAddress(e.target.value);
+                            let symbol = getTokenSymbolByAddress(
+                              e.target.value
+                            );
                             setSelectedTokenSymbol(symbol);
                           }}
                         >
                           {options
                             ? options.map((option, key) => {
-                              return <option value={option.value}>{option.title}</option>;
-                            })
+                                return (
+                                  <option value={option.value}>
+                                    {option.title}
+                                  </option>
+                                );
+                              })
                             : ''}
                         </select>
                       </div>
 
-                      <div className="col-md-6">
-                        <h5 className="required">Expiration date</h5>
+                      <div className='col-md-6'>
+                        <h5 className='required'>Expiration date</h5>
                         <input
-                          type="datetime-local"
-                          id="meeting-time"
-                          name="meeting-time"
+                          type='datetime-local'
+                          id='meeting-time'
+                          name='meeting-time'
                           min={getMaxAllowedDate()}
-                          className="form-control"
+                          className='form-control'
                           onChange={(e) => {
                             setEndTime(new Date(e.target.value));
                           }}
@@ -1511,14 +1695,14 @@ const CreateMultiple = (props) => {
                       </div>
                     </div>
                   </div>
-                  <div id="tab_opt_3" className="hide">
-                    <h5 className="required">Minimum bid</h5>
+                  <div id='tab_opt_3' className='hide'>
+                    <h5 className='required'>Minimum bid</h5>
                     <input
-                      type="text"
-                      name="item_price_bid"
-                      min="0"
-                      max="18"
-                      id="item_price_bid"
+                      type='text'
+                      name='item_price_bid'
+                      min='0'
+                      max='18'
+                      id='item_price_bid'
                       value={minimumBid}
                       onKeyPress={(e) => {
                         if (!/^\d*\.?\d*$/.test(e.key)) e.preventDefault();
@@ -1529,49 +1713,61 @@ const CreateMultiple = (props) => {
                         }
                         inputPriceAuction(e);
                       }}
-                      className="form-control"
-                      placeholder="0"
+                      className='form-control'
+                      placeholder='0'
                     />
 
-                    <div className="spacer-20"></div>
-                    <div className="col-md-12">
-                      <h5 className="required">Payment Token</h5>
+                    <div className='spacer-20'></div>
+                    <div className='col-md-12'>
+                      <h5 className='required'>Payment Token</h5>
                       <select
-                        className="form-control selectOpt"
+                        className='form-control selectOpt'
                         onChange={(e) => {
                           setSelectedTokenAddress(e.target.value);
                         }}
                       >
                         {options
                           ? options.map((option, key) => {
-                            return <option value={option.value}>{option.title}</option>;
-                          })
+                              return (
+                                <option value={option.value}>
+                                  {option.title}
+                                </option>
+                              );
+                            })
                           : ''}
                       </select>
                     </div>
                   </div>
                 </div>
 
-                <div className="switch-with-title">
+                <div className='switch-with-title'>
                   <h5>
-                    <i className="fa fa- fa-unlock-alt id-color-2 mr10"></i>
+                    <i className='fa fa- fa-unlock-alt id-color-2 mr10'></i>
                     Lazy Minting
                   </h5>
 
-                  <div className="de-switch">
-                    <input type="checkbox" id="switch-unlock1" className="checkbox" checked={isLazyMinting} />
+                  <div className='de-switch'>
+                    <input
+                      type='checkbox'
+                      id='switch-unlock1'
+                      className='checkbox'
+                      checked={isLazyMinting}
+                    />
 
-                    <label htmlFor="switch-unlock1" onClick={clickToLazyMint}></label>
+                    <label
+                      htmlFor='switch-unlock1'
+                      onClick={clickToLazyMint}
+                    ></label>
                   </div>
                 </div>
 
-                <div className="spacer-20"></div>
+                <div className='spacer-20'></div>
                 {/* <div className="spacer-20"></div> */}
-                <h5 className="required">Title</h5>
+                <h5 className='required'>Title</h5>
                 <input
-                  type="text"
-                  name="item_title"
-                  id="item_title"
+                  type='text'
+                  name='item_title'
+                  id='item_title'
                   onChange={(e) => {
                     if (e.target.value.length > 50) {
                       return;
@@ -1579,10 +1775,10 @@ const CreateMultiple = (props) => {
                     setNftTitle(e.target.value);
                   }}
                   value={nftTitle}
-                  className="form-control"
-                  placeholder="Crypto"
+                  className='form-control'
+                  placeholder='Crypto'
                 />
-                <div className="spacer-10"></div>
+                <div className='spacer-10'></div>
                 <h5>Description</h5>
                 <textarea
                   onChange={(e) => {
@@ -1593,20 +1789,20 @@ const CreateMultiple = (props) => {
                   }}
                   value={nftDesc}
                   data-autoresize
-                  name="item_desc"
-                  id="item_desc"
-                  className="form-control"
-                  placeholder="My NFT description"
+                  name='item_desc'
+                  id='item_desc'
+                  className='form-control'
+                  placeholder='My NFT description'
                 ></textarea>
 
                 <h5>Quantity</h5>
                 <input
-                  type="text"
-                  name="item_title"
-                  min="1"
-                  step="1"
+                  type='text'
+                  name='item_title'
+                  min='1'
+                  step='1'
                   value={quantity}
-                  id="item_title"
+                  id='item_title'
                   onKeyPress={(e) => {
                     if (!/^\d*$/.test(e.key)) e.preventDefault();
                   }}
@@ -1637,28 +1833,32 @@ const CreateMultiple = (props) => {
                       }
                     }
                   }}
-                  className="form-control"
-                  placeholder=""
+                  className='form-control'
+                  placeholder=''
                 />
 
-                <div className="spacer-10"></div>
-                <div className={isLazyMinting ? 'hideCollaborator' : 'showCollaborator'}>
+                <div className='spacer-10'></div>
+                <div
+                  className={
+                    isLazyMinting ? 'hideCollaborator' : 'showCollaborator'
+                  }
+                >
                   <h5>Collaborator (Optional)</h5>
                   <input
-                    type="text"
-                    name="item_collaborator"
-                    id="item_collaborator"
+                    type='text'
+                    name='item_collaborator'
+                    id='item_collaborator'
                     onChange={(e) => setCurrCollaborator(e.target.value)}
                     value={currCollaborator}
-                    className="form-control"
+                    className='form-control'
                     placeholder="Please Enter Collaborator's Wallet Address"
                     maxLength={42}
                   />
                   <input
-                    type="Number"
-                    name="item_collaborator_percent"
-                    id="item_collaborator_percent"
-                    min="0"
+                    type='Number'
+                    name='item_collaborator_percent'
+                    id='item_collaborator_percent'
+                    min='0'
                     value={currCollaboratorPercent}
                     onChange={(e) => {
                       if (Number(e.target.value) > 100) {
@@ -1667,15 +1867,18 @@ const CreateMultiple = (props) => {
                       }
                       var t = e.target.value;
                       e.target.value =
-                        t.indexOf('.') >= 0 ? t.substr(0, t.indexOf('.')) + t.substr(t.indexOf('.'), 3) : t;
+                        t.indexOf('.') >= 0
+                          ? t.substr(0, t.indexOf('.')) +
+                            t.substr(t.indexOf('.'), 3)
+                          : t;
                       setCurrCollaboratorPercent(e.target.value);
                     }}
-                    className="form-control"
-                    placeholder="Percent"
+                    className='form-control'
+                    placeholder='Percent'
                   />
                   <button
-                    id="submit"
-                    className="btn-main"
+                    id='submit'
+                    className='btn-main'
                     onClick={() => {
                       handleAddCollaborator();
                     }}
@@ -1686,38 +1889,45 @@ const CreateMultiple = (props) => {
                 <ul>
                   {collaborators && collaboratorPercents
                     ? collaborators.map((collaborator, key) => {
-                      return collaborator !== '' ? (
-                        <li className="added_collaborator_list">
-                          <div className="d-flex justify-content-around align-items-baseline">
-                            <h5>
-                              {collaborator.slice(0, 5) + '...' + collaborator.slice(38, 42)} :{' '}
-                              <span>{collaboratorPercents[key] + '%'}</span>
-                            </h5>
-                            <button
-                              className="remove-btn btn-main"
-                              onClick={() => {
-                                handleRemoveCollaborator(key);
-                              }}
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </li>
-                      ) : (
-                        ''
-                      );
-                    })
+                        return collaborator !== '' ? (
+                          <li className='added_collaborator_list'>
+                            <div className='d-flex justify-content-around align-items-baseline'>
+                              <h5>
+                                {collaborator.slice(0, 5) +
+                                  '...' +
+                                  collaborator.slice(38, 42)}{' '}
+                                : <span>{collaboratorPercents[key] + '%'}</span>
+                              </h5>
+                              <button
+                                className='remove-btn btn-main'
+                                onClick={() => {
+                                  handleRemoveCollaborator(key);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </li>
+                        ) : (
+                          ''
+                        );
+                      })
                     : ''}
                 </ul>
 
-                <button className="btn-main showHideBtn" onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}>
-                  {isAdvancedSetting ? 'Hide Advanced Settings' : 'Show Advanced Settings'}
+                <button
+                  className='btn-main showHideBtn'
+                  onClick={() => setIsAdvancedSetting(!isAdvancedSetting)}
+                >
+                  {isAdvancedSetting
+                    ? 'Hide Advanced Settings'
+                    : 'Show Advanced Settings'}
                 </button>
                 {isAdvancedSetting ? PropertiesSection() : ''}
                 {isAdvancedSetting ? (
                   <button
-                    id="submit"
-                    className="btn-main"
+                    id='submit'
+                    className='btn-main'
                     onClick={() => {
                       handleAddProperty();
                     }}
@@ -1727,39 +1937,42 @@ const CreateMultiple = (props) => {
                 ) : (
                   ''
                 )}
-                <div className="spacer-40"></div>
-                <div className="nft_attr_section">
-                  <div className="row gx-2">
+                <div className='spacer-40'></div>
+                <div className='nft_attr_section'>
+                  <div className='row gx-2'>
                     {propertyKeys && propertyValues
                       ? propertyKeys.map((propertyKey, key) => {
-                        return propertyKey !== '' ? (
-                          <div className="col-lg-4 col-md-6 col-sm-6">
-                            <div className="createProperty">
-                              <div className="nft_attr">
-                                <h5>{propertyKey}</h5>
-                                <h4>{propertyValues[key]}</h4>
+                          return propertyKey !== '' ? (
+                            <div className='col-lg-4 col-md-6 col-sm-6'>
+                              <div className='createProperty'>
+                                <div className='nft_attr'>
+                                  <h5>{propertyKey}</h5>
+                                  <h4>{propertyValues[key]}</h4>
+                                </div>
+                                <button
+                                  className='remove-btn btn-main removeBTN'
+                                  onClick={() => {
+                                    handleRemoveProperty(key);
+                                  }}
+                                >
+                                  <i
+                                    className='fa fa-trash'
+                                    aria-hidden='true'
+                                  ></i>
+                                </button>
                               </div>
-                              <button
-                                className="remove-btn btn-main removeBTN"
-                                onClick={() => {
-                                  handleRemoveProperty(key);
-                                }}
-                              >
-                                <i className="fa fa-trash" aria-hidden="true"></i>
-                              </button>
                             </div>
-                          </div>
-                        ) : (
-                          ''
-                        );
-                      })
+                          ) : (
+                            ''
+                          );
+                        })
                       : ''}
                   </div>
                 </div>
-                <div className="spacer-10"></div>
+                <div className='spacer-10'></div>
                 <button
-                  id="submit"
-                  className="btn-main"
+                  id='submit'
+                  className='btn-main'
                   onClick={async () => {
                     await handleNftCreation();
                   }}
@@ -1770,35 +1983,37 @@ const CreateMultiple = (props) => {
             </div>
           </div>
 
-          <div className="col-lg-3 col-sm-6 col-xs-12">
+          <div className='col-lg-3 col-sm-6 col-xs-12'>
             <h5>Preview item</h5>
-            <div className="preview_section nft__item m-0 position-relative c-items">
+            <div className='preview_section nft__item m-0 position-relative c-items'>
               {isTimedAuction ? (
-                <div className="de_countdown">
+                <div className='de_countdown'>
                   <Clock deadline={timeLeft} />
                 </div>
               ) : (
                 ''
               )}
 
-              <div className="author_list_pp_explore_page author_list_pp">
+              <div className='author_list_pp_explore_page author_list_pp'>
                 <span>
                   <img
-                    className="lazy author_image"
+                    className='lazy author_image'
                     // /img/author/author-7.jpg
                     src={profilePic ? profilePic : Avatar}
-                    alt=""
+                    alt=''
                   />
-                  <i className="fa fa-check profile_img_check"></i>
+                  <i className='fa fa-check profile_img_check'></i>
                 </span>
               </div>
-              <div className="nft__item_wrap">
-                <span className="c-previous-items">
+              <div className='nft__item_wrap'>
+                <span className='c-previous-items'>
                   <img
-                    src={nftImage ? URL.createObjectURL(nftImage) : previewImage}
-                    id="get_file_2"
-                    className="lazy nft__item_preview slider-img-preview"
-                    alt=""
+                    src={
+                      nftImage ? URL.createObjectURL(nftImage) : previewImage
+                    }
+                    id='get_file_2'
+                    className='lazy nft__item_preview slider-img-preview'
+                    alt=''
                   />
                 </span>
               </div>
@@ -1825,64 +2040,80 @@ const CreateMultiple = (props) => {
           </div>
         </div>
         {isShowPopup ? (
-          <div className="popup-bg" id="CreateNftLoader">
-            <div className="loader_popup-box">
-              <div className="row">
-                <h2 className="col-12 d-flex justify-content-center mt-2 mb-3">Follow Steps</h2>
+          <div className='popup-bg' id='CreateNftLoader'>
+            <div className='loader_popup-box'>
+              <div className='row'>
+                <h2 className='col-12 d-flex justify-content-center mt-2 mb-3'>
+                  Follow Steps
+                </h2>
               </div>
 
-              <div className="row customDisplayPopup">
-                <div className="col-3 icontxtDisplayPopup">
+              <div className='row customDisplayPopup'>
+                <div className='col-3 icontxtDisplayPopup'>
                   <div className={isApprovePopupClass}></div>
                 </div>
-                <div className="col-8 icontxtDisplayPopup">
-                  <h5 className="popupHeading">Approve</h5>
-                  <span className="popupText">This transaction is conducted only once per collection</span>
+                <div className='col-8 icontxtDisplayPopup'>
+                  <h5 className='popupHeading'>Approve</h5>
+                  <span className='popupText'>
+                    This transaction is conducted only once per collection
+                  </span>
                 </div>
               </div>
-              <div className="row customDisplayPopup">
-                <div className="col-3 icontxtDisplayPopup">
+              <div className='row customDisplayPopup'>
+                <div className='col-3 icontxtDisplayPopup'>
                   <div className={isMintPopupClass}></div>
                 </div>
-                <div className="col-8 icontxtDisplayPopup">
-                  <h5 className="popupHeading">Mint</h5>
-                  <span className="popupText">Send transaction to create your NFT</span>
+                <div className='col-8 icontxtDisplayPopup'>
+                  <h5 className='popupHeading'>Mint</h5>
+                  <span className='popupText'>
+                    Send transaction to create your NFT
+                  </span>
                 </div>
               </div>
-              <div className="row customDisplayPopup">
-                <div className="col-3 icontxtDisplayPopup">
+              <div className='row customDisplayPopup'>
+                <div className='col-3 icontxtDisplayPopup'>
                   <div className={isRoyaltyPopupClass}></div>
                 </div>
-                <div className="col-8 icontxtDisplayPopup">
-                  <h5 className="popupHeading">Royalty</h5>
-                  <span className="popupText">Setting Royalty % for your NFT</span>
+                <div className='col-8 icontxtDisplayPopup'>
+                  <h5 className='popupHeading'>Royalty</h5>
+                  <span className='popupText'>
+                    Setting Royalty % for your NFT
+                  </span>
                 </div>
               </div>
-              <div className="row customDisplayPopup">
-                <div className="col-3 icontxtDisplayPopup">
+              <div className='row customDisplayPopup'>
+                <div className='col-3 icontxtDisplayPopup'>
                   <div className={isUploadPopupClass}></div>
                 </div>
-                <div className="col-8 icontxtDisplayPopup">
-                  <h5 className="popupHeading">Upload</h5>
-                  <span className="popupText">Uploading of all media assets and metadata to IPFS</span>
+                <div className='col-8 icontxtDisplayPopup'>
+                  <h5 className='popupHeading'>Upload</h5>
+                  <span className='popupText'>
+                    Uploading of all media assets and metadata to IPFS
+                  </span>
                 </div>
               </div>
               {isPutOnMarketplace ? (
-                <div className="row customDisplayPopup">
-                  <div className="col-3 icontxtDisplayPopup">
+                <div className='row customDisplayPopup'>
+                  <div className='col-3 icontxtDisplayPopup'>
                     <div className={isPutOnSalePopupClass}></div>
                   </div>
-                  <div className="col-8 icontxtDisplayPopup">
-                    <h5 className="popupHeading">Put On Sale</h5>
-                    <span className="popupText">Sign message to set fixed price</span>
+                  <div className='col-8 icontxtDisplayPopup'>
+                    <h5 className='popupHeading'>Put On Sale</h5>
+                    <span className='popupText'>
+                      Sign message to set fixed price
+                    </span>
                   </div>
                 </div>
               ) : (
                 ''
               )}
-              <div className="row customDisplayPopup">
+              <div className='row customDisplayPopup'>
                 {hideClosePopup ? (
-                  <button className="closeBtn btn-main" disabled={ClosePopupDisabled} onClick={closePopup}>
+                  <button
+                    className='closeBtn btn-main'
+                    disabled={ClosePopupDisabled}
+                    onClick={closePopup}
+                  >
                     Close
                   </button>
                 ) : (
@@ -1890,7 +2121,7 @@ const CreateMultiple = (props) => {
                 )}
                 {hideRedirectPopup ? (
                   <button
-                    className="closeBtn btn-main"
+                    className='closeBtn btn-main'
                     disabled={RedirectPopupDisabled}
                     onClick={redirectCreateNFTPopup}
                   >
