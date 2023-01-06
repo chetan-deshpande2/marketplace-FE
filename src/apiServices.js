@@ -172,7 +172,7 @@ export const checkuseraddress = async (account) => {
 export const updateProfile = async (account, data) => {
   console.log(account, data);
   const requestOptions = {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       Authorization: localStorage.getItem('Authorization'),
     },
@@ -188,7 +188,7 @@ export const updateProfile = async (account, data) => {
       ?.includes('application/json');
     const datas = isJson && (await response.json());
     console.log(datas);
-    return datas.message;
+    return datas;
   } catch (err) {
     return err;
   }

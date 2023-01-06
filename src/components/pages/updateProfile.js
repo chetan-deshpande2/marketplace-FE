@@ -163,7 +163,7 @@ const UpdateProfile = (props) => {
     formData.append('sWebsite', data.website ? data.website : '');
     formData.append('sEmail', data.email ? data.email : '');
     formData.append('sWalletAddress', currentUser);
-    formData.append('userProfile', data.profilePic ? data.profilePic : '');
+    formData.append('userProfile', data.profilePic);
 
     console.log(data.uname);
     if (currentUser) {
@@ -191,6 +191,7 @@ const UpdateProfile = (props) => {
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
+      console.log(img);
       setProfilePic(img);
     }
   };

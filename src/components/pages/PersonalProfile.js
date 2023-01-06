@@ -84,8 +84,16 @@ const PersonalProfile = function (props) {
         console.log(profileInfo);
         if (profileInfo) {
           let profileData = profileInfo;
-          if (profileData.user.oName && profileData.user.oName.sFirstname && profileData.user.oName.sLastname) {
-            setFullName(profileData.user.oName.sFirstname + ' ' + profileData.user.oName.sLastname);
+          if (
+            profileData.user.oName &&
+            profileData.user.oName.sFirstname &&
+            profileData.user.oName.sLastname
+          ) {
+            setFullName(
+              profileData.user.oName.sFirstname +
+                ' ' +
+                profileData.user.oName.sLastname
+            );
           } else {
             setFullName('Unnamed');
           }
@@ -104,8 +112,12 @@ const PersonalProfile = function (props) {
             setAddress('0x0..');
           }
 
-          let sProfilePicUrl = profileData.user.sProfilePicUrl === undefined ? Avatar : profileData.user.sProfilePicUrl;
-          setProfilePic(sProfilePicUrl);
+          let sProfilePicUrl =
+            profileData.user.sProfilePicUrl === undefined
+              ? Avatar
+              : profileData.user.sProfilePicUrl;
+          setProfilePic(
+            'http://bafybeigh5zsvpcywivxin4grse5m6ufu3ptummo722acf7cebwcpadvlq4.ipfs.w3s.link/ca14e04a2ba6d242e822429e84135c63');
           setProfileData(profileData);
           setLoading(false);
         }
@@ -179,41 +191,43 @@ const PersonalProfile = function (props) {
       {loading ? <Loader /> : ''}
       <GlobalStyles />
       <section
-        id="profile_banner"
-        className="jumbotron breadcumb no-bg"
+        id='profile_banner'
+        className='jumbotron breadcumb no-bg'
         style={{
           backgroundImage: `url(${'./img/background/subheader.jpg'})`,
         }}
       >
-        <div className="mainbreadcumb"></div>
+        <div className='mainbreadcumb'></div>
       </section>
-      <section className="container no-bottom">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="d_profile de-flex">
-              <div className="de-flex-col">
-                <div className="profile_avatar">
-                  <img src={profilePic ? profilePic : ''} alt="" />
-                  <i className="fa fa-check"></i>
-                  <div className="profile_name">
+      <section className='container no-bottom'>
+        <div className='row'>
+          <div className='col-md-12'>
+            <div className='d_profile de-flex'>
+              <div className='de-flex-col'>
+                <div className='profile_avatar'>
+                  <img src={profilePic ? profilePic : ''} alt='' />
+                  <i className='fa fa-check'></i>
+                  <div className='profile_name'>
                     <h4>
-                      <div className="d-flex">
+                      <div className='d-flex'>
                         {fullName}
                         <BsPencilSquare
-                          className="BsPencilSquare pe-auto"
+                          className='BsPencilSquare pe-auto'
                           onClick={() => {
                             window.location.href = '/updateProfile';
                           }}
                         />
                       </div>
-                      <span className="profile_username">{userName ? userName : '@unnamed'}</span>
+                      <span className='profile_username'>
+                        {userName ? userName : '@unnamed'}
+                      </span>
                       <CopyToClipboard
                         text={address}
                         onCopy={() => {
                           NotificationManager.success('Copied!!');
                         }}
                       >
-                        <span id="wallet" className="profile_wallet">
+                        <span id='wallet' className='profile_wallet'>
                           {currentUser ? currentUser : '0x0..'}
                         </span>
                       </CopyToClipboard>
@@ -255,24 +269,24 @@ const PersonalProfile = function (props) {
           </div>
         </div>
       </section>
-      <section className="container no-top">
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="items_filter">
-              <ul className="de_nav text-left">
-                <li id="Mainbtn" className="active">
+      <section className='container no-top'>
+        <div className='row'>
+          <div className='col-lg-12'>
+            <div className='items_filter'>
+              <ul className='de_nav text-left'>
+                <li id='Mainbtn' className='active'>
                   <span onClick={handleBtnClick}>On Sale</span>
                 </li>
-                <li id="Mainbtn1" className="">
+                <li id='Mainbtn1' className=''>
                   <span onClick={handleBtnClick1}>Created </span>
                 </li>
                 {/* <li id="Mainbtn2" className="">
                   <span onClick={handleBtnClick2}>Liked </span>
                 </li> */}
-                <li id="Mainbtn3" className="">
+                <li id='Mainbtn3' className=''>
                   <span onClick={handleBtnClick3}>Owned </span>
                 </li>
-                <li id="Mainbtn4" className="">
+                <li id='Mainbtn4' className=''>
                   <span onClick={handleBtnClick4}>Collections </span>
                 </li>
               </ul>
@@ -280,28 +294,47 @@ const PersonalProfile = function (props) {
           </div>
         </div>
         {openMenu && (
-          <div id="zero1" className="onStep fadeIn">
-            <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
+          <div id='zero1' className='onStep fadeIn'>
+            <ColumnZero
+              isProfile={true}
+              paramType={paramType}
+              profile={profileData}
+            />
           </div>
         )}
         {openMenu1 && (
-          <div id="zero2" className="onStep fadeIn">
-            <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
+          <div id='zero2' className='onStep fadeIn'>
+            <ColumnZero
+              isProfile={true}
+              paramType={paramType}
+              profile={profileData}
+            />
           </div>
         )}
         {openMenu2 && (
-          <div id="zero3" className="onStep fadeIn">
-            <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
+          <div id='zero3' className='onStep fadeIn'>
+            <ColumnZero
+              isProfile={true}
+              paramType={paramType}
+              profile={profileData}
+            />
           </div>
         )}
         {openMenu3 && (
-          <div id="zero4" className="onStep fadeIn">
-            <ColumnZero isProfile={true} paramType={paramType} profile={profileData} />
+          <div id='zero4' className='onStep fadeIn'>
+            <ColumnZero
+              isProfile={true}
+              paramType={paramType}
+              profile={profileData}
+            />
           </div>
         )}
         {openMenu4 && (
-          <div id="zero5" className="onStep fadeIn">
-            <GeneralCollectionsPage userId={profileData?.user._id} isAllCollections={false} />
+          <div id='zero5' className='onStep fadeIn'>
+            <GeneralCollectionsPage
+              userId={profileData?.user._id}
+              isAllCollections={false}
+            />
           </div>
         )}
       </section>

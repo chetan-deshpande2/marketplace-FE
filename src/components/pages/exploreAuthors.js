@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Footer from "../components/footer";
 import { createGlobalStyle } from "styled-components";
 import { connect } from "react-redux";
-import ExploreAuthorsList from "./../components/exploreAuthorsList";
+import ExploreAuthorsList from "../components/exploreAuthorList";
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {

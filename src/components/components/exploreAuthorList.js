@@ -46,7 +46,7 @@ const ExploreAuthorsList = (props) => {
       let searchData = {
         page: currPage,
         limit: perPageCount,
-        sTextsearch: searchText,
+        sTextsearch: searchText
       };
       let _authors = await GetAllUserDetails(searchData);
       setAuthors(_authors.results[0]);
@@ -108,9 +108,13 @@ const ExploreAuthorsList = (props) => {
                       (window.location.href = "author/" + author._id)
                     }
                   >
+                   
                     <span className="authorName">
                       {author.oName
-                        ? author.oName.sFirstname + " " + author.oName.sLastname
+                        ? author.oName.sFirstname +
+                            " " +
+                            author.oName.sLastname
+                           
                         : "@unnamed"}
                     </span>
                     <h4 className="walletAddress">
@@ -124,19 +128,19 @@ const ExploreAuthorsList = (props) => {
             </div>
           ))
         : ""}
-      <div className="col-lg-12">
-        {totalPages > 1 ? (
-          <Pagination
-            count={totalPages}
-            size="large"
-            page={currPage}
-            variant="outlined"
-            shape="rounded"
-            onChange={handleChange}
-          />
-        ) : (
-          ""
-        )}
+        <div className="col-lg-12">
+          {totalPages > 1 ? (
+            <Pagination
+              count={totalPages}
+              size="large"
+              page={currPage}
+              variant="outlined"
+              shape="rounded"
+              onChange={handleChange}
+            />
+          ) : (
+            ""
+          )}
       </div>
     </div>
   );
