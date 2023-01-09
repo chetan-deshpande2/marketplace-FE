@@ -5,7 +5,7 @@ import { createGlobalStyle } from 'styled-components';
 import $ from 'jquery';
 import Loader from '../components/loader';
 import './styles.css';
-
+import './Loader.css'
 //*==========
 import { useCookies } from 'react-cookie';
 import Avatar from './../../assets/images/avatar5.jpg';

@@ -32,7 +32,6 @@ export const Register = async (account) => {
       .get('content-type')
       ?.includes('application/json');
     const data = isJson && (await response.json());
-    console.log(data);
 
     // check for error response
     if (!response.ok) {
@@ -66,14 +65,12 @@ export const Login = async (account) => {
       .get('content-type')
       ?.includes('application/json');
     const data = isJson && (await response.json());
-    console.log(data);
     // check for error response
     if (!response.ok) {
       // get error message from body or default to response status
       const error = (data && data.message) || response.status;
       return Promise.reject(error);
     }
-    console.log('token', data.token);
     localStorage.setItem('Authorization', data.token);
     return data.token;
     //   this.setState({ postId: data.id });
@@ -101,7 +98,6 @@ export const Logout = async () => {
     ?.includes('application/json');
 
   const data = isJson && (await response.json());
-  console.log(data);
 
   localStorage.removeItem('Authorization', data.token);
 };
@@ -114,12 +110,10 @@ export const getProfile = async () => {
     .get('content-type')
     ?.includes('application/json');
   const data = isJson && (await response.json());
-  console.log(data);
   return data;
 };
 
 export const getUserById = async (id) => {
-  console.log(id);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -136,7 +130,6 @@ export const getUserById = async (id) => {
     .get('content-type')
     ?.includes('application/json');
   const data = isJson && (await response.json());
-  console.log(data);
   return data;
 };
 
@@ -162,7 +155,6 @@ export const checkuseraddress = async (account) => {
       .get('content-type')
       ?.includes('application/json');
     const data = isJson && (await response.json());
-    console.log(data.message);
     return data;
   } catch (err) {
     return err;
@@ -170,7 +162,6 @@ export const checkuseraddress = async (account) => {
 };
 
 export const updateProfile = async (account, data) => {
-  console.log(account, data);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -187,7 +178,6 @@ export const updateProfile = async (account, data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas;
   } catch (err) {
     return err;
@@ -267,7 +257,6 @@ export const GetIndividualAuthorDetail = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
 
     if (datas) return datas.user;
     return [];
@@ -277,7 +266,6 @@ export const GetIndividualAuthorDetail = async (data) => {
 };
 
 export const getUsersCollections = async () => {
-  console.log(localStorage.getItem('Authorization'));
   const requestOptions = {
     method: 'GET',
     headers: {
@@ -294,7 +282,6 @@ export const getUsersCollections = async () => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas.results[0]);
     if (datas) return datas;
     return [];
   } catch (err) {
@@ -496,12 +483,10 @@ export const SetNFTOrder = async (data) => {
       REACT_APP_API_BASE_URL + '/nft/setNFTOrder',
       requestOptions
     );
-    console.log('record updated', response);
     const isJson = response.headers
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas.data;
   } catch (err) {
     return err;
@@ -578,7 +563,6 @@ export const GetCollectionsByAddress = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(data);
     return datas.collection;
   } catch (err) {
     return err;
@@ -627,7 +611,6 @@ export const GetMyNftList = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas.data;
   } catch (err) {
     return err;
@@ -677,7 +660,6 @@ export const GetMyLikedNft = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas.results;
   } catch (err) {
     return err;
@@ -702,7 +684,6 @@ export const GetMyOnSaleNft = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log('dataaasss on sale', datas);
     return datas.results;
   } catch (err) {
     return err;
@@ -710,7 +691,6 @@ export const GetMyOnSaleNft = async (data) => {
 };
 
 export const GetCollectionsNftList = async (data, owned = false) => {
-  console.log('Data', data);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -737,7 +717,6 @@ export const GetCollectionsNftList = async (data, owned = false) => {
 };
 
 export const GetSearchedNft = async (data, owned = false) => {
-  console.log('Data', data);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -761,7 +740,6 @@ export const GetSearchedNft = async (data, owned = false) => {
 };
 
 export const updateBidNft = async (data) => {
-  console.log('dataaa', data);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -786,7 +764,6 @@ export const updateBidNft = async (data) => {
 };
 
 export const fetchBidNft = async (data) => {
-  console.log('Data', data);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -804,7 +781,6 @@ export const fetchBidNft = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas;
   } catch (err) {
     return err;
@@ -837,7 +813,6 @@ export const GetOrdersByNftId = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas.AllOrders);
     return datas.AllOrders;
   } catch (err) {
     return err;
@@ -866,7 +841,6 @@ export const createNft = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
 
     return datas;
   } catch (err) {
@@ -896,7 +870,6 @@ export const createOrder = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
 
     return datas;
   } catch (err) {
@@ -915,8 +888,6 @@ export const DeleteOrder = async (data) => {
   };
 
   try {
-    console.log('remove');
-
     let response = await fetch(
       REACT_APP_API_BASE_URL + '/order/deleteOrder',
       requestOptions
@@ -939,7 +910,6 @@ export const TransferNfts = async (data) => {
   //     "page": 1,
   //     "limit": 4
   // }
-  console.log('transfer nft');
 
   const requestOptions = {
     method: 'PUT',
@@ -966,8 +936,6 @@ export const TransferNfts = async (data) => {
 };
 
 export const createBidNft = async (data) => {
-  console.log('place a bid');
-
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -985,7 +953,6 @@ export const createBidNft = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(data);
     return datas.result;
   } catch (err) {
     return err;
@@ -993,8 +960,6 @@ export const createBidNft = async (data) => {
 };
 
 export const acceptBid = async (data) => {
-  console.log('accept bid');
-
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -1012,7 +977,6 @@ export const acceptBid = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas.data;
   } catch (err) {
     return err;
@@ -1037,7 +1001,6 @@ export const InsertHistory = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas.results;
   } catch (err) {
     return err;
@@ -1045,7 +1008,6 @@ export const InsertHistory = async (data) => {
 };
 
 export const GetHistory = async (data) => {
-  console.log(data);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -1063,7 +1025,6 @@ export const GetHistory = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas.results);
     return datas.results;
   } catch (err) {
     return err;
@@ -1088,7 +1049,6 @@ export const GetHotCollections = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas.data;
   } catch (err) {
     return err;
@@ -1096,7 +1056,6 @@ export const GetHotCollections = async (data) => {
 };
 
 export const UpdateTokenCount = async (data) => {
-  console.log(data);
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -1112,7 +1071,6 @@ export const UpdateTokenCount = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas.data;
   } catch (err) {
     return err;
@@ -1137,7 +1095,6 @@ export const GetOwnedNftList = async (data) => {
       .get('content-type')
       ?.includes('application/json');
     const datas = isJson && (await response.json());
-    console.log(datas);
     return datas.results;
   } catch (err) {
     return err;
