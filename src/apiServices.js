@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 
-// const REACT_APP_API_BASE_URL = 'http://192.168.1.48:3000/api/v1';
-const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const REACT_APP_API_BASE_URL = 'http://192.168.1.48:3000/api/v1';
+// const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const exportInstance = async (SCAddress, ABI) => {
   let provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -208,14 +208,8 @@ export const Follow = async (data) => {
   }
 };
 
-export const GetAllUserDetails = async () => {
-  let searchData = {
-    length: 8,
-    start: 0,
-    sTextsearch: '',
-    sSellingType: '',
-    sSortingType: 'Recently Added',
-  };
+export const GetAllUserDetails = async (searchData) => {
+
   const requestOptions = {
     method: 'POST',
     headers: {

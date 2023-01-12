@@ -173,7 +173,6 @@ const CreateMultiple = (props) => {
   const fileRefCollection = useRef();
 
   const togglePopup = () => {
-    console.log(currentUser);
     if (!currentUser) {
       NotificationManager.error('Please Connect Your Wallet', '', 800);
       return;
@@ -410,11 +409,7 @@ const CreateMultiple = (props) => {
   };
 
   const handleAddCollaborator = async () => {
-    console.log(
-      'currCollaborator,currCollaboratorPercent',
-      currCollaborator,
-      currCollaboratorPercent
-    );
+   
     if (currCollaborator === '' || currCollaboratorPercent === '') {
       NotificationManager.error('Invalid inputs');
       return;
@@ -439,7 +434,6 @@ const CreateMultiple = (props) => {
     for (let i = 0; i < tempArr2.length; i++) {
       sum = sum + Number(tempArr2[i]);
     }
-    console.log('sum22', sum);
     if (sum > 90) {
       NotificationManager.error('Total percentage should be less than 90');
       return;
@@ -515,94 +509,9 @@ const CreateMultiple = (props) => {
 
   //*======================
 
-  // const handleCollectionCreate = async () => {
-  //   console.log(props);
-  //   let res = await handleNetworkSwitch(currentUser);
-  //   setCookie('balance', res, { path: '/' });
-  //   if (res === false) return;
-  //   setIsPopup(false);
-  //   setCollectionCreation(true);
-  //   if (!currentUser && profile) {
-  //     NotificationManager.error('Please Connect Your Wallet', '', 800);
-  //     return;
-  //   }
 
-  //   try {
-  //     let _title = title.replace(/^\s+|\s+$/g, '');
-  //     if (_title === '' || _title === undefined) {
-  //       NotificationManager.error('Please Enter Title', '', 800);
-  //       setCollectionCreation(false);
-  //       return;
-  //     }
-  //     if (image === undefined) {
-  //       NotificationManager.error('Please Upload Image', '', 800);
-  //       setCollectionCreation(false);
-  //       return;
-  //     }
-  //     if (symbol === '') {
-  //       NotificationManager.error('Please Enter symbol', '', 800);
-  //       setCollectionCreation(false);
-  //       return;
-  //     }
-  //     // let res = await checkIfCollectionNameAlreadyTaken(_title);
-  //     // if (res === true) {
-  //     //   NotificationManager.error('Collection Name Already Taken', '', 800);
-  //     //   setCollectionCreation(false);
-  //     //   return;
-  //     // }
-  //     if (files && files.length > 0) {
-  //       if (files[0].size / 1000000 > MAX_FILE_SIZE) {
-  //         NotificationManager.error(`File size should be less than ${MAX_FILE_SIZE} MB`, '', 800);
-  //         return;
-  //       }
-  //     }
-  //     setCollectionCreation(true);
-  //     let collectionData = {
-  //       sName: _title,
-  //       sDescription: description,
-  //       nftFile: image,
-  //       erc721: JSON.stringify(false),
-  //       sRoyaltyPercentage: Number(royalty) * 100,
-
-  //       symbol: symbol,
-  //     };
-  //     let collectionsList = '';
-  //     try {
-  //       let ress = await handleCollectionCreation(false, collectionData, currentUser);
-  //       collectionsList = await getUsersCollections({
-  //         page: 1,
-  //         limit: 100,
-  //         userId: profile._id,
-  //       });
-  //       if (collectionsList && collectionsList?.results?.length > 0) {
-  //         collectionsList.results = collectionsList?.results?.filter((collection) => {
-  //           return collection.erc721 === false;
-  //         });
-  //         setCollections(collectionsList?.results);
-
-  //         // window.location.reload();
-  //       }
-  //       if (ress === false) {
-  //         setCollectionCreation(false);
-  //         // window.location.reload();
-  //       }
-  //     } catch (e) {
-  //       setCollectionCreation(false);
-  //       return;
-  //     }
-
-  //     setCollectionCreation(false);
-  //     togglePopup();
-  //     window.location.reload();
-  //   } catch (e) {
-  //     setCollectionCreation(false);
-  //     togglePopup();
-  //     console.log(e);
-  //   }
-  // };
 
   const handleCollectionCreate = async () => {
-    console.log(props);
     // let res = await handleNetworkSwitch(currentUser);
     // setCookie('balance', res, { path: '/' });
     // if (res === false) return;
@@ -694,14 +603,12 @@ const CreateMultiple = (props) => {
     } catch (e) {
       setCollectionCreation(false);
       togglePopup();
-      console.log(e);
-      // window.location.reload();
+      window.location.reload();
     }
   };
 
   const handleNftCreation = async () => {
     let res = await handleNetworkSwitch(currentUser);
-    console.log(res);
     setCookie('balance', res, { path: '/' });
     if (res === false) return;
     let options;
@@ -754,10 +661,9 @@ const CreateMultiple = (props) => {
       return;
     }
     try {
-      console.log('updateCount');
       await UpdateTokenCount(nftContractAddress);
     } catch (e) {
-      console.log('error', e);
+      return
     }
     if (currentUser && profile) {
       try {
@@ -766,7 +672,6 @@ const CreateMultiple = (props) => {
 
         setisShowPopup(true);
         setisApprovePopupClass('clockloader');
-        console.log(nftContractAddress);
 
         const NFTcontract = await exportInstance(
           nftContractAddress,
@@ -819,7 +724,6 @@ const CreateMultiple = (props) => {
             NotificationManager.success('Approved', '', 800);
           }
         } catch (e) {
-          console.log('err', e);
           setisApprovePopupClass('errorIcon');
           stopCreateNFTPopup();
           return;
@@ -914,7 +818,7 @@ const CreateMultiple = (props) => {
         setisUploadPopupClass('clockloader');
 
         let res = await createNft(fd);
-        console.log('res========', res);
+
         // if (res.message === 'Invalid file type! Only JPG, JPEG, PNG, GIF, WEBP, MP3 & MPEG  files are allowed. ') {
         //   setisUploadPopupClass('errorIcon');
         //   stopCreateNFTPopup();
@@ -926,7 +830,6 @@ const CreateMultiple = (props) => {
         //   return;
         // }
         setCreatedItemId(res.result._id);
-        console.log(setCreatedItemId(res.result._id));
         try {
           let historyMetaData = {
             nftId: res.result._id,
@@ -948,7 +851,6 @@ const CreateMultiple = (props) => {
 
           await InsertHistory(historyMetaData);
         } catch (e) {
-          console.log('error in history api', e);
           return;
         }
         // if (res.data) {
@@ -963,7 +865,6 @@ const CreateMultiple = (props) => {
         let _deadline;
         let _price;
         let _auctionEndDate;
-        console.log(chosenType);
         if (chosenType === 0) {
           _deadline = GENERAL_TIMESTAMP;
           _auctionEndDate = GENERAL_DATE;
@@ -981,8 +882,6 @@ const CreateMultiple = (props) => {
           _price = ethers.utils.parseEther(minimumBid.toString()).toString();
         }
 
-        console.log(_deadline, _price, _auctionEndDate);
-        console.log(isPutOnMarketplace);
         if (isPutOnMarketplace) {
           let sellerOrder = [
             currentUser.toLowerCase(),
@@ -1008,7 +907,6 @@ const CreateMultiple = (props) => {
           //   stopCreateNFTPopup();
           //   return;
           // }
-          console.log(currentUser);
           let signature = await getSignature(currentUser, ...sellerOrder);
           if (signature === false) {
             setisPutOnSalePopupClass('errorIcon');

@@ -174,7 +174,6 @@ const CreateSingle = (props) => {
   const fileRefCollection = useRef();
 
   const togglePopup = () => {
-    console.log(currentUser);
     if (!currentUser) {
       NotificationManager.error('Please Connect Your Wallet', '', 800);
       return;
@@ -412,11 +411,7 @@ const CreateSingle = (props) => {
   };
 
   const handleAddCollaborator = async () => {
-    console.log(
-      'currCollaborator,currCollaboratorPercent',
-      currCollaborator,
-      currCollaboratorPercent
-    );
+  
     if (currCollaborator === '' || currCollaboratorPercent === '') {
       NotificationManager.error('Invalid inputs');
       return;
@@ -441,7 +436,6 @@ const CreateSingle = (props) => {
     for (let i = 0; i < tempArr2.length; i++) {
       sum = sum + Number(tempArr2[i]);
     }
-    console.log('sum22', sum);
     if (sum > 90) {
       NotificationManager.error('Total percentage should be less than 90');
       return;
@@ -517,7 +511,6 @@ const CreateSingle = (props) => {
   //*=============================================
 
   const handleCollectionCreate = async () => {
-    console.log(props);
     // let res = await handleNetworkSwitch(currentUser);
     // setCookie('balance', res, { path: '/' });
     // if (res === false) return;
@@ -608,7 +601,6 @@ const CreateSingle = (props) => {
     } catch (e) {
       setCollectionCreation(false);
       togglePopup();
-      console.log(e);
       window.location.reload();
     }
   };
@@ -670,7 +662,7 @@ const CreateSingle = (props) => {
     try {
       await UpdateTokenCount(nftContractAddress);
     } catch (e) {
-      console.log('error', e);
+     return e
     }
 
     if (currentUser && profile) {
@@ -687,7 +679,6 @@ const CreateSingle = (props) => {
           extendedERC721Abi.abi
         );
 
-        console.log('NFTcontract', NFTcontract);
 
         try {
           // let gasLimit = await NFTcontract.estimateGas.isApprovedForAll(
@@ -741,7 +732,6 @@ const CreateSingle = (props) => {
             NotificationManager.success('Approved', '', 800);
           }
         } catch (e) {
-          console.log('err', e);
           setisApprovePopupClass('errorIcon');
           stopCreateNFTPopup();
           return;
@@ -766,7 +756,6 @@ const CreateSingle = (props) => {
             //   gasLimit: 9000000,
             //   value: 0,
             // };
-            console.log(nextId);
             let mintRes = await NFTcontract.mint(currentUser, nextId, options);
             res1 = await mintRes.wait();
             if (res1.status === 0) {
@@ -844,15 +833,13 @@ const CreateSingle = (props) => {
         fd.append('lockedContent', lockedContent);
         fd.append('nLazyMintingStatus', isLazyMinting ? 1 : 0);
         let res;
-        setisUploadPopupClass('clockloader');
+        setisApprovePopupClass('checkiconCompleted');
         try {
           res = await createNft(fd);
         } catch (e) {
-          console.log('err', e);
           return;
         }
 
-        console.log(res);
         setCreatedItemId(res.result._id);
         try {
           let historyMetaData = {
@@ -874,7 +861,6 @@ const CreateSingle = (props) => {
 
           await InsertHistory(historyMetaData);
         } catch (e) {
-          console.log('error in history api', e);
           return;
         }
 
@@ -890,10 +876,9 @@ const CreateSingle = (props) => {
         let _deadline;
         let _price;
         let _auctionEndDate;
-        console.log(chosenType, GENERAL_TIMESTAMP, GENERAL_DATE);
 
         if (chosenType === 0) {
-          console.log('insde )');
+          console.log('inside');
           _deadline = GENERAL_TIMESTAMP;
           _auctionEndDate = GENERAL_DATE;
           _price = ethers.utils.parseEther(price.toString()).toString();
@@ -926,8 +911,7 @@ const CreateSingle = (props) => {
             salt,
           ];
 
-          console.log('inside BEfore Func');
-          console.log(nextId);
+          console.log('inside before Func');
 
           // let tokenUri = await NFTcontract.setCustomTokenUri(nextId, '0x00', {
           //   from: currentUser,
@@ -984,7 +968,6 @@ const CreateSingle = (props) => {
 
               await InsertHistory(historyMetaData);
             } catch (e) {
-              console.log('error in history api', e);
               return;
             }
           } catch (DataErr) {
@@ -1008,7 +991,6 @@ const CreateSingle = (props) => {
         closeCreateNFTPopup();
         // window.location.href = "/profile";
       } catch (err) {
-        console.log('error', err);
         stopCreateNFTPopup();
         return;
       }
@@ -1016,7 +998,6 @@ const CreateSingle = (props) => {
   };
 
   useEffect(() => {
-    console.log(cookies);
     setCurrentUser(cookies.selected_account);
   }, []);
 
